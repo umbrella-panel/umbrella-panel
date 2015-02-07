@@ -5,13 +5,6 @@
     <artifactId>umbrellapanel</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>umbrellapanel-worker</artifactId>
-  <name>UmbrellaPanel-Worker</name>
-  <dependencies>
-  	<dependency>
-  		<groupId>ms.idrea</groupId>
-  		<artifactId>umbrellapanel-core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
+  <artifactId>umbrellapanel-api</artifactId>
+  <name>IUmbrellaPanel-API</name>
 </project>
