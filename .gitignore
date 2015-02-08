@@ -26,6 +26,8 @@ manifest.mf
 # Mac filesystem dust
 .DS_Store/
 
+*/servers/
+
 # intellij
 *.iml
 *.ipr
