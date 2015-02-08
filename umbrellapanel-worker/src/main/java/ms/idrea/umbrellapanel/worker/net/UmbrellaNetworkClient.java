@@ -6,15 +6,15 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import lombok.Getter;
-import ms.idrea.umbreallapanel.core.net.UmbrellaProtocol;
-import ms.idrea.umbreallapanel.core.net.DynamicSession;
+
+import ms.idrea.umbrellapanel.core.net.DynamicSession;
+import ms.idrea.umbrellapanel.core.net.UmbrellaProtocol;
 
 import com.flowpowered.networking.Message;
-import com.flowpowered.networking.MessageHandler;
 import com.flowpowered.networking.NetworkClient;
 import com.flowpowered.networking.session.Session;
 
-public class UmbrellaNetworkClient extends NetworkClient implements MessageHandler<DynamicSession, Message> {
+public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umbrellapanel.worker.net.NetworkClient {
 
 	@Getter
 	private DynamicSession session;
@@ -27,7 +27,7 @@ public class UmbrellaNetworkClient extends NetworkClient implements MessageHandl
 
 	@Override
 	public Session newSession(Channel c) {
-		session = new DynamicSession(c, new UmbrellaProtocol(UmbrellaNetworkClient.class)) {
+		session = new DynamicSession(c, new UmbrellaProtocol(ClientMessageHandler.class)) {
 
 			@Override
 			public void onReady() {
@@ -49,7 +49,9 @@ public class UmbrellaNetworkClient extends NetworkClient implements MessageHandl
 	}
 
 	@Override
-	public void handle(DynamicSession session, Message message) {
-		System.out.println("[CLIENT-IN " + session + "]: " + message);
+	public void send(Message... messages) {
+		for (Message message : messages) {
+			session.send(message);;
+		}
 	}
 }

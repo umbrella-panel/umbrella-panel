@@ -7,5 +7,17 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>umbrellapanel-api</artifactId>
-	<name>IUmbrellaPanel-API</name>
+	<name>UmbrellaPanel-API</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.51</version>
+		</dependency>
+	</dependencies>
 </project>

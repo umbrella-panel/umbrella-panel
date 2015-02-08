@@ -6,23 +6,21 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import ms.idrea.umbreallapanel.core.net.UmbrellaProtocol;
-import ms.idrea.umbreallapanel.core.net.DynamicSession;
+import ms.idrea.umbrellapanel.core.net.DynamicSession;
+import ms.idrea.umbrellapanel.core.net.UmbrellaProtocol;
 
-import com.flowpowered.networking.Message;
-import com.flowpowered.networking.MessageHandler;
 import com.flowpowered.networking.NetworkServer;
 import com.flowpowered.networking.protocol.AbstractProtocol;
 import com.flowpowered.networking.protocol.ProtocolRegistry;
 import com.flowpowered.networking.session.Session;
 
-public class UmbrellaNetworkServer extends NetworkServer implements MessageHandler<DynamicSession, Message> {
+public class UmbrellaNetworkServer extends NetworkServer {
 
 	private ProtocolRegistry<AbstractProtocol> pr = new ProtocolRegistry<AbstractProtocol>();
 	private ConcurrentMap<InetSocketAddress, DynamicSession> sessions = new ConcurrentHashMap<InetSocketAddress, DynamicSession>();
 
 	public UmbrellaNetworkServer() {
-		bindAndRegister(new InetSocketAddress(3000), new UmbrellaProtocol(UmbrellaNetworkServer.class));
+		bindAndRegister(new InetSocketAddress(30000), new UmbrellaProtocol(ServerMessageHandler.class));
 	}
 
 	private void bindAndRegister(InetSocketAddress a, AbstractProtocol p) {
@@ -45,7 +43,10 @@ public class UmbrellaNetworkServer extends NetworkServer implements MessageHandl
 		sessions.remove(((DynamicSession) session).getAddress());
 	}
 
-	public void handle(DynamicSession session, Message message) {
-		System.out.println("[SERVER-IN " + session + "]: " + message);
+	public DynamicSession first() {
+		for (InetSocketAddress address : sessions.keySet()) {
+			return sessions.get(address);
+		}
+		return null;
 	}
 }

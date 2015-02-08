@@ -7,13 +7,16 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@ToString(callSuper = true)
+@ToString
 @AllArgsConstructor
-public class TextMessage implements Message {
+public class ManageGameServerMessage implements Message {
 
-	public TextMessage(String subChannel, String text) {
-		this(text);
+	public static enum Action {
+		DELETE,
+		START,
+		FORCE_STOP
 	}
 
-	private String text;
+	private int id;
+	private Action action;
 }
