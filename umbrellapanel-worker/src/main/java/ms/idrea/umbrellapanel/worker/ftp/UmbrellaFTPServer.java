@@ -1,13 +1,24 @@
 package ms.idrea.umbrellapanel.worker.ftp;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import ms.idrea.umbrellapanel.core.PanelUser;
+import ms.idrea.umbrellapanel.worker.UserRegistery;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.Authentication;
 import org.apache.ftpserver.ftplet.AuthenticationFailedException;
+import org.apache.ftpserver.ftplet.Authority;
+import org.apache.ftpserver.ftplet.AuthorizationRequest;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.FtpReply;
 import org.apache.ftpserver.ftplet.FtpRequest;
@@ -18,75 +29,32 @@ import org.apache.ftpserver.ftplet.FtpletResult;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.listener.ListenerFactory;
-import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.UsernamePasswordAuthentication;
+import org.apache.ftpserver.usermanager.impl.ConcurrentLoginRequest;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 public class UmbrellaFTPServer {
 
 	// 
 	
+	
+	public static void main(String... args) {
+		new UmbrellaFTPServer().start();
+		while (true)
+			;
+	}
+	
 	public void start() {
+		UserRegistery userRegistery = new UserRegistery();
+		
 		FtpServerFactory serverFactory = new FtpServerFactory();
 		ListenerFactory listener = new ListenerFactory();
 		listener.setPort(21);
 		serverFactory.addListener("default", listener.createListener());
 		
-		UserManager um = new UserManager() {
-			
-			@Override
-			public void save(User user) throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.save()");
-				// TODO Auto-generated method stub
-			}
-			
-			@Override
-			public boolean isAdmin(String login) throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.isAdmin()");
-				return false;
-			}
-			
-			@Override
-			public User getUserByName(String login) throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.getUserByName()");
-				// TODO Auto-generated method stub
-				return new BaseUser();
-			}
-			
-			@Override
-			public String[] getAllUserNames() throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.getAllUserNames()");
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public String getAdminName() throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.getAdminName()");
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-			@Override
-			public boolean doesExist(String login) throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.doesExist()");
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public void delete(String login) throws FtpException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.delete()");
-				// TODO Auto-generated method stub
-			}
-			
-			@Override
-			public User authenticate(Authentication authentication) throws AuthenticationFailedException {
-				System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.authenticate()");
-				System.out.println(authentication.toString());
-				return null;
-			}
-		};
+		userRegistery.update(new PanelUser("paul", "****"));
 		
-		serverFactory.setUserManager(um);
+		serverFactory.setUserManager(userRegistery);
 		
 		
 		Map<String, Ftplet> m = new HashMap<String, Ftplet>();
