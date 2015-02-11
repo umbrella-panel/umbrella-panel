@@ -3,6 +3,7 @@ package ms.idrea.umbrellapanel.worker.gameserver;
 import java.io.File;
 
 import lombok.Getter;
+import lombok.Setter;
 import ms.idrea.umbrellapanel.core.PanelUser;
 import ms.idrea.umbrellapanel.util.Address;
 import ms.idrea.umbrellapanel.worker.GameServer;
@@ -16,7 +17,10 @@ public class UmbrellaGameServer implements GameServer {
 	@Getter
 	private int id;
 	@Getter
+	@Setter
 	private Address address;
+	@Setter
+	private String startCommand;
 	@Getter
 	private int userId;
 	private UmbrellaServerContoller umbrellaServerContoller;
@@ -26,10 +30,11 @@ public class UmbrellaGameServer implements GameServer {
 	private ServerManager serverManager;
 	private UserRegistery userRegistery;
 
-	public UmbrellaGameServer(int id, int userId, Address address, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery) {
+	public UmbrellaGameServer(int id, int userId, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery) {
 		this.id = id;
 		this.userId = userId;
 		this.address = address;
+		this.startCommand = startCommand;
 		this.logHandler = logHandler;
 		this.serverManager = serverManager;
 	}
@@ -43,6 +48,12 @@ public class UmbrellaGameServer implements GameServer {
 			new File(workingDirectory.getParent()).mkdirs();
 		}
 		workingDirectory.mkdir();
+	}
+
+	@Override
+	public void delete() {
+		forceStop();
+		workingDirectory.delete();
 	}
 
 	@Override
@@ -78,13 +89,13 @@ public class UmbrellaGameServer implements GameServer {
 	}
 
 	@Override
-	public String getStartCommand() {
-		return "java -jar server.jar -h " + address.getIp() + " -p " + address.getPort(); // TODO
+	public PanelUser getPanelUser() {
+		return userRegistery.getPanelUser(userId);
 	}
 
 	@Override
-	public PanelUser getPanelUser() {
-		return userRegistery.getPanelUser(userId);
+	public String getStartCommand() {
+		return startCommand + " -h " + address.getHost() + " -p " + address.getPort();
 	}
 
 	protected void appendServerLog(String message) {

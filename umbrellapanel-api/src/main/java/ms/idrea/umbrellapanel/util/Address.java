@@ -10,6 +10,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class Address {
-	private String ip;
+
+	private String host;
 	private int port;
 }

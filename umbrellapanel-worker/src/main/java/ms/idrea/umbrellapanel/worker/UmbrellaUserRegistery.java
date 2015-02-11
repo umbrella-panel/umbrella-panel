@@ -24,7 +24,12 @@ import org.apache.ftpserver.usermanager.impl.WritePermission;
 
 public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 
+	private Worker worker;
 	private ConcurrentMap<Integer, MultiUser> users = new ConcurrentHashMap<>();
+
+	public UmbrellaUserRegistery(Worker worker) {
+		this.worker = worker;
+	}
 
 	@Override
 	public void update(PanelUser user) {
@@ -58,7 +63,7 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 	}
 
 	private void update(int id, String name, String password) {
-		users.put(id, new MultiUser(id, name, password));
+		users.put(id, new MultiUser(id, name, password, worker));
 	}
 
 	@Override
@@ -70,6 +75,7 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 				if (user == null) {
 					return null;
 				}
+				// make sure password + name are correct
 				if (user.getPassword().equals(usernamePasswordAuthentication.getPassword()) && user.getName().equals(usernamePasswordAuthentication.getUsername())) {
 					return user;
 				}
@@ -100,7 +106,7 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 	}
 
 	@Override
-	public void delete(String arg0) throws FtpException {
+	public void delete(String name) throws FtpException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -123,13 +129,12 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 			temp.add(new WritePermission());
 			DEFAULT_AUTHORITIES = Collections.unmodifiableList(temp);
 		}
-		
 		@Getter
-		private String homeDirectory;
+		private final String homeDirectory;
 
-		public MultiUser(int id, String name, String password) {
+		public MultiUser(int id, String name, String password, Worker worker) {
 			super(id, name, password);
-			homeDirectory = new File(UmbrellaWorker.getInstance().getServerManager().getGameServerDirectory(), String.valueOf(getId())).getAbsolutePath();
+			homeDirectory = new File(worker.getServerManager().getGameServerDirectory(), String.valueOf(getId())).getAbsolutePath();
 		}
 
 		@Override

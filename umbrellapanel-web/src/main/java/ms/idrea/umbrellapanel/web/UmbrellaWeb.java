@@ -5,13 +5,14 @@ import java.util.Scanner;
 import lombok.Getter;
 import ms.idrea.umbrellapanel.core.PanelUser;
 import ms.idrea.umbrellapanel.core.net.DynamicSession;
-import ms.idrea.umbrellapanel.core.net.messages.CreateGameServerMessage;
+import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage;
 import ms.idrea.umbrellapanel.core.net.messages.DispatchCommandMessage;
 import ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage;
 import ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage.Action;
 import ms.idrea.umbrellapanel.core.net.messages.UpdatePanelUserMessage;
 import ms.idrea.umbrellapanel.util.Address;
 import ms.idrea.umbrellapanel.web.net.UmbrellaNetworkServer;
+import ms.idrea.umbrellapanel.web.webservice.UmbrellaWebServer;
 
 public class UmbrellaWeb {
 	
@@ -24,11 +25,20 @@ public class UmbrellaWeb {
 	}
 	
 	// ---------------
+	@Getter
+	private UmbrellaWebServer webServer;
 	
 	private UmbrellaNetworkServer networkServer;
 	
 	private void start() {
 		networkServer = new UmbrellaNetworkServer();
+		webServer = new UmbrellaWebServer();
+		try {
+			webServer.start(new Address("*", 80));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		boolean b = true;
 		Scanner scanner = new Scanner(System.in);
@@ -48,15 +58,15 @@ public class UmbrellaWeb {
 	}
 	
 	public void a() {
-		DynamicSession session = networkServer.first();
+		DynamicSession session = null;;
 		
 		session.send(new UpdatePanelUserMessage(new PanelUser(0, "paul", "icanhaz")));
-		session.send(new CreateGameServerMessage(0, 0, new Address("0.0.0.0", 25565), false));
-		session.send(new ManageGameServerMessage(0, Action.START));
+		session.send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage.Action.CREATE, 0, 0, new Address("0.0.0.0", 25565), "java -jar server.jar"));
+		session.send(new ManageGameServerMessage(Action.START, 0));
 	}
 	
 	public void b() {
-		DynamicSession session = networkServer.first();
+		DynamicSession session = null;
 		session.send(new DispatchCommandMessage(0, "stop"));
 	}
 }

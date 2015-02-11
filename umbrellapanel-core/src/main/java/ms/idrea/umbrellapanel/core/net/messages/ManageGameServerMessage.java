@@ -17,6 +17,6 @@ public class ManageGameServerMessage implements Message {
 		FORCE_STOP
 	}
 
-	private int id;
 	private Action action;
+	private int id;
 }

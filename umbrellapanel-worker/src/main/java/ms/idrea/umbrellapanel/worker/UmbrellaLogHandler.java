@@ -25,7 +25,8 @@ public class UmbrellaLogHandler implements LogHandler {
 			logBuffer.put(log.getId(), new ArrayList<String>());
 		}
 		logBuffer.get(log.getId()).add(log.getMessage());
-		System.out.println("[" + log.getId() + "]: " + log.getMessage());
+		
+		worker.getLogger().fine("[" + log.getId() + "]: " + log.getMessage());
 	}
 
 	public void flush() {

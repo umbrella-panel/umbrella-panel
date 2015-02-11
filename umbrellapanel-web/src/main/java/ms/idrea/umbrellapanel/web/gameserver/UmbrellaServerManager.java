@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.worker.gameserver;
+package ms.idrea.umbrellapanel.web.gameserver;
 
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,15 +9,6 @@ import ms.idrea.umbrellapanel.worker.ServerManager;
 
 public class UmbrellaServerManager implements ServerManager {
 
-	// UmbrellaWeb -> UmbrellaWorker -> This -> (Commands)
-	// OnStartup -> UmbrellaWeb -> SERVERS TO MANAGE -> This
-	// 
-	// Messages:
-	// ManageGameServer -> Type (Create || Delete || Force-Stop)
-	// GameServerCommandMessage
-	// GameServerLogMessage
-	// 
-	// 
 	private ConcurrentMap<Integer, GameServer> servers = new ConcurrentHashMap<>();
 
 	@Override
@@ -47,8 +38,9 @@ public class UmbrellaServerManager implements ServerManager {
 
 	@Override
 	public void shutdown() {
+		// TODO send stop commands to all server!
 		for (int id : servers.keySet()) {
-			getServer(id).dispatchCommand("stop"); // TODO GameServer#getStopCommand()
+			getServer(id).dispatchCommand("stop");
 		}
 		while (true) {
 			boolean exit = true;

@@ -14,15 +14,16 @@ public class ManageGameServerMessageCodec implements Codec<ManageGameServerMessa
 
 	@Override
 	public ManageGameServerMessage decode(ByteBuf buf) throws IOException {
-		int id = buf.readInt();
 		String action = ByteBufUtils.readUTF8(buf);
-		return new ManageGameServerMessage(id, Action.valueOf(action));
+		int id = buf.readInt();
+		
+		return new ManageGameServerMessage(Action.valueOf(action), id);
 	}
 
 	@Override
 	public ByteBuf encode(ByteBuf buf, ManageGameServerMessage message) throws IOException {
-		buf.writeInt(message.getId());
 		ByteBufUtils.writeUTF8(buf, message.getAction().toString());
+		buf.writeInt(message.getId());
 		return buf;
 	}
 }
