@@ -1,5 +1,6 @@
 package ms.idrea.umbrellapanel.worker.gameserver;
 
+import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -65,5 +66,10 @@ public class UmbrellaServerManager implements ServerManager {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	@Override
+	public File getGameServerDirectory() {
+		return new File("servers"); // TODO: config
 	}
 }

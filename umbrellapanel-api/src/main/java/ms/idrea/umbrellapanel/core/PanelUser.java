@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PanelUser {
-	
+
+	private final int id;
 	private String name;
 	private String password;
-	
 }

@@ -4,10 +4,12 @@ import ms.idrea.umbrellapanel.core.net.codecs.CreateGameServerMessageCodec;
 import ms.idrea.umbrellapanel.core.net.codecs.DispatchCommandMessageCodec;
 import ms.idrea.umbrellapanel.core.net.codecs.LogMessageCodec;
 import ms.idrea.umbrellapanel.core.net.codecs.ManageGameServerMessageCodec;
+import ms.idrea.umbrellapanel.core.net.codecs.UpdatePanelUserMessageCodec;
 import ms.idrea.umbrellapanel.core.net.messages.CreateGameServerMessage;
 import ms.idrea.umbrellapanel.core.net.messages.DispatchCommandMessage;
 import ms.idrea.umbrellapanel.core.net.messages.LogMessage;
 import ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage;
+import ms.idrea.umbrellapanel.core.net.messages.UpdatePanelUserMessage;
 import io.netty.buffer.ByteBuf;
 
 import com.flowpowered.networking.Codec;
@@ -21,11 +23,12 @@ import com.flowpowered.networking.protocol.simple.SimpleProtocol;
 public class UmbrellaProtocol extends SimpleProtocol {
 
 	public UmbrellaProtocol(Class<? extends MessageHandler<DynamicSession, Message>> handler) {
-		super("UmbrellaProtocol", 4);
+		super("UmbrellaProtocol", 5);
 		registerMessage(LogMessage.class, LogMessageCodec.class, handler, null);
 		registerMessage(ManageGameServerMessage.class, ManageGameServerMessageCodec.class, handler, null);
 		registerMessage(CreateGameServerMessage.class, CreateGameServerMessageCodec.class, handler, null);
 		registerMessage(DispatchCommandMessage.class, DispatchCommandMessageCodec.class, handler, null);
+		registerMessage(UpdatePanelUserMessage.class, UpdatePanelUserMessageCodec.class, handler, null);
 	}
 
 	@Override

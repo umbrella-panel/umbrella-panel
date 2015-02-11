@@ -7,7 +7,9 @@ import ms.idrea.umbrellapanel.core.PanelUser;
 import ms.idrea.umbrellapanel.util.Address;
 import ms.idrea.umbrellapanel.worker.GameServer;
 import ms.idrea.umbrellapanel.worker.LogHandler;
-import ms.idrea.umbrellapanel.worker.gameserver.ServerContoller.ProcessState;
+import ms.idrea.umbrellapanel.worker.ServerManager;
+import ms.idrea.umbrellapanel.worker.UserRegistery;
+import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerContoller.ProcessState;
 
 public class UmbrellaGameServer implements GameServer {
 
@@ -16,25 +18,27 @@ public class UmbrellaGameServer implements GameServer {
 	@Getter
 	private Address address;
 	@Getter
-	private PanelUser panelUser;
-	private ServerContoller serverContoller;
+	private int userId;
+	private UmbrellaServerContoller umbrellaServerContoller;
 	@Getter
 	private File workingDirectory;
 	private LogHandler logHandler;
+	private ServerManager serverManager;
+	private UserRegistery userRegistery;
 
-	public UmbrellaGameServer(int id, PanelUser panelUser, Address address, LogHandler logHandler) {
+	public UmbrellaGameServer(int id, int userId, Address address, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery) {
 		this.id = id;
-		this.panelUser = panelUser;
+		this.userId = userId;
 		this.address = address;
 		this.logHandler = logHandler;
+		this.serverManager = serverManager;
 	}
 
 	@Override
 	public void setup() {
 		// TODO
-		// assign work dir
 		// download spigot
-		workingDirectory = new File("servers", String.valueOf(id));
+		workingDirectory = new File(new File(serverManager.getGameServerDirectory(), String.valueOf(userId)), String.valueOf(id)); // TODO better dir handling
 		if (workingDirectory.getParent() != null) {
 			new File(workingDirectory.getParent()).mkdirs();
 		}
@@ -46,7 +50,7 @@ public class UmbrellaGameServer implements GameServer {
 		if (isRunning()) {
 			return false;
 		}
-		serverContoller = new ServerContoller(this);
+		umbrellaServerContoller = new UmbrellaServerContoller(this);
 		return true;
 	}
 
@@ -55,7 +59,7 @@ public class UmbrellaGameServer implements GameServer {
 		if (!isRunning()) {
 			return false;
 		}
-		serverContoller.forceStop();
+		umbrellaServerContoller.forceStop();
 		return true;
 	}
 
@@ -64,18 +68,23 @@ public class UmbrellaGameServer implements GameServer {
 		if (!isRunning()) {
 			return false;
 		}
-		serverContoller.dispatchCommand(str);
+		umbrellaServerContoller.dispatchCommand(str);
 		return true;
 	}
 
 	@Override
 	public boolean isRunning() {
-		return serverContoller != null;
+		return umbrellaServerContoller != null;
 	}
 
 	@Override
 	public String getStartCommand() {
 		return "java -jar server.jar -h " + address.getIp() + " -p " + address.getPort(); // TODO
+	}
+
+	@Override
+	public PanelUser getPanelUser() {
+		return userRegistery.getPanelUser(userId);
 	}
 
 	protected void appendServerLog(String message) {
@@ -84,7 +93,7 @@ public class UmbrellaGameServer implements GameServer {
 
 	protected void updateProcessState(ProcessState state) {
 		if (state == ProcessState.STOPPED) {
-			serverContoller = null;
+			umbrellaServerContoller = null;
 		}
 	}
 }

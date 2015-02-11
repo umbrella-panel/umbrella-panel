@@ -13,4 +13,6 @@ public interface Worker {
 	public LogHandler getLogHandler();
 	
 	public ServerManager getServerManager();
+	
+	public UserRegistery getUserRegistery();
 }

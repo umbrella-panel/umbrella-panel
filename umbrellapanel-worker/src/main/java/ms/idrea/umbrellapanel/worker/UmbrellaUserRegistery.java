@@ -1,5 +1,6 @@
 package ms.idrea.umbrellapanel.worker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.Getter;
 import ms.idrea.umbrellapanel.core.PanelUser;
 
 import org.apache.ftpserver.ftplet.Authentication;
@@ -20,41 +22,47 @@ import org.apache.ftpserver.usermanager.UsernamePasswordAuthentication;
 import org.apache.ftpserver.usermanager.impl.ConcurrentLoginRequest;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 
-public class UserRegistery implements UserManager {
+public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 
-	private ConcurrentMap<String, MultiUser> users = new ConcurrentHashMap<>();
+	private ConcurrentMap<Integer, MultiUser> users = new ConcurrentHashMap<>();
 
+	@Override
 	public void update(PanelUser user) {
-		update(user.getName(), user.getPassword());
+		update(user.getId(), user.getName(), user.getPassword());
 	}
 
-	public void update(User user) {
-		update(user.getName(), user.getPassword());
+	@Override
+	public User getUser(int id) {
+		return getUser(id);
 	}
 
-	public User getUser(PanelUser user) {
-		update(user.getName(), user.getPassword());
-		return (User) get(user.getName());
+	@Override
+	public PanelUser getPanelUser(int id) {
+		return get(id);
 	}
 
-	public PanelUser getPanelUser(User user) {
-		update(user.getName(), user.getPassword());
-		return (PanelUser) get(user.getName());
+	@Override
+	public MultiUser get(int id) {
+		return users.get(id);
 	}
 
-	public MultiUser get(String name) {
-		return users.get(name);
+	@Override
+	public MultiUser getByName(String name) {
+		for (int id : users.keySet()) {
+			MultiUser o = get(id);
+			if (o.getName().equals(name)) {
+				return o;
+			}
+		}
+		return null;
 	}
 
-	private void update(String name, String password) {
-		users.put(name, new MultiUser(name, password));
+	private void update(int id, String name, String password) {
+		users.put(id, new MultiUser(id, name, password));
 	}
 
 	@Override
 	public User authenticate(Authentication authentication) throws AuthenticationFailedException {
-		System.out.println(users);
-		System.out.println("UmbrellaFTPServer.start().new UserManager() {...}.authenticate()");
-		System.out.println(authentication.toString());
 		if (authentication instanceof UsernamePasswordAuthentication) {
 			UsernamePasswordAuthentication usernamePasswordAuthentication = (UsernamePasswordAuthentication) authentication;
 			try {
@@ -83,7 +91,7 @@ public class UserRegistery implements UserManager {
 
 	@Override
 	public User getUserByName(String name) throws FtpException {
-		return get(name);
+		return getByName(name);
 	}
 
 	@Override
@@ -115,9 +123,13 @@ public class UserRegistery implements UserManager {
 			temp.add(new WritePermission());
 			DEFAULT_AUTHORITIES = Collections.unmodifiableList(temp);
 		}
+		
+		@Getter
+		private String homeDirectory;
 
-		public MultiUser(String name, String password) {
-			super(name, password);
+		public MultiUser(int id, String name, String password) {
+			super(id, name, password);
+			homeDirectory = new File(UmbrellaWorker.getInstance().getServerManager().getGameServerDirectory(), String.valueOf(getId())).getAbsolutePath();
 		}
 
 		@Override
@@ -148,11 +160,6 @@ public class UserRegistery implements UserManager {
 		@Override
 		public boolean getEnabled() {
 			return true;
-		}
-
-		@Override
-		public String getHomeDirectory() {
-			return ""; // TODO
 		}
 
 		@Override

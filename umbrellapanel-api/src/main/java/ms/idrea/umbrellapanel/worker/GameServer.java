@@ -9,6 +9,8 @@ public interface GameServer {
 	
 	public Address getAddress();
 	
+	public int getUserId();
+	
 	public PanelUser getPanelUser();
 	
 	/**

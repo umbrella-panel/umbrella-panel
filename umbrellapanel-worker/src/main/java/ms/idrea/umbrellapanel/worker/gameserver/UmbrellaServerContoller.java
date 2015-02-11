@@ -12,7 +12,7 @@ import lombok.Getter;
  * 
  * @author Paul
  */
-public class ServerContoller extends Thread {
+public class UmbrellaServerContoller extends Thread {
 
 	public static enum ProcessState {
 		PRE,
@@ -30,7 +30,7 @@ public class ServerContoller extends Thread {
 	@Getter
 	private ProcessState processState = ProcessState.PRE;
 
-	public ServerContoller(UmbrellaGameServer server) {
+	public UmbrellaServerContoller(UmbrellaGameServer server) {
 		this.server = server;
 		super.start();
 	}

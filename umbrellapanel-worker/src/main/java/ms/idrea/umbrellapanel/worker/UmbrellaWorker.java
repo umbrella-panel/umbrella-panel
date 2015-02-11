@@ -8,6 +8,7 @@ import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
 
+@Getter
 public class UmbrellaWorker implements Worker {
 	
 	@Getter
@@ -21,12 +22,11 @@ public class UmbrellaWorker implements Worker {
 	
 	// ---------------
 	
-	@Getter
 	private NetworkClient networkClient;
-	@Getter
 	private ServerManager serverManager;
-	@Getter
 	private LogHandler logHandler;
+	private UserRegistery userRegistery;
+	private FTPServer ftpServer;
 	
 	private boolean isStopping = false;
 	
@@ -41,12 +41,16 @@ public class UmbrellaWorker implements Worker {
 		}));
 		
 		// TODO config -> loading.. now..
+		userRegistery = new UmbrellaUserRegistery();
+		ftpServer = new UmbrellaFTPServer(this);
+		ftpServer.start();
 		logHandler = new UmbrellaLogHandler(this);
 		serverManager = new UmbrellaServerManager();
 		networkClient = new UmbrellaNetworkClient(new InetSocketAddress("localhost", 30000), new Runnable() {
 			
 			@Override
 			public void run() {
+				// GIVE ME YOUR USERS!!
 				// send Hello, here are we message with shared key
 				// send getServers message
 			}
@@ -72,6 +76,7 @@ public class UmbrellaWorker implements Worker {
 		}
 		isStopping = true;
 		System.out.println("Worker is stopping!");
+		ftpServer.shutdown();
 		networkClient.shutdown();
 		serverManager.shutdown();
 	}	

@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 
-import ms.idrea.umbrellapanel.core.PanelUser;
 import ms.idrea.umbrellapanel.core.net.messages.CreateGameServerMessage;
 import ms.idrea.umbrellapanel.util.Address;
 
@@ -16,19 +15,17 @@ public class CreateGameServerMessageCodec implements Codec<CreateGameServerMessa
 	@Override
 	public CreateGameServerMessage decode(ByteBuf buf) throws IOException {
 		int id = buf.readInt();
-		String name = ByteBufUtils.readUTF8(buf);
-		String password = ByteBufUtils.readUTF8(buf);
+		int userId = buf.readInt();
 		String ip = ByteBufUtils.readUTF8(buf);
 		int port = buf.readInt();
 		boolean noSetup = buf.readBoolean();
-		return new CreateGameServerMessage(id, new PanelUser(name, password), new Address(ip, port), noSetup);
+		return new CreateGameServerMessage(id, userId, new Address(ip, port), noSetup);
 	}
 
 	@Override
 	public ByteBuf encode(ByteBuf buf, CreateGameServerMessage message) throws IOException {
 		buf.writeInt(message.getId());
-		ByteBufUtils.writeUTF8(buf, message.getPanelUser().getName());
-		ByteBufUtils.writeUTF8(buf, message.getPanelUser().getPassword());
+		buf.writeInt(message.getUserId());
 		ByteBufUtils.writeUTF8(buf, message.getAddress().getIp());
 		buf.writeInt(message.getAddress().getPort());
 		buf.writeBoolean(message.isNoSetup());
