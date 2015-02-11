@@ -36,3 +36,4 @@ manifest.mf
 
 # other files
 *.log*
+*.properties
