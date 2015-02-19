@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import ms.idrea.umbrellapanel.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.PanelUser;
 
 import com.flowpowered.networking.Message;
 
@@ -13,5 +13,11 @@ import com.flowpowered.networking.Message;
 @AllArgsConstructor
 public class UpdatePanelUserMessage implements Message {
 
+	public static enum Action {
+		UPDATE,
+		DELETE;
+	}
+
+	private Action action;
 	private PanelUser panelUser;
 }

@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import ms.idrea.umbrellapanel.worker.Worker;
+import ms.idrea.umbrellapanel.api.worker.Worker;
+import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
 
 public class UmbrellaWorkerProperties implements WorkerProperties {
 

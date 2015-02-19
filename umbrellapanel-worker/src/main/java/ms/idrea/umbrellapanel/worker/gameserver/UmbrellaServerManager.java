@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import ms.idrea.umbrellapanel.worker.GameServer;
-import ms.idrea.umbrellapanel.worker.ServerManager;
+import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
+import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 
 public class UmbrellaServerManager implements ServerManager {
 
@@ -48,22 +48,13 @@ public class UmbrellaServerManager implements ServerManager {
 	@Override
 	public void shutdown() {
 		for (int id : servers.keySet()) {
-			getServer(id).dispatchCommand("stop"); // TODO GameServer#getStopCommand()
-		}
-		while (true) {
-			boolean exit = true;
-			for (int id : servers.keySet()) {
-				if (getServer(id).isRunning()) {
-					exit = false;
-					break;
+			GameServer gameServer = getServer(id);
+			if (gameServer.isRunning()) {
+				gameServer.dispatchCommand("stop"); // TODO GameServer#getStopCommand()
+				try {
+					gameServer.joinProcess();
+				} catch (Exception e) {
 				}
-			}
-			if (exit) {
-				break;
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (Exception e) {
 			}
 		}
 	}

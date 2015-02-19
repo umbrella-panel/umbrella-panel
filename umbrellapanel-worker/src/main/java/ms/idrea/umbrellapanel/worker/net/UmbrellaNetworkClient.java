@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 import lombok.Getter;
-
+import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.core.net.DynamicSession;
 import ms.idrea.umbrellapanel.core.net.UmbrellaProtocol;
 
@@ -14,13 +14,15 @@ import com.flowpowered.networking.Message;
 import com.flowpowered.networking.NetworkClient;
 import com.flowpowered.networking.session.Session;
 
-public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umbrellapanel.worker.net.NetworkClient {
+public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umbrellapanel.api.worker.net.NetworkClient {
 
 	@Getter
 	private DynamicSession session;
 	private final Runnable startup;
+	private Worker worker;
 
-	public UmbrellaNetworkClient(InetSocketAddress address, Runnable startup) {
+	public UmbrellaNetworkClient(Worker worker, InetSocketAddress address, Runnable startup) {
+		this.worker = worker;
 		this.startup = startup;
 		connect(address);
 	}
@@ -51,6 +53,7 @@ public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umb
 	@Override
 	public void send(Message... messages) {
 		for (Message message : messages) {
+			worker.getLogger().finest("[CLIENT-OUT " + session + "]: " + message);
 			session.send(message);;
 		}
 	}

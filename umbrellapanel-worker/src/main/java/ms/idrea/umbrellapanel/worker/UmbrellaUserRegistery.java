@@ -9,7 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import lombok.Getter;
-import ms.idrea.umbrellapanel.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.worker.UserRegistery;
+import ms.idrea.umbrellapanel.api.worker.Worker;
 
 import org.apache.ftpserver.ftplet.Authentication;
 import org.apache.ftpserver.ftplet.AuthenticationFailedException;
@@ -36,6 +38,11 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 		update(user.getId(), user.getName(), user.getPassword());
 	}
 
+	@Override
+	public void delete(PanelUser user) {
+		users.remove(user.getId());
+	}
+	
 	@Override
 	public User getUser(int id) {
 		return getUser(id);

@@ -3,8 +3,7 @@ package ms.idrea.umbrellapanel.core.net.messages;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-
-import ms.idrea.umbrellapanel.util.Address;
+import ms.idrea.umbrellapanel.api.util.Address;
 
 import com.flowpowered.networking.Message;
 

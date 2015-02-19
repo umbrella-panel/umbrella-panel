@@ -32,4 +32,9 @@ public class DynamicSession extends BasicSession {
 	public void onInboundThrowable(Throwable throwable) {
 		throwable.printStackTrace();
 	}
+	
+	@Override
+	public String toString() {
+		return getAddress().toString();
+	}
 }

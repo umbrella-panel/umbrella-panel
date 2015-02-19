@@ -1,15 +1,18 @@
 package ms.idrea.umbrellapanel.worker.gameserver;
 
 import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 
 import lombok.Getter;
 import lombok.Setter;
-import ms.idrea.umbrellapanel.core.PanelUser;
-import ms.idrea.umbrellapanel.util.Address;
-import ms.idrea.umbrellapanel.worker.GameServer;
-import ms.idrea.umbrellapanel.worker.LogHandler;
-import ms.idrea.umbrellapanel.worker.ServerManager;
-import ms.idrea.umbrellapanel.worker.UserRegistery;
+import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.util.Address;
+import ms.idrea.umbrellapanel.api.worker.LogHandler;
+import ms.idrea.umbrellapanel.api.worker.UserRegistery;
+import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
+import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerContoller.ProcessState;
 
 public class UmbrellaGameServer implements GameServer {
@@ -27,7 +30,6 @@ public class UmbrellaGameServer implements GameServer {
 	@Getter
 	private File workingDirectory;
 	private LogHandler logHandler;
-	private ServerManager serverManager;
 	private UserRegistery userRegistery;
 
 	public UmbrellaGameServer(int id, int userId, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery) {
@@ -36,14 +38,13 @@ public class UmbrellaGameServer implements GameServer {
 		this.address = address;
 		this.startCommand = startCommand;
 		this.logHandler = logHandler;
-		this.serverManager = serverManager;
+		workingDirectory = new File(new File(serverManager.getGameServerDirectory(), String.valueOf(userId)), String.valueOf(id));
 	}
 
 	@Override
 	public void setup() {
 		// TODO
 		// download spigot
-		workingDirectory = new File(new File(serverManager.getGameServerDirectory(), String.valueOf(userId)), String.valueOf(id)); // TODO better dir handling
 		if (workingDirectory.getParent() != null) {
 			new File(workingDirectory.getParent()).mkdirs();
 		}
@@ -53,7 +54,11 @@ public class UmbrellaGameServer implements GameServer {
 	@Override
 	public void delete() {
 		forceStop();
-		workingDirectory.delete();
+		try {
+			FileUtils.deleteDirectory(workingDirectory);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -98,6 +103,13 @@ public class UmbrellaGameServer implements GameServer {
 		return startCommand + " -h " + address.getHost() + " -p " + address.getPort();
 	}
 
+	@Override
+	public void joinProcess() throws InterruptedException {
+		if (umbrellaServerContoller != null) {
+			umbrellaServerContoller.join();
+		}
+	}
+	
 	protected void appendServerLog(String message) {
 		logHandler.append(id, message);
 	}

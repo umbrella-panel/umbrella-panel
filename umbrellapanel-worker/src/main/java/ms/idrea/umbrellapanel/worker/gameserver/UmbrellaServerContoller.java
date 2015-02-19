@@ -21,7 +21,6 @@ public class UmbrellaServerContoller extends Thread {
 		STOPPING
 	};
 
-	public static final String SAY_COMMAND = "say";
 	public static final String STOP_COMMAND = "stop";
 	private UmbrellaGameServer server;
 	private Process process;
@@ -31,13 +30,14 @@ public class UmbrellaServerContoller extends Thread {
 	private ProcessState processState = ProcessState.PRE;
 
 	public UmbrellaServerContoller(UmbrellaGameServer server) {
+		super("serverController-" + server.getId());
 		this.server = server;
 		super.start();
 	}
 
 	@Override
 	public void start() {
-		throw new UnsupportedOperationException("Cannot start ServerThreads");
+		throw new UnsupportedOperationException("Cannot start " + getClass().getSimpleName());
 	}
 
 	private void setState(ProcessState state) {

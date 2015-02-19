@@ -8,7 +8,7 @@
 	<name>UmbrellaPanel</name>
 	<modules>
 		<module>umbrellapanel-core</module>
-		<module>umbrellapanel-web</module>
+		<module>umbrellapanel-chief</module>
 		<module>umbrellapanel-worker</module>
 		<module>umbrellapanel-api</module>
 	</modules>

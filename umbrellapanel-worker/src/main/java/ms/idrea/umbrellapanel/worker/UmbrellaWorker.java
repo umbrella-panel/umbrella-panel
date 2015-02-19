@@ -6,14 +6,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import lombok.Getter;
-
+import ms.idrea.umbrellapanel.api.util.LoggerHelper;
+import ms.idrea.umbrellapanel.api.worker.FTPServer;
+import ms.idrea.umbrellapanel.api.worker.LogHandler;
+import ms.idrea.umbrellapanel.api.worker.UserRegistery;
+import ms.idrea.umbrellapanel.api.worker.Worker;
+import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
+import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
+import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.core.net.messages.WorkerMessage;
 import ms.idrea.umbrellapanel.core.net.messages.WorkerMessage.Action;
-import ms.idrea.umbrellapanel.util.LoggerHelper;
 import ms.idrea.umbrellapanel.worker.conf.UmbrellaWorkerProperties;
-import ms.idrea.umbrellapanel.worker.conf.WorkerProperties;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerManager;
-import ms.idrea.umbrellapanel.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
 
 @Getter
@@ -36,14 +40,15 @@ public class UmbrellaWorker implements Worker {
 	private UserRegistery userRegistery;
 	private FTPServer ftpServer;
 	private WorkerProperties workerProperties;
-	
-	private boolean isStopping = false;
+	private boolean isRunning;
 	
 	// loadup the good stuffzz
 	public void start() {
 		logger = Logger.getLogger("UmbrellaWorker");
 		LoggerHelper.setConsoleLogger(logger, Level.FINEST); // -> INFO
 		LoggerHelper.setFileLogger(logger, Level.ALL, "UmbrellaWorker.log");
+		
+		isRunning = true;
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			
@@ -61,7 +66,7 @@ public class UmbrellaWorker implements Worker {
 		ftpServer.start();
 		logHandler = new UmbrellaLogHandler(this);
 		serverManager = new UmbrellaServerManager();
-		networkClient = new UmbrellaNetworkClient(new InetSocketAddress("localhost", 30000), new Runnable() {
+		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress("localhost", 30000), new Runnable() {
 			
 			@Override
 			public void run() {
@@ -89,14 +94,20 @@ public class UmbrellaWorker implements Worker {
 	}
 	
 	public void shutdown() {
-		if (isStopping) {
+		if (!isRunning) {
 			return;
 		}
-		isStopping = true;
+		isRunning = false;
 		logger.info("Worker is stopping!");
+		serverManager.shutdown();
+		logHandler.shutdown();
+		
+		
+		networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
+		
 		workerProperties.save();
 		ftpServer.shutdown();
 		networkClient.shutdown();
-		serverManager.shutdown();
+		
 	}	
 }

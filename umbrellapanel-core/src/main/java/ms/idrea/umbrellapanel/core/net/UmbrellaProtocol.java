@@ -24,7 +24,7 @@ import com.flowpowered.networking.protocol.simple.SimpleProtocol;
 
 public class UmbrellaProtocol extends SimpleProtocol {
 
-	public UmbrellaProtocol(Class<? extends MessageHandler<DynamicSession, Message>> handler) {
+	public UmbrellaProtocol(Class<? extends MessageHandler<? extends DynamicSession, Message>> handler) {
 		super("UmbrellaProtocol", 6);
 		registerMessage(LogMessage.class, LogMessageCodec.class, handler, null);
 		registerMessage(ManageGameServerMessage.class, ManageGameServerMessageCodec.class, handler, null);

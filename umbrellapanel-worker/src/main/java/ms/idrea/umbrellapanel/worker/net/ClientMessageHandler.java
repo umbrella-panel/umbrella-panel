@@ -1,12 +1,12 @@
 package ms.idrea.umbrellapanel.worker.net;
 
-import ms.idrea.umbrellapanel.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.worker.Worker;
+import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
 import ms.idrea.umbrellapanel.core.net.DynamicSession;
 import ms.idrea.umbrellapanel.core.net.messages.*;
 import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage.Action;
-import ms.idrea.umbrellapanel.worker.GameServer;
 import ms.idrea.umbrellapanel.worker.UmbrellaWorker;
-import ms.idrea.umbrellapanel.worker.Worker;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaGameServer;
 
 import com.flowpowered.networking.Message;
@@ -70,7 +70,16 @@ public class ClientMessageHandler implements MessageHandler<DynamicSession, Mess
 				server.dispatchCommand(message.getCommand());
 			} else if (rawMessage instanceof UpdatePanelUserMessage) {
 				UpdatePanelUserMessage message = (UpdatePanelUserMessage) rawMessage;
-				worker.getUserRegistery().update(message.getPanelUser());
+				switch (message.getAction()) {
+					case DELETE:
+						worker.getUserRegistery().delete(message.getPanelUser());
+						break;
+					case UPDATE:
+						worker.getUserRegistery().update(message.getPanelUser());
+						break;
+					default:
+						throw new UnsupportedOperationException();
+				}
 			} else if (rawMessage instanceof WorkerMessage) {
 				WorkerMessage message = (WorkerMessage) rawMessage;
 				switch (message.getAction()) {
