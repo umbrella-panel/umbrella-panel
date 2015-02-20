@@ -3,8 +3,6 @@ package ms.idrea.umbrellapanel.worker.gameserver;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
-
 import lombok.Getter;
 import lombok.Setter;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
@@ -17,6 +15,8 @@ import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage;
 import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage.Status;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerContoller.ProcessState;
+
+import org.apache.commons.io.FileUtils;
 
 public class UmbrellaGameServer implements GameServer {
 

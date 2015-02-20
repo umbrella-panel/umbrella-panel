@@ -1,9 +1,9 @@
 package ms.idrea.umbrellapanel.api.chief.gameserver;
 
-import com.flowpowered.networking.session.Session;
-
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
+
+import com.flowpowered.networking.session.Session;
 
 public interface GameServer {
 
@@ -28,7 +28,7 @@ public interface GameServer {
 	public boolean dispatchCommand(String str);
 
 	public void setRunning(boolean running);
-	
+
 	public boolean isRunning();
 
 	public String getStartCommand();

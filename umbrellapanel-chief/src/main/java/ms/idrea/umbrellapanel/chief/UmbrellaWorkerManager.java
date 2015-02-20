@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.flowpowered.networking.session.Session;
-
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.chief.net.Worker;
+
+import com.flowpowered.networking.session.Session;
 
 public class UmbrellaWorkerManager implements WorkerManager {
 
@@ -20,14 +20,17 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	private List<Worker> workerList = null;
 	private int nextId = 0;
 
+	@Override
 	public OfflineWorker getWorker(int id) {
 		return workers.get(id);
 	}
 
+	@Override
 	public Worker getRunningWorker(int id) {
 		return runningWorkers.get(id);
 	}
 
+	@Override
 	public List<Worker> getAllWorkers() {
 		buildCache();
 		return workerList;

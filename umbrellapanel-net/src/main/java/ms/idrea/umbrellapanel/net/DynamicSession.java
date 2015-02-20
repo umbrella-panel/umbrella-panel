@@ -1,9 +1,9 @@
 package ms.idrea.umbrellapanel.net;
 
-import com.flowpowered.networking.Message;
-import com.flowpowered.networking.MessageHandler;
 import io.netty.channel.Channel;
 
+import com.flowpowered.networking.Message;
+import com.flowpowered.networking.MessageHandler;
 import com.flowpowered.networking.protocol.AbstractProtocol;
 import com.flowpowered.networking.session.BasicSession;
 
@@ -32,7 +32,7 @@ public class DynamicSession extends BasicSession {
 	public void onInboundThrowable(Throwable throwable) {
 		throwable.printStackTrace();
 	}
-	
+
 	@Override
 	public String toString() {
 		return getAddress().toString();

@@ -1,5 +1,6 @@
 package ms.idrea.umbrellapanel.net;
 
+import io.netty.buffer.ByteBuf;
 import ms.idrea.umbrellapanel.net.codecs.DispatchCommandMessageCodec;
 import ms.idrea.umbrellapanel.net.codecs.GameServerStatusMessageCodec;
 import ms.idrea.umbrellapanel.net.codecs.LogMessageCodec;
@@ -14,7 +15,6 @@ import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
-import io.netty.buffer.ByteBuf;
 
 import com.flowpowered.networking.Codec;
 import com.flowpowered.networking.Codec.CodecRegistration;

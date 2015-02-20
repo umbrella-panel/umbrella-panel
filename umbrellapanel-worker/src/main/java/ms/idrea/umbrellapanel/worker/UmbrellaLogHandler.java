@@ -48,10 +48,12 @@ public class UmbrellaLogHandler extends Thread implements LogHandler {
 		}
 	}
 
+	@Override
 	public void append(int id, String message) {
 		append(new ServerLog(id, message));
 	}
 
+	@Override
 	public synchronized void append(ServerLog log) {
 		if (logBuffer.get(log.getId()) == null) {
 			logBuffer.put(log.getId(), new ArrayList<String>());
@@ -60,6 +62,7 @@ public class UmbrellaLogHandler extends Thread implements LogHandler {
 		worker.getLogger().fine("[" + log.getId() + "]: " + log.getMessage());
 	}
 
+	@Override
 	public synchronized void flush() {
 		for (int id : logBuffer.keySet()) {
 			worker.getNetworkClient().send(new LogMessage(id, logBuffer.get(id)));

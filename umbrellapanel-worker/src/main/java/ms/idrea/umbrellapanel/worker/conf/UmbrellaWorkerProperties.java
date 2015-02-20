@@ -18,11 +18,11 @@ public class UmbrellaWorkerProperties implements WorkerProperties {
 			return toString().toLowerCase();
 		}
 	}
-	
+
 	private Properties properties;
 	private File file;
 	private Worker worker;
-	
+
 	public UmbrellaWorkerProperties(Worker worker) {
 		this.worker = worker;
 	}
@@ -59,7 +59,7 @@ public class UmbrellaWorkerProperties implements WorkerProperties {
 			worker.getLogger().warning(e.getMessage());
 		}
 	}
-	
+
 	private String getString(Key key, String defaultValue) {
 		String value = (String) properties.get(key.toPath());
 		return value != null ? value : defaultValue;

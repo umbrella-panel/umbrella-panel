@@ -7,7 +7,7 @@ import ms.idrea.umbrellapanel.api.core.PanelUser;
 public interface PanelUserDatabase {
 
 	public PanelUser createUser(String name, String password);
-	
+
 	public void updateUser(PanelUser user);
 
 	public void deleteUser(PanelUser user);

@@ -15,6 +15,7 @@ public class LoggerHelper {
 	private static final SimpleDateFormat COMMON_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");;
 	private static final Formatter COMMON_FORMATER = new Formatter() {
 
+		@Override
 		public String format(LogRecord record) {
 			return new StringBuilder().append('[').append(COMMON_DATE_FORMAT.format(new Date())).append(' ').append(Thread.currentThread().getName()).append('/').append(record.getLevel()).append("] ").append(record.getMessage()).append("\n").toString();
 		}

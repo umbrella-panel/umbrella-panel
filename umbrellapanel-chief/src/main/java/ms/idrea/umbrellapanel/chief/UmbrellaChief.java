@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import lombok.Getter;
-
 import ms.idrea.umbrellapanel.api.chief.Chief;
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
@@ -66,7 +65,6 @@ public class UmbrellaChief implements Chief {
 			String[] temp = cmd.split(" ");
 			String base = temp[0];
 			String[] args = Arrays.copyOfRange(temp, 1, temp.length);
-			
 			if (base.equalsIgnoreCase("adduser")) {
 				PanelUser user = panelUserDatabase.createUser(args[0], args[1]);
 				System.out.println(user);
@@ -99,22 +97,20 @@ public class UmbrellaChief implements Chief {
 				server.dispatchCommand(s.substring(0, s.length() - 1));
 				System.out.println("OK");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	/*	
-		PanelUser user = panelUserDatabase.createUser("paul", "icanhaz");
-		GameServer gameServer = serverManager.createServer(user, new Address("0.0.0.0", 25565), "java -jar server.jar", ((List<Worker>) workerManager.getAllWorkers()).get(0).getId()); // \o/
-		gameServer.start();
-		try {
-			Thread.sleep(5000 * 10);
-		} catch (Exception e) {
-			
-		}
-		gameServer.dispatchCommand("stop");
-		System.out.println(gameServer.toString());
-		*/
+		/*	
+			PanelUser user = panelUserDatabase.createUser("paul", "icanhaz");
+			GameServer gameServer = serverManager.createServer(user, new Address("0.0.0.0", 25565), "java -jar server.jar", ((List<Worker>) workerManager.getAllWorkers()).get(0).getId()); // \o/
+			gameServer.start();
+			try {
+				Thread.sleep(5000 * 10);
+			} catch (Exception e) {
+				
+			}
+			gameServer.dispatchCommand("stop");
+			System.out.println(gameServer.toString());
+			*/
 	}
 }

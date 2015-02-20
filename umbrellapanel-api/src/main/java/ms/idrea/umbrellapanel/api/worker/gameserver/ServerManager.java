@@ -11,8 +11,8 @@ public interface ServerManager {
 	public void addServer(GameServer server);
 
 	public void createServer(GameServer server);
-	
+
 	public void deleteServer(GameServer server);
-	
+
 	public void shutdown();
 }

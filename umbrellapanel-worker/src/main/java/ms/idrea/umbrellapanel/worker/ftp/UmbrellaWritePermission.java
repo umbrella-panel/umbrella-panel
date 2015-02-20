@@ -9,7 +9,7 @@ import org.apache.ftpserver.usermanager.impl.WriteRequest;
 public class UmbrellaWritePermission extends WritePermission {
 
 	public static final Pattern ALLOWED_FILES = Pattern.compile("\\/\\d+.*", Pattern.DOTALL);
-	
+
 	@Override
 	public AuthorizationRequest authorize(final AuthorizationRequest request) {
 		if (request instanceof WriteRequest) {

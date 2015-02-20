@@ -23,7 +23,7 @@ import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
 
 @Getter
 public class UmbrellaWorker implements Worker {
-	
+
 	@Getter
 	private static Worker instance;
 
@@ -31,9 +31,8 @@ public class UmbrellaWorker implements Worker {
 		instance = new UmbrellaWorker();
 		instance.start();
 	}
-	
+
 	// ---------------
-	
 	private Logger logger;
 	private NetworkClient networkClient;
 	private ServerManager serverManager;
@@ -42,33 +41,30 @@ public class UmbrellaWorker implements Worker {
 	private FTPServer ftpServer;
 	private WorkerProperties workerProperties;
 	private boolean isRunning;
-	
+
 	// loadup the good stuffzz
+	@Override
 	public void start() {
 		logger = Logger.getLogger("UmbrellaWorker");
 		LoggerHelper.setConsoleLogger(logger, Level.FINEST); // -> INFO
 		LoggerHelper.setFileLogger(logger, Level.ALL, "UmbrellaWorker.log");
-		
 		isRunning = true;
-		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				shutdown();
 			}
 		}));
-		
 		workerProperties = new UmbrellaWorkerProperties(this);
 		workerProperties.load();
-		
 		userRegistery = new UmbrellaUserRegistery(this);
 		ftpServer = new UmbrellaFTPServer(this);
 		ftpServer.start();
 		logHandler = new UmbrellaLogHandler(this);
 		serverManager = new UmbrellaServerManager();
 		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress("localhost", 30000), new Runnable() {
-			
+
 			@Override
 			public void run() {
 				if (workerProperties.getWorkerId() == -1) {
@@ -79,21 +75,19 @@ public class UmbrellaWorker implements Worker {
 				// the umbrella server should now send all the data.
 			}
 		});
-		
 		Scanner scanner = new Scanner(System.in);
 		String input;
-		
 		while ((input = scanner.next()) != null) {
 			if (input.equalsIgnoreCase("exit")) {
 				break;
 			}
 			logger.info("Type \"exit\" to exit the program!");
 		}
-		
 		scanner.close();
 		shutdown();
 	}
-	
+
+	@Override
 	public void shutdown() {
 		if (!isRunning) {
 			return;
@@ -102,13 +96,9 @@ public class UmbrellaWorker implements Worker {
 		logger.info("Worker is stopping!");
 		serverManager.shutdown();
 		logHandler.shutdown();
-		
-		
 		networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
-		
 		workerProperties.save();
 		ftpServer.shutdown();
 		networkClient.shutdown();
-		
-	}	
+	}
 }

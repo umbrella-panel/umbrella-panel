@@ -10,7 +10,7 @@ import com.flowpowered.networking.Message;
 @ToString
 @AllArgsConstructor
 public class DispatchCommandMessage implements Message {
-	
+
 	private int id;
 	private String command;
 }

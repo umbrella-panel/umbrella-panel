@@ -16,7 +16,6 @@ public class ManageGameServerMessageCodec implements Codec<ManageGameServerMessa
 	public ManageGameServerMessage decode(ByteBuf buf) throws IOException {
 		String action = ByteBufUtils.readUTF8(buf);
 		int id = buf.readInt();
-		
 		return new ManageGameServerMessage(Action.valueOf(action), id);
 	}
 

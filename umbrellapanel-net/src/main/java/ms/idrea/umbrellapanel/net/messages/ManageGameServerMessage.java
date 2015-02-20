@@ -1,10 +1,10 @@
 package ms.idrea.umbrellapanel.net.messages;
 
-import com.flowpowered.networking.Message;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+
+import com.flowpowered.networking.Message;
 
 @Getter
 @ToString

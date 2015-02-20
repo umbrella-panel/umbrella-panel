@@ -22,7 +22,7 @@ import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.usermanager.UsernamePasswordAuthentication;
-import org.apache.ftpserver.usermanager.impl.*;
+import org.apache.ftpserver.usermanager.impl.ConcurrentLoginPermission;
 
 public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 

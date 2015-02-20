@@ -23,7 +23,7 @@ public class UpdateGameServerMessageCodec implements Codec<UpdateGameServerMessa
 		String startCommand = ByteBufUtils.readUTF8(buf);
 		return new UpdateGameServerMessage(Action.valueOf(action), id, userId, new Address(ip, port), startCommand);
 	}
-	
+
 	@Override
 	public ByteBuf encode(ByteBuf buf, UpdateGameServerMessage message) throws IOException {
 		ByteBufUtils.writeUTF8(buf, message.getAction().toString());

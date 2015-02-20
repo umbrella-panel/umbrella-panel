@@ -16,6 +16,6 @@ public interface UserRegistery extends UserManager {
 	public PanelUser getPanelUser(int id);
 
 	public Object get(int id);
-	
+
 	public PanelUser getByName(String name);
 }

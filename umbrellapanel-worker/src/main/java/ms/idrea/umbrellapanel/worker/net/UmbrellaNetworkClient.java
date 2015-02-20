@@ -33,8 +33,9 @@ public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umb
 
 			@Override
 			public void onReady() {
-				if (startup != null)
+				if (startup != null) {
 					startup.run();
+				}
 			}
 		};
 		return session;
