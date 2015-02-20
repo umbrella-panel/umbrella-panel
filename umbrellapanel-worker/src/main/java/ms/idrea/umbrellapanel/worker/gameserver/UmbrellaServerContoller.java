@@ -46,9 +46,11 @@ public class UmbrellaServerContoller extends Thread {
 	}
 
 	public void forceStop() {
-		if (process != null)
+		if (process != null) {
 			process.destroy();
-		setState(ProcessState.STOPPED);
+		} else {
+			setState(ProcessState.STOPPED);
+		}
 	}
 
 	public void softStop() {

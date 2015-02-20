@@ -1,5 +1,7 @@
 package ms.idrea.umbrellapanel.api.chief;
 
+import java.util.List;
+
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 
 public interface PanelUserDatabase {
@@ -13,4 +15,6 @@ public interface PanelUserDatabase {
 	public PanelUser getUser(int id);
 
 	public int getNextId();
+
+	public List<PanelUser> getAllUsers();
 }

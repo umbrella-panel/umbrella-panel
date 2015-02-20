@@ -6,8 +6,8 @@
 		<artifactId>umbrellapanel</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>umbrellapanel-core</artifactId>
-	<name>UmbrellaPanel-Core</name>
+	<artifactId>umbrellapanel-net</artifactId>
+	<name>UmbrellaPanel-Net</name>
 	<dependencies>
 		<dependency>
 			<groupId>ms.idrea</groupId>

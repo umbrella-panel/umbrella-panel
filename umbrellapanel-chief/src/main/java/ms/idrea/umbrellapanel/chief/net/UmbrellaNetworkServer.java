@@ -7,8 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
-import ms.idrea.umbrellapanel.core.net.DynamicSession;
-import ms.idrea.umbrellapanel.core.net.UmbrellaProtocol;
+import ms.idrea.umbrellapanel.net.UmbrellaProtocol;
 
 import com.flowpowered.networking.Message;
 import com.flowpowered.networking.NetworkServer;

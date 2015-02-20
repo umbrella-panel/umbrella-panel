@@ -27,6 +27,8 @@ public interface GameServer {
 
 	public boolean dispatchCommand(String str);
 
+	public void setRunning(boolean running);
+	
 	public boolean isRunning();
 
 	public String getStartCommand();

@@ -1,17 +1,19 @@
-package ms.idrea.umbrellapanel.core.net;
+package ms.idrea.umbrellapanel.net;
 
-import ms.idrea.umbrellapanel.core.net.codecs.UpdateGameServerMessageCodec;
-import ms.idrea.umbrellapanel.core.net.codecs.DispatchCommandMessageCodec;
-import ms.idrea.umbrellapanel.core.net.codecs.LogMessageCodec;
-import ms.idrea.umbrellapanel.core.net.codecs.ManageGameServerMessageCodec;
-import ms.idrea.umbrellapanel.core.net.codecs.UpdatePanelUserMessageCodec;
-import ms.idrea.umbrellapanel.core.net.codecs.WorkerMessageCodec;
-import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage;
-import ms.idrea.umbrellapanel.core.net.messages.DispatchCommandMessage;
-import ms.idrea.umbrellapanel.core.net.messages.LogMessage;
-import ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage;
-import ms.idrea.umbrellapanel.core.net.messages.UpdatePanelUserMessage;
-import ms.idrea.umbrellapanel.core.net.messages.WorkerMessage;
+import ms.idrea.umbrellapanel.net.codecs.DispatchCommandMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.GameServerStatusMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.LogMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.ManageGameServerMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.UpdateGameServerMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.UpdatePanelUserMessageCodec;
+import ms.idrea.umbrellapanel.net.codecs.WorkerMessageCodec;
+import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
+import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage;
+import ms.idrea.umbrellapanel.net.messages.LogMessage;
+import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
+import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
+import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
+import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
 import io.netty.buffer.ByteBuf;
 
 import com.flowpowered.networking.Codec;
@@ -25,13 +27,14 @@ import com.flowpowered.networking.protocol.simple.SimpleProtocol;
 public class UmbrellaProtocol extends SimpleProtocol {
 
 	public UmbrellaProtocol(Class<? extends MessageHandler<? extends DynamicSession, Message>> handler) {
-		super("UmbrellaProtocol", 6);
+		super("UmbrellaProtocol", 7);
 		registerMessage(LogMessage.class, LogMessageCodec.class, handler, null);
 		registerMessage(ManageGameServerMessage.class, ManageGameServerMessageCodec.class, handler, null);
 		registerMessage(UpdateGameServerMessage.class, UpdateGameServerMessageCodec.class, handler, null);
 		registerMessage(DispatchCommandMessage.class, DispatchCommandMessageCodec.class, handler, null);
 		registerMessage(UpdatePanelUserMessage.class, UpdatePanelUserMessageCodec.class, handler, null);
 		registerMessage(WorkerMessage.class, WorkerMessageCodec.class, handler, null);
+		registerMessage(GameServerStatusMessage.class, GameServerStatusMessageCodec.class, handler, null);
 	}
 
 	@Override

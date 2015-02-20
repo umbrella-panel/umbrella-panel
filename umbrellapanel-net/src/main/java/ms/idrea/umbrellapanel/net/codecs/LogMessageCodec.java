@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.core.net.codecs;
+package ms.idrea.umbrellapanel.net.codecs;
 
 import io.netty.buffer.ByteBuf;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ms.idrea.umbrellapanel.core.net.messages.LogMessage;
+import ms.idrea.umbrellapanel.net.messages.LogMessage;
 
 import com.flowpowered.networking.Codec;
 import com.flowpowered.networking.util.ByteBufUtils;

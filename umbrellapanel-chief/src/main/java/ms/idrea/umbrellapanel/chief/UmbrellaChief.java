@@ -1,10 +1,10 @@
 package ms.idrea.umbrellapanel.chief;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import lombok.Getter;
+
 import ms.idrea.umbrellapanel.api.chief.Chief;
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
@@ -15,7 +15,6 @@ import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
-import ms.idrea.umbrellapanel.chief.net.Worker;
 
 @Getter
 public class UmbrellaChief implements Chief {

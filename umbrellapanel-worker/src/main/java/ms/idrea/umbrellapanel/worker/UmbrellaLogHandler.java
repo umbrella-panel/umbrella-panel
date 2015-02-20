@@ -7,7 +7,7 @@ import java.util.Map;
 
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
 import ms.idrea.umbrellapanel.api.worker.Worker;
-import ms.idrea.umbrellapanel.core.net.messages.LogMessage;
+import ms.idrea.umbrellapanel.net.messages.LogMessage;
 
 public class UmbrellaLogHandler extends Thread implements LogHandler {
 

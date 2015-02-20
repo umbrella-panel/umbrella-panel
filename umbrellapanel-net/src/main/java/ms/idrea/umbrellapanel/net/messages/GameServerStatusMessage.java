@@ -1,6 +1,4 @@
-package ms.idrea.umbrellapanel.core.net.messages;
-
-import java.util.List;
+package ms.idrea.umbrellapanel.net.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +9,13 @@ import com.flowpowered.networking.Message;
 @Getter
 @ToString
 @AllArgsConstructor
-public class LogMessage implements Message {
+public class GameServerStatusMessage implements Message {
+
+	public static enum Status {
+		RUNNING,
+		STOPPED
+	}
 
 	private int id;
-	private List<String> lines;
+	private Status status;
 }

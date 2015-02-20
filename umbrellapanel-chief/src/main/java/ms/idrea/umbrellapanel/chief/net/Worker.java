@@ -2,7 +2,7 @@ package ms.idrea.umbrellapanel.chief.net;
 
 import io.netty.channel.Channel;
 import lombok.Getter;
-import ms.idrea.umbrellapanel.core.net.DynamicSession;
+import ms.idrea.umbrellapanel.net.DynamicSession;
 
 import com.flowpowered.networking.protocol.AbstractProtocol;
 

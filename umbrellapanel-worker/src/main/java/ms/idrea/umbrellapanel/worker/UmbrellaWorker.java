@@ -14,9 +14,10 @@ import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
-import ms.idrea.umbrellapanel.core.net.messages.WorkerMessage;
-import ms.idrea.umbrellapanel.core.net.messages.WorkerMessage.Action;
+import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
+import ms.idrea.umbrellapanel.net.messages.WorkerMessage.Action;
 import ms.idrea.umbrellapanel.worker.conf.UmbrellaWorkerProperties;
+import ms.idrea.umbrellapanel.worker.ftp.UmbrellaFTPServer;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
 

@@ -1,13 +1,15 @@
 package ms.idrea.umbrellapanel.chief;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
-import ms.idrea.umbrellapanel.core.net.messages.UpdatePanelUserMessage;
-import ms.idrea.umbrellapanel.core.net.messages.UpdatePanelUserMessage.Action;
+import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
+import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage.Action;
 
 import com.flowpowered.networking.Message;
 
@@ -23,7 +25,16 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 
 	@Override
 	public synchronized int getNextId() {
-		return nextId ++;
+		return nextId++;
+	}
+
+	@Override
+	public List<PanelUser> getAllUsers() {
+		List<PanelUser> list = new ArrayList<>();
+		for (Integer id : users.keySet()) {
+			list.add(getUser(id));
+		}
+		return list;
 	}
 
 	@Override

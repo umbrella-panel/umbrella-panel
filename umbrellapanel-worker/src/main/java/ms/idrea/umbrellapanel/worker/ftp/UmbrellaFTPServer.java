@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.worker;
+package ms.idrea.umbrellapanel.worker.ftp;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -12,6 +12,7 @@ import lombok.Getter;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.worker.UserRegistery;
 import ms.idrea.umbrellapanel.api.worker.Worker;
+import ms.idrea.umbrellapanel.worker.ftp.UmbrellaWritePermission;
 
 import org.apache.ftpserver.ftplet.Authentication;
 import org.apache.ftpserver.ftplet.AuthenticationFailedException;
@@ -21,8 +22,7 @@ import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.apache.ftpserver.usermanager.UsernamePasswordAuthentication;
-import org.apache.ftpserver.usermanager.impl.ConcurrentLoginRequest;
-import org.apache.ftpserver.usermanager.impl.WritePermission;
+import org.apache.ftpserver.usermanager.impl.*;
 
 public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 
@@ -42,7 +42,7 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 	public void delete(PanelUser user) {
 		users.remove(user.getId());
 	}
-	
+
 	@Override
 	public User getUser(int id) {
 		return getUser(id);
@@ -132,8 +132,8 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 		public static final List<Authority> DEFAULT_AUTHORITIES;
 		static {
 			List<Authority> temp = new LinkedList<>();
-			// TODO MORE
-			temp.add(new WritePermission());
+			temp.add(new UmbrellaWritePermission());
+			temp.add(new ConcurrentLoginPermission(20, 2));
 			DEFAULT_AUTHORITIES = Collections.unmodifiableList(temp);
 		}
 		@Getter
@@ -146,11 +146,22 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 
 		@Override
 		public AuthorizationRequest authorize(AuthorizationRequest request) {
-			if (request instanceof ConcurrentLoginRequest) {
-				return request;
+			boolean someoneCouldAuthorize = false;
+			for (Authority authority : DEFAULT_AUTHORITIES) {
+				if (authority.canAuthorize(request)) {
+					someoneCouldAuthorize = true;
+					request = authority.authorize(request);
+					// authorization failed, return null
+					if (request == null) {
+						return null;
+					}
+				}
 			}
-			// TODO
-			return null;
+			if (someoneCouldAuthorize) {
+				return request;
+			} else {
+				return null;
+			}
 		}
 
 		@Override

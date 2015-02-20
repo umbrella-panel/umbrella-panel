@@ -32,11 +32,17 @@ public class UmbrellaWorkerProperties implements WorkerProperties {
 		properties = new Properties();
 		try {
 			file = new File("worker.properties");
+			boolean newFile = false;
 			if (!file.exists()) {
 				file.createNewFile();
+				newFile = true;
 			}
 			FileInputStream stream = new FileInputStream(file);
 			properties.load(stream);
+			if (newFile) {
+				setSharedPassword("$SHAREDPASSWORD$");
+				setWorkerId(-1);
+			}
 			stream.close();
 		} catch (Exception e) {
 			throw new RuntimeException("Could not load properties!", e);

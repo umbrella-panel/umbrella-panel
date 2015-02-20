@@ -3,9 +3,9 @@ package ms.idrea.umbrellapanel.worker.net;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
-import ms.idrea.umbrellapanel.core.net.DynamicSession;
-import ms.idrea.umbrellapanel.core.net.messages.*;
-import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage.Action;
+import ms.idrea.umbrellapanel.net.DynamicSession;
+import ms.idrea.umbrellapanel.net.messages.*;
+import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action;
 import ms.idrea.umbrellapanel.worker.UmbrellaWorker;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaGameServer;
 
@@ -26,10 +26,10 @@ public class ClientMessageHandler implements MessageHandler<DynamicSession, Mess
 		try {
 			if (rawMessage instanceof UpdateGameServerMessage) {
 				UpdateGameServerMessage message = (UpdateGameServerMessage) rawMessage;
-				PanelUser user = getUserOrThrow(message.getId());
+				PanelUser user = getUserOrThrow(message.getUserId());
 				GameServer oldServer = worker.getServerManager().getServer(message.getId());
 				if (oldServer == null) {
-					GameServer server = new UmbrellaGameServer(message.getId(), user.getId(), message.getAddress(), message.getStartCommand(), worker.getLogHandler(), worker.getServerManager(), worker.getUserRegistery());
+					GameServer server = new UmbrellaGameServer(message.getId(), user.getId(), message.getAddress(), message.getStartCommand(), worker.getLogHandler(), worker.getServerManager(), worker.getUserRegistery(), worker.getNetworkClient());
 					switch (message.getAction()) {
 						case CREATE:
 							worker.getServerManager().createServer(server);

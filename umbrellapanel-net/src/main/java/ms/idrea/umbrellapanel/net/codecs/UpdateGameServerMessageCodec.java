@@ -1,12 +1,12 @@
-package ms.idrea.umbrellapanel.core.net.codecs;
+package ms.idrea.umbrellapanel.net.codecs;
 
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 
 import ms.idrea.umbrellapanel.api.util.Address;
-import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage;
-import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage.Action;
+import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
+import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action;
 
 import com.flowpowered.networking.Codec;
 import com.flowpowered.networking.util.ByteBufUtils;

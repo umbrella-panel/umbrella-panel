@@ -1,10 +1,10 @@
-package ms.idrea.umbrellapanel.core.net.codecs;
+package ms.idrea.umbrellapanel.net.codecs;
 
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 
-import ms.idrea.umbrellapanel.core.net.messages.DispatchCommandMessage;
+import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
 
 import com.flowpowered.networking.Codec;
 import com.flowpowered.networking.util.ByteBufUtils;

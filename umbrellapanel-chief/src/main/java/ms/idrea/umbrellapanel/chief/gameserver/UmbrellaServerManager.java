@@ -1,5 +1,7 @@
 package ms.idrea.umbrellapanel.chief.gameserver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,7 +28,16 @@ public class UmbrellaServerManager implements ServerManager {
 	public synchronized int getNextId() {
 		return nextId++;
 	}
-	
+
+	@Override
+	public List<GameServer> getAllServers() {
+		List<GameServer> list = new ArrayList<>();
+		for (Integer id : servers.keySet()) {
+			list.add(getServer(id));
+		}
+		return list;
+	}
+
 	@Override
 	public GameServer getServer(int id) {
 		return servers.get(id);

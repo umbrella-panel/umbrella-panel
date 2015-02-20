@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.core.net.messages;
+package ms.idrea.umbrellapanel.net.messages;
 
 import com.flowpowered.networking.Message;
 

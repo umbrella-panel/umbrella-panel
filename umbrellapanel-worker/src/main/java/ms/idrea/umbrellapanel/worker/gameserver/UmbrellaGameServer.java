@@ -13,6 +13,9 @@ import ms.idrea.umbrellapanel.api.worker.LogHandler;
 import ms.idrea.umbrellapanel.api.worker.UserRegistery;
 import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
+import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
+import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage;
+import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage.Status;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerContoller.ProcessState;
 
 public class UmbrellaGameServer implements GameServer {
@@ -31,20 +34,17 @@ public class UmbrellaGameServer implements GameServer {
 	private File workingDirectory;
 	private LogHandler logHandler;
 	private UserRegistery userRegistery;
+	private NetworkClient networkClient;
 
-	public UmbrellaGameServer(int id, int userId, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery) {
+	public UmbrellaGameServer(int id, int userId, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery, NetworkClient networkClient) {
 		this.id = id;
 		this.userId = userId;
 		this.address = address;
 		this.startCommand = startCommand;
 		this.logHandler = logHandler;
+		this.networkClient = networkClient;
+		// make sure workingDirectory is set
 		workingDirectory = new File(new File(serverManager.getGameServerDirectory(), String.valueOf(userId)), String.valueOf(id));
-	}
-
-	@Override
-	public void setup() {
-		// TODO
-		// download spigot
 		if (workingDirectory.getParent() != null) {
 			new File(workingDirectory.getParent()).mkdirs();
 		}
@@ -52,7 +52,14 @@ public class UmbrellaGameServer implements GameServer {
 	}
 
 	@Override
+	public void setup() {
+		// TODO
+		// download spigot
+	}
+
+	@Override
 	public void delete() {
+		id = -1; // ID is no longer vaild
 		forceStop();
 		try {
 			FileUtils.deleteDirectory(workingDirectory);
@@ -109,14 +116,21 @@ public class UmbrellaGameServer implements GameServer {
 			umbrellaServerContoller.join();
 		}
 	}
-	
+
 	protected void appendServerLog(String message) {
 		logHandler.append(id, message);
 	}
 
 	protected void updateProcessState(ProcessState state) {
-		if (state == ProcessState.STOPPED) {
+		if (state == ProcessState.RUNNING) {
+			logHandler.flush(); // TODO flush only this server
+			networkClient.send(new GameServerStatusMessage(id, Status.RUNNING));
+		} else if (state == ProcessState.STOPPED) {
+			logHandler.flush(); // TODO flush only this server
 			umbrellaServerContoller = null;
+			if (id != -1) { // check if id is -1 because the server is removed
+				networkClient.send(new GameServerStatusMessage(id, Status.STOPPED));
+			}
 		}
 	}
 }

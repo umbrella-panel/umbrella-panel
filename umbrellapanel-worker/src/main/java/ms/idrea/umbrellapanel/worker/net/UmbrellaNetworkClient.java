@@ -7,8 +7,8 @@ import java.net.SocketAddress;
 
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.worker.Worker;
-import ms.idrea.umbrellapanel.core.net.DynamicSession;
-import ms.idrea.umbrellapanel.core.net.UmbrellaProtocol;
+import ms.idrea.umbrellapanel.net.DynamicSession;
+import ms.idrea.umbrellapanel.net.UmbrellaProtocol;
 
 import com.flowpowered.networking.Message;
 import com.flowpowered.networking.NetworkClient;

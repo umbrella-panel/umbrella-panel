@@ -3,16 +3,15 @@ package ms.idrea.umbrellapanel.chief.gameserver;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.net.Worker;
-import ms.idrea.umbrellapanel.core.net.messages.DispatchCommandMessage;
-import ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage;
-import ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage;
+import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
+import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
+import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
 
 @ToString
 public class UmbrellaGameServer implements GameServer {
@@ -28,7 +27,7 @@ public class UmbrellaGameServer implements GameServer {
 	@Getter
 	private int userId;
 	@Getter
-	private boolean isRunning;
+	private boolean isRunning = false;
 	private int workerId;
 	private PanelUserDatabase panelUserDatabase;
 	private WorkerManager workerManager;
@@ -45,14 +44,12 @@ public class UmbrellaGameServer implements GameServer {
 
 	@Override
 	public void setup() {
-		getWorkerOrThrow().send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.core.net.messages.UpdateGameServerMessage.Action.CREATE, id, userId, address, startCommand));
-		isRunning = false;
+		getWorkerOrThrow().send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.CREATE, id, userId, address, startCommand));
 	}
 
 	@Override
 	public void delete() {
-		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage.Action.DELETE, id));
-		isRunning = false;
+		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage.Action.DELETE, id));
 	}
 
 	@Override
@@ -60,8 +57,7 @@ public class UmbrellaGameServer implements GameServer {
 		if (isRunning()) {
 			return false;
 		}
-		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage.Action.START, id));
-		isRunning = true;
+		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage.Action.START, id));
 		return true;
 	}
 
@@ -70,8 +66,7 @@ public class UmbrellaGameServer implements GameServer {
 		if (!isRunning()) {
 			return false;
 		}
-		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.core.net.messages.ManageGameServerMessage.Action.FORCE_STOP, id));
-		isRunning = false;
+		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage.Action.FORCE_STOP, id));
 		return true;
 	}
 
@@ -100,5 +95,11 @@ public class UmbrellaGameServer implements GameServer {
 			throw new IllegalStateException("Worker is offline!");
 		}
 		return worker;
+	}
+
+	@Override
+	public void setRunning(boolean running) {
+		this.isRunning = running;
+		System.err.println("NEW STATE: " + running);
 	}
 }
