@@ -123,7 +123,6 @@ public class UmbrellaGameServer implements GameServer {
 
 	protected void updateProcessState(ProcessState state) {
 		if (state == ProcessState.RUNNING) {
-			logHandler.flush(); // TODO flush only this server
 			networkClient.send(new GameServerStatusMessage(id, Status.RUNNING));
 		} else if (state == ProcessState.STOPPED) {
 			logHandler.flush(); // TODO flush only this server

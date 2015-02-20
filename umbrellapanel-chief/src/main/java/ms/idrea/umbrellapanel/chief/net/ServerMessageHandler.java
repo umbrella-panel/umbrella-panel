@@ -24,7 +24,7 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 
 	@Override
 	public void handle(Worker worker, Message rawMessage) {
-		//	System.out.println("[SERVER-IN " + worker + "]: " + rawMessage);
+		// System.out.println("[SERVER-IN " + worker + "]: " + rawMessage);
 		try {
 			if (rawMessage instanceof WorkerMessage) {
 				WorkerMessage message = (WorkerMessage) rawMessage;
@@ -48,17 +48,20 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 							worker.send(new UpdatePanelUserMessage(ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage.Action.UPDATE, user));
 						}
 						for (GameServer server : chief.getServerManager().getAllServers()) {
-							worker.send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.UPDATE, server.getId(), server.getUserId(), server.getAddress(), server.getStartCommand()));
+							// only send the worker the server if he owns it
+							if (server.getWorkerId() == worker.getId()) {
+								worker.send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.UPDATE, server.getId(), server.getUserId(), server.getAddress(), server.getStartCommand()));
+							}
 						}
 					}
-					// send them the servers.
 				} else {
 					worker.send(new WorkerMessage(Action.REGISTER, -1, ""));
 				}
 			} else if (rawMessage instanceof LogMessage) {
 				LogMessage message = (LogMessage) rawMessage;
+				GameServer server = getServerOrThrow(message.getId());
 				for (String line : message.getLines()) {
-					System.out.println("[" + message.getId() + "]: " + line);
+					server.appendLog(line);
 				}
 			} else if (rawMessage instanceof GameServerStatusMessage) {
 				GameServerStatusMessage message = (GameServerStatusMessage) rawMessage;

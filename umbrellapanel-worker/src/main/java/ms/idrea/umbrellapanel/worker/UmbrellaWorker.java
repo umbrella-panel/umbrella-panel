@@ -7,11 +7,11 @@ import java.util.logging.Logger;
 
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
-import ms.idrea.umbrellapanel.api.worker.FTPServer;
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
 import ms.idrea.umbrellapanel.api.worker.UserRegistery;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
+import ms.idrea.umbrellapanel.api.worker.ftp.FTPServer;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
@@ -45,10 +45,8 @@ public class UmbrellaWorker implements Worker {
 	// loadup the good stuffzz
 	@Override
 	public void start() {
-		logger = Logger.getLogger("UmbrellaWorker");
-		LoggerHelper.setConsoleLogger(logger, Level.FINEST); // -> INFO
-		LoggerHelper.setFileLogger(logger, Level.ALL, "UmbrellaWorker.log");
 		isRunning = true;
+		logger = LoggerHelper.getCommonLogger("UmbrellaWorker", Level.FINEST, "UmbrellaWorker.log", Level.ALL);
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 
 			@Override
@@ -56,11 +54,16 @@ public class UmbrellaWorker implements Worker {
 				shutdown();
 			}
 		}));
+		LoggerHelper.worker(logger, Level.INFO);
 		workerProperties = new UmbrellaWorkerProperties(this);
 		workerProperties.load();
 		userRegistery = new UmbrellaUserRegistery(this);
 		ftpServer = new UmbrellaFTPServer(this);
-		ftpServer.start();
+		try {
+			ftpServer.start();
+		} catch (Exception e) {
+			new Exception("Failed to start ftp server!", e).printStackTrace();
+		}
 		logHandler = new UmbrellaLogHandler(this);
 		serverManager = new UmbrellaServerManager();
 		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress("localhost", 30000), new Runnable() {

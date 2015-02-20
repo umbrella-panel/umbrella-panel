@@ -1,5 +1,7 @@
 package ms.idrea.umbrellapanel.api.chief.gameserver;
 
+import java.util.List;
+
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
@@ -36,4 +38,10 @@ public interface GameServer {
 	public void setStartCommand(String startCommand);
 
 	public Session getWorker();
+
+	public int getWorkerId();
+	
+	public void appendLog(String log);
+	
+	public List<String> getLogBuffer();
 }

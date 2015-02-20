@@ -2,6 +2,8 @@ package ms.idrea.umbrellapanel.chief;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.chief.Chief;
@@ -12,8 +14,12 @@ import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
+import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
+import ms.idrea.umbrellapanel.chief.net.Worker;
+
+import com.flowpowered.networking.session.Session;
 
 @Getter
 public class UmbrellaChief implements Chief {
@@ -31,9 +37,21 @@ public class UmbrellaChief implements Chief {
 	private PanelUserDatabase panelUserDatabase;
 	private ServerManager serverManager;
 	private WorkerManager workerManager;
+	private Logger logger;
+	private boolean isRunning;
 
 	@Override
 	public void start() {
+		isRunning = true;
+		logger = LoggerHelper.getCommonLogger("UmbrellaChief", Level.FINEST, "UmbrellaChief.log", Level.ALL);
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				shutdown();
+			}
+		}));
+		LoggerHelper.chief(logger, Level.INFO);
 		workerManager = new UmbrellaWorkerManager();
 		networkServer = new UmbrellaNetworkServer(workerManager);
 		panelUserDatabase = new UmbrellaPanelUserDatabase(networkServer);
@@ -57,6 +75,14 @@ public class UmbrellaChief implements Chief {
 		}
 		System.out.println("Exit..");
 		scanner.close();
+		shutdown();
+	}
+
+	public void shutdown() {
+		if (!isRunning) {
+			return;
+		}
+		isRunning = false;
 		networkServer.shutdown();
 	}
 
@@ -96,6 +122,17 @@ public class UmbrellaChief implements Chief {
 				}
 				server.dispatchCommand(s.substring(0, s.length() - 1));
 				System.out.println("OK");
+			} else if (base.equalsIgnoreCase("listworkers")) {
+				System.out.println("------");
+				for (Session session : workerManager.getAllWorkers()) {
+					if (session instanceof Worker) {
+						Worker worker = (Worker) session;
+						System.out.println(worker.getId() + " on " + worker.getAddress());
+					} else {
+						System.out.println("Unknown " + session.toString());
+					}
+				}
+				System.out.println("------");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

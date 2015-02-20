@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ms.idrea.umbrellapanel.api.worker.FTPServer;
 import ms.idrea.umbrellapanel.api.worker.Worker;
+import ms.idrea.umbrellapanel.api.worker.ftp.FTPServer;
 
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;

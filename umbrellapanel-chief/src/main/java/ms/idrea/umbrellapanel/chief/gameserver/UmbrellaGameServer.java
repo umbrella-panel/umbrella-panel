@@ -1,5 +1,9 @@
 package ms.idrea.umbrellapanel.chief.gameserver;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,9 +32,11 @@ public class UmbrellaGameServer implements GameServer {
 	private int userId;
 	@Getter
 	private boolean isRunning = false;
+	@Getter
 	private int workerId;
 	private PanelUserDatabase panelUserDatabase;
 	private WorkerManager workerManager;
+	private List<String> logBuffer;
 
 	public UmbrellaGameServer(int id, int userId, int workerId, Address address, String startCommand, WorkerManager workerManager, PanelUserDatabase panelUserDatabase) {
 		this.id = id;
@@ -40,6 +46,7 @@ public class UmbrellaGameServer implements GameServer {
 		this.startCommand = startCommand;
 		this.workerManager = workerManager;
 		this.panelUserDatabase = panelUserDatabase;
+		this.logBuffer = Collections.synchronizedList(new LinkedList<String>());
 	}
 
 	@Override
@@ -57,6 +64,7 @@ public class UmbrellaGameServer implements GameServer {
 		if (isRunning()) {
 			return false;
 		}
+		logBuffer.clear(); // clear log on restart
 		getWorkerOrThrow().send(new ManageGameServerMessage(ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage.Action.START, id));
 		return true;
 	}
@@ -100,6 +108,15 @@ public class UmbrellaGameServer implements GameServer {
 	@Override
 	public void setRunning(boolean running) {
 		this.isRunning = running;
-		System.err.println("NEW STATE: " + running);
+	}
+
+	@Override
+	public void appendLog(String log) {
+		logBuffer.add(log);
+	}
+
+	@Override
+	public List<String> getLogBuffer() {
+		return Collections.unmodifiableList(logBuffer);
 	}
 }

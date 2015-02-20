@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.api.worker;
+package ms.idrea.umbrellapanel.api.worker.ftp;
 
 public interface FTPServer {
 
