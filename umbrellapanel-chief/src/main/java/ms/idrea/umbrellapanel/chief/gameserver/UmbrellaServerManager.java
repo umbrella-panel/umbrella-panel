@@ -1,5 +1,10 @@
 package ms.idrea.umbrellapanel.chief.gameserver;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,5 +60,47 @@ public class UmbrellaServerManager implements ServerManager {
 	public void deleteServer(GameServer server) {
 		server.delete();
 		servers.remove(server.getId());
+	}
+
+	@Override
+	public void save(Writer out) throws IOException {
+		BufferedWriter writer = new BufferedWriter(out);
+		writer.write(String.valueOf(nextId));
+		writer.newLine();
+		writer.write(String.valueOf(servers.size()));
+		writer.newLine();
+		for (int id : servers.keySet()) {
+			GameServer server = getServer(id);
+			writer.write(String.valueOf(server.getId()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getUserId()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getWorkerId()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getAddress().getHost()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getAddress().getPort()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getStartCommand()));
+			writer.newLine();
+		}
+		writer.flush();
+	}
+
+	@Override
+	public void load(Reader in) throws IOException {
+		BufferedReader reader = new BufferedReader(in);
+		nextId = Integer.valueOf(reader.readLine());
+		int serverSize = Integer.valueOf(reader.readLine());
+		servers = new ConcurrentHashMap<>(serverSize);
+		for (int i = 0; i < serverSize; i++) {
+			int id = Integer.valueOf(reader.readLine());
+			int userId = Integer.valueOf(reader.readLine());
+			int workerId = Integer.valueOf(reader.readLine());
+			String host = reader.readLine();
+			int port = Integer.valueOf(reader.readLine());
+			String startCommand = reader.readLine();
+			servers.put(id, new UmbrellaGameServer(id, userId, workerId, new Address(host, port), startCommand, workerManager, panelUserDatabase));
+		}
 	}
 }

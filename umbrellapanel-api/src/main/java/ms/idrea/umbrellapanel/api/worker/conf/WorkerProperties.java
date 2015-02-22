@@ -13,4 +13,12 @@ public interface WorkerProperties {
 	public int getWorkerId();
 
 	public void setWorkerId(int id);
+
+	public String getChiefHost();
+
+	public void setChiefHost(String host);
+
+	public int getChiefPort();
+
+	public void setChiefPort(int port);
 }

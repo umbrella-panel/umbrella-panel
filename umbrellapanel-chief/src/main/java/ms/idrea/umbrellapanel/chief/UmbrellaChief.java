@@ -9,12 +9,14 @@ import lombok.Getter;
 import ms.idrea.umbrellapanel.api.chief.Chief;
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
+import ms.idrea.umbrellapanel.api.chief.conf.ChiefProperties;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
+import ms.idrea.umbrellapanel.chief.conf.UmbrellaChiefProperties;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
 import ms.idrea.umbrellapanel.chief.net.Worker;
@@ -32,7 +34,21 @@ public class UmbrellaChief implements Chief {
 		instance.start();
 	}
 
+	// TODO save
+	/*
+	 * Users
+	 * LastUserId
+	 * 
+	 * OfflineWorkers
+	 * LastWorkerId
+	 * 
+	 * Servers
+	 * LastServerId
+	 * 
+	 */
 	// ---------------
+	private ChiefProperties chiefProperties;
+	private FileManager fileManager;
 	private NetworkServer networkServer;
 	private PanelUserDatabase panelUserDatabase;
 	private ServerManager serverManager;
@@ -52,19 +68,19 @@ public class UmbrellaChief implements Chief {
 			}
 		}));
 		LoggerHelper.chief(logger, Level.INFO);
+		chiefProperties = new UmbrellaChiefProperties(this);
+		chiefProperties.load();
+		fileManager = new FileManager();
 		workerManager = new UmbrellaWorkerManager();
-		networkServer = new UmbrellaNetworkServer(workerManager);
+		networkServer = new UmbrellaNetworkServer(workerManager, chiefProperties.getNetPort());
 		panelUserDatabase = new UmbrellaPanelUserDatabase(networkServer);
 		serverManager = new UmbrellaServerManager(panelUserDatabase, workerManager);
-		/*
-			webServer = new UmbrellaWebServer();
-			try {
-				webServer.start(new Address("*", 80));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		*/
+		//
+		fileManager.register(serverManager, "servers");
+		fileManager.register(workerManager, "workers");
+		fileManager.register(panelUserDatabase, "users");
+		fileManager.load();
+		//
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		while ((line = scanner.nextLine()) != null) {
@@ -73,7 +89,7 @@ public class UmbrellaChief implements Chief {
 			}
 			processCommand(line);
 		}
-		System.out.println("Exit..");
+		logger.info("Exiting...");
 		scanner.close();
 		shutdown();
 	}
@@ -84,6 +100,8 @@ public class UmbrellaChief implements Chief {
 		}
 		isRunning = false;
 		networkServer.shutdown();
+		chiefProperties.save();
+		fileManager.save();
 	}
 
 	private void processCommand(String cmd) {
@@ -123,7 +141,7 @@ public class UmbrellaChief implements Chief {
 				server.dispatchCommand(s.substring(0, s.length() - 1));
 				System.out.println("OK");
 			} else if (base.equalsIgnoreCase("listworkers")) {
-				System.out.println("------");
+				System.out.println("---Workers---");
 				for (Session session : workerManager.getAllWorkers()) {
 					if (session instanceof Worker) {
 						Worker worker = (Worker) session;
@@ -133,21 +151,32 @@ public class UmbrellaChief implements Chief {
 					}
 				}
 				System.out.println("------");
+			} else if (base.equalsIgnoreCase("listusers")) {
+				System.out.println("---Users---");
+				for (PanelUser user : panelUserDatabase.getAllUsers()) {
+					System.out.println(user.toString());
+				}
+				System.out.println("------");
+			} else if (base.equalsIgnoreCase("listservers")) {
+				System.out.println("---Servers---");
+				for (GameServer server : serverManager.getAllServers()) {
+					System.out.println(server.toString());
+				}
+				System.out.println("------");
+			} else if (base.equalsIgnoreCase("help")) {
+				logger.info("commands:");
+				logger.info("adduser <name> <password>");
+				logger.info("crateserver <userId> <hostIp> <hostPort> <workerId>");
+				logger.info("manageserver <start|force-stop|delete> <serverId>");
+				logger.info("sendcmd <serverId> <cmd...>");
+				logger.info("listworkers");
+				logger.info("listusers");
+				logger.info("listservers");
+			} else {
+				logger.info("Unknown command! For help type \"help\"");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			new Exception("Failed to process command \"" + cmd + "\"", e).printStackTrace();
 		}
-		/*	
-			PanelUser user = panelUserDatabase.createUser("paul", "icanhaz");
-			GameServer gameServer = serverManager.createServer(user, new Address("0.0.0.0", 25565), "java -jar server.jar", ((List<Worker>) workerManager.getAllWorkers()).get(0).getId()); // \o/
-			gameServer.start();
-			try {
-				Thread.sleep(5000 * 10);
-			} catch (Exception e) {
-				
-			}
-			gameServer.dispatchCommand("stop");
-			System.out.println(gameServer.toString());
-			*/
 	}
 }

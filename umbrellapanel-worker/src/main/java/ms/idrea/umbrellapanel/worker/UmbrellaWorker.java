@@ -66,7 +66,7 @@ public class UmbrellaWorker implements Worker {
 		}
 		logHandler = new UmbrellaLogHandler(this);
 		serverManager = new UmbrellaServerManager();
-		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress("localhost", 30000), new Runnable() {
+		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()), new Runnable() {
 
 			@Override
 			public void run() {

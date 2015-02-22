@@ -92,7 +92,7 @@ public class ClientMessageHandler implements MessageHandler<DynamicSession, Mess
 						if (message.getId() != -1) {
 							worker.getWorkerProperties().setWorkerId(message.getId());
 						} else {
-							throw new RuntimeException("Could not register at web!");
+							throw new RuntimeException("Could not register at chief!");
 						}
 						break;
 					default:

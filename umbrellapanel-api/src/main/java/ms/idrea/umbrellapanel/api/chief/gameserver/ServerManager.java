@@ -2,10 +2,11 @@ package ms.idrea.umbrellapanel.api.chief.gameserver;
 
 import java.util.List;
 
+import ms.idrea.umbrellapanel.api.core.LoadAndSaveable;
 import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
-public interface ServerManager {
+public interface ServerManager extends LoadAndSaveable {
 
 	public GameServer getServer(int id);
 

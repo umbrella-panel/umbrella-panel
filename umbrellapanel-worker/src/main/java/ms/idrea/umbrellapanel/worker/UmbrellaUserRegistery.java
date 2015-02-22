@@ -77,16 +77,13 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 	public User authenticate(Authentication authentication) throws AuthenticationFailedException {
 		if (authentication instanceof UsernamePasswordAuthentication) {
 			UsernamePasswordAuthentication usernamePasswordAuthentication = (UsernamePasswordAuthentication) authentication;
-			try {
-				User user = getUserByName(usernamePasswordAuthentication.getUsername());
-				if (user == null) {
-					return null;
-				}
-				// make sure password + name are correct
-				if (user.getPassword().equals(usernamePasswordAuthentication.getPassword()) && user.getName().equals(usernamePasswordAuthentication.getUsername())) {
-					return user;
-				}
-			} catch (FtpException e) {
+			MultiUser user = getByName(usernamePasswordAuthentication.getUsername());
+			if (user == null) {
+				return null;
+			}
+			// make sure password + name are correct
+			if (user.canLogin(usernamePasswordAuthentication.getUsername(), usernamePasswordAuthentication.getPassword())) {
+				return user;
 			}
 		}
 		return null;
@@ -140,7 +137,7 @@ public class UmbrellaUserRegistery implements UserManager, UserRegistery {
 		private final String homeDirectory;
 
 		public MultiUser(int id, String name, String password, Worker worker) {
-			super(id, name, password);
+			super(id, name, password, true);
 			homeDirectory = new File(worker.getServerManager().getGameServerDirectory(), String.valueOf(getId())).getAbsolutePath();
 		}
 

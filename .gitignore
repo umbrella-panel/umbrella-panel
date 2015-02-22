@@ -37,3 +37,5 @@ manifest.mf
 # other files
 *.log*
 *.properties
+*.dat
+*.conf

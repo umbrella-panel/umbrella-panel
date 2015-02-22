@@ -19,7 +19,7 @@ public class UpdatePanelUserMessageCodec implements Codec<UpdatePanelUserMessage
 		int id = buf.readInt();
 		String name = ByteBufUtils.readUTF8(buf);
 		String password = ByteBufUtils.readUTF8(buf);
-		return new UpdatePanelUserMessage(Action.valueOf(action), new PanelUser(id, name, password));
+		return new UpdatePanelUserMessage(Action.valueOf(action), new PanelUser(id, name, password, true));
 	}
 
 	@Override

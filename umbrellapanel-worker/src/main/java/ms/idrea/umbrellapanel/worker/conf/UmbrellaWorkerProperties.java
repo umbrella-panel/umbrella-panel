@@ -1,80 +1,23 @@
 package ms.idrea.umbrellapanel.worker.conf;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Properties;
 
+import ms.idrea.umbrellapanel.api.core.UmbrellaProperties;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
 
-public class UmbrellaWorkerProperties implements WorkerProperties {
-
-	public static enum Key {
-		SHARED_PASSWORD,
-		WORKER_ID;
-
-		public String toPath() {
-			return toString().toLowerCase();
-		}
-	}
-
-	private Properties properties;
-	private File file;
-	private Worker worker;
+public class UmbrellaWorkerProperties extends UmbrellaProperties implements WorkerProperties {
 
 	public UmbrellaWorkerProperties(Worker worker) {
-		this.worker = worker;
+		super("UmbrellaWorker", new File("UmbrellaWorker.conf"), worker.getLogger());
 	}
 
 	@Override
-	public void load() {
-		properties = new Properties();
-		try {
-			file = new File("worker.properties");
-			boolean newFile = false;
-			if (!file.exists()) {
-				file.createNewFile();
-				newFile = true;
-			}
-			FileInputStream stream = new FileInputStream(file);
-			properties.load(stream);
-			if (newFile) {
-				setSharedPassword("$SHAREDPASSWORD$");
-				setWorkerId(-1);
-			}
-			stream.close();
-		} catch (Exception e) {
-			throw new RuntimeException("Could not load properties!", e);
-		}
-	}
-
-	@Override
-	public void save() {
-		try {
-			FileOutputStream stream = new FileOutputStream(file);
-			properties.store(stream, "UmbrellaWorker");
-			stream.close();
-		} catch (Exception e) {
-			worker.getLogger().warning(e.getMessage());
-		}
-	}
-
-	private String getString(Key key, String defaultValue) {
-		String value = (String) properties.get(key.toPath());
-		return value != null ? value : defaultValue;
-	}
-
-	private int getInt(Key key, int defaultValue) {
-		try {
-			return Integer.valueOf(getString(key, null));
-		} catch (Exception e) {
-			return defaultValue;
-		}
-	}
-
-	private void set(Key key, Object value) {
-		properties.setProperty(key.toPath(), value.toString());
+	public void onNewPropertiesCreated() {
+		setSharedPassword("$SHAREDPASSWORD$");
+		setWorkerId(-1);
+		setChiefHost("localhost");
+		setChiefPort(35886);
 	}
 
 	@Override
@@ -95,5 +38,25 @@ public class UmbrellaWorkerProperties implements WorkerProperties {
 	@Override
 	public void setWorkerId(int id) {
 		set(Key.WORKER_ID, id);
+	}
+
+	@Override
+	public String getChiefHost() {
+		return getString(Key.CHIEF_HOST, "localhost");
+	}
+
+	@Override
+	public void setChiefHost(String host) {
+		set(Key.CHIEF_HOST, host);
+	}
+
+	@Override
+	public int getChiefPort() {
+		return getInt(Key.CHIEF_PORT, 35886);
+	}
+
+	@Override
+	public void setChiefPort(int port) {
+		set(Key.CHIEF_PORT, port);
 	}
 }

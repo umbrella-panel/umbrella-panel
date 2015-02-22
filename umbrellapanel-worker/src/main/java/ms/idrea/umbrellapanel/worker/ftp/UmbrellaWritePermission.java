@@ -15,7 +15,6 @@ public class UmbrellaWritePermission extends WritePermission {
 		if (request instanceof WriteRequest) {
 			WriteRequest writeRequest = (WriteRequest) request;
 			String requestFile = writeRequest.getFile();
-			System.out.println(requestFile);
 			if (ALLOWED_FILES.matcher(requestFile).matches()) {
 				return writeRequest;
 			} else {

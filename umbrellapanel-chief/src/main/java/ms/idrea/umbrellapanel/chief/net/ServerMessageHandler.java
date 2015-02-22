@@ -28,7 +28,7 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 		try {
 			if (rawMessage instanceof WorkerMessage) {
 				WorkerMessage message = (WorkerMessage) rawMessage;
-				if (message.getSharedPassword().equals("123")) {
+				if (message.getSharedPassword().equals(chief.getChiefProperties().getSharedPassword())) {
 					switch (message.getAction()) {
 						case REGISTER:
 							chief.getWorkerManager().onRegister(worker);

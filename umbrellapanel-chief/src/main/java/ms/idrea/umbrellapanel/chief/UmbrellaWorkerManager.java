@@ -1,10 +1,17 @@
 package ms.idrea.umbrellapanel.chief;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import lombok.Getter;
 
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.chief.net.Worker;
@@ -86,9 +93,14 @@ public class UmbrellaWorkerManager implements WorkerManager {
 		}
 	}
 
+	@Getter
 	public class OfflineWorker {
 
 		private int id;
+
+		public OfflineWorker(int id) {
+			this.id = id;
+		}
 
 		public OfflineWorker(Worker worker) {
 			this.id = worker.getId();
@@ -100,6 +112,33 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 		public boolean isOnline() {
 			return getWorker() != null;
+		}
+	}
+
+	@Override
+	public void save(Writer out) throws IOException {
+		BufferedWriter writer = new BufferedWriter(out);
+		writer.write(String.valueOf(nextId));
+		writer.newLine();
+		writer.write(String.valueOf(workers.size()));
+		writer.newLine();
+		for (int id : workers.keySet()) {
+			OfflineWorker worker = getWorker(id);
+			writer.write(String.valueOf(worker.getId()));
+			writer.newLine();
+		}
+		writer.flush();
+	}
+
+	@Override
+	public void load(Reader in) throws IOException {
+		BufferedReader reader = new BufferedReader(in);
+		nextId = Integer.valueOf(reader.readLine());
+		int workerSize = Integer.valueOf(reader.readLine());
+		workers = new ConcurrentHashMap<>(workerSize);
+		for (int i = 0; i < workerSize; i++) {
+			int id = Integer.valueOf(reader.readLine());
+			workers.put(id, new OfflineWorker(id));
 		}
 	}
 }

@@ -21,9 +21,9 @@ public class UmbrellaNetworkServer extends NetworkServer implements ms.idrea.umb
 	private ConcurrentMap<InetSocketAddress, Worker> workers = new ConcurrentHashMap<>();
 	private WorkerManager workerManager;
 
-	public UmbrellaNetworkServer(WorkerManager workerManager) {
+	public UmbrellaNetworkServer(WorkerManager workerManager, int netport) {
 		this.workerManager = workerManager;
-		bindAndRegister(new InetSocketAddress(30000), new UmbrellaProtocol(ServerMessageHandler.class));
+		bindAndRegister(new InetSocketAddress(netport), new UmbrellaProtocol(ServerMessageHandler.class));
 	}
 
 	private void bindAndRegister(InetSocketAddress a, AbstractProtocol p) {
