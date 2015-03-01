@@ -11,7 +11,7 @@ import ms.idrea.umbrellapanel.net.messages.LogMessage;
 
 public class UmbrellaLogHandler extends Thread implements LogHandler {
 
-	public static final int SEND_INTERVAL = 10 * 1000;
+	public static final int SEND_INTERVAL = 100;
 	private Map<Integer, List<String>> logBuffer = new HashMap<>();
 	private Worker worker;
 
@@ -34,7 +34,7 @@ public class UmbrellaLogHandler extends Thread implements LogHandler {
 					wait(SEND_INTERVAL);
 				} catch (InterruptedException e) {
 				}
-			//	flush();
+				flush();
 			}
 		}
 	}

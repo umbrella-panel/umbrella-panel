@@ -109,7 +109,6 @@ public class UmbrellaGameServer implements GameServer {
 
 	protected void appendServerLog(String message) {
 		logHandler.append(id, message);
-		logHandler.flush(); // TODO :/
 	}
 
 	protected void updateProcessState(ProcessState state) {
