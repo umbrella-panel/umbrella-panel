@@ -152,7 +152,7 @@
 									<%
 										for (Session sessionWorker : main.getChief().getWorkerManager().getAllWorkers()) {
 											Worker worker = (Worker) sessionWorker;
-											out.print("<option value=\"" + worker.getId() + "\">" + worker.getAddress().toString() + "</option>");
+											out.print("<option value=\"" + worker.getId() + "\">" + worker.getAddress().toString() + " (" + worker.getId() + ")</option>");
 										}
 									%>
 									</select>
