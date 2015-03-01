@@ -502,7 +502,7 @@
 									<%
 										} else {
 									%>
-										<span class="label label-info">FTP</span> <code><% out.print("ftp://" + server.getId() + "-" + user.getName() + ":&lt;dein-passwort&gt;@" + worker.getAddress().getHostString() + ":21/"); %></code><br>
+										<span class="label label-info">FTP</span> <code><% out.print("ftp://" + server.getId() + "-" + user.getName() + ":&lt;dein-passwort&gt;@" + worker.getAddress().getHostString() + ":1221/"); %></code><br>
 										<span class="label label-success">Worker Online</span> <code><% out.print(worker.getId() + " (" + worker.getAddress().toString() + ")"); %></code>
 									<%
 										}

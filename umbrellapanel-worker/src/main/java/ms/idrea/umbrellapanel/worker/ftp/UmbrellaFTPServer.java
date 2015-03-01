@@ -31,7 +31,7 @@ public class UmbrellaFTPServer implements FTPServer {
 	public void start() {
 		FtpServerFactory serverFactory = new FtpServerFactory();
 		ListenerFactory listener = new ListenerFactory();
-		listener.setPort(21);
+		listener.setPort(1221);
 		serverFactory.addListener("default", listener.createListener());
 		serverFactory.setUserManager(worker.getFTPUserWrapper());
 		serverFactory.setFtplets(bakeFtplets());
