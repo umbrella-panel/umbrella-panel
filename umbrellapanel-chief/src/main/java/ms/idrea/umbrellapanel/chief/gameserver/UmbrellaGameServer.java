@@ -114,7 +114,7 @@ public class UmbrellaGameServer implements GameServer {
 
 	@Override
 	public List<ServerLog> getLogBuffer() {
-		return Collections.unmodifiableList(logBuffer);
+		return new LinkedList<>(logBuffer);
 	}
 
 	@Override

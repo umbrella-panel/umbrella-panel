@@ -17,7 +17,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<title>Webinterface</title>
+	<title>UmbrellaPanel - iDreams</title>
 	<link href="resources/css/bootstrap.min.css" rel="stylesheet">
 	<link href="resources/css/web.css" rel="stylesheet">
 	<link href="resources/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -70,20 +70,14 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">Webinterface</a>
+				<a class="navbar-brand" href="/">UmbrellaPanel</a>
 			</div>
 			<ul class="nav navbar-right top-nav">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><% out.print(user.getName()); %> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="#"><i class="fa fa-fw fa-user"></i>Profil</a>
-						</li>
-						<li>
-							<a href="#"><i class="fa fa-fw fa-envelope"></i>Inbox</a>
-						</li>
-						<li>
-							<a href="#"><i class="fa fa-fw fa-gear"></i>Einstellung</a>
+							<a href="/?profil"><i class="fa fa-fw fa-user"></i>Profil</a>
 						</li>
 						<li class="divider"></li>
 						<li>
@@ -120,7 +114,7 @@
 						if (user.hasGlobalPermission(Permission.ADMIN)) {
 					%>
 					<li>
-						<a <%if (request.getParameter("users") != null) { out.print("class=\"active-menu\""); }%> href="/?users"><i class="fa fa-fw fa-users"></i>Benutzer</a>
+						<a <%if (request.getParameter("users") != null || request.getParameter("user") != null) { out.print("class=\"active-menu\""); }%> href="/?users"><i class="fa fa-fw fa-users"></i>Benutzer</a>
 					</li>
 					<li>
 						<a <%if (request.getParameter("create") != null) { out.print("class=\"active-menu\""); }%> href="/?create"><i class="fa fa-fw fa-save"></i>Server erstellen</a>
@@ -128,7 +122,6 @@
 					<%
 						}
 					%>
-					<center><a href="#">by Affe480 & Paulomart</a></center>
 				</ul>
 			</div>
 		</nav>
@@ -174,7 +167,54 @@
 			</div>
 		<%
 			} else if (request.getParameter("profil") != null) {
-			
+		%>
+			<div id="page-wrapper">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-12">
+							<h1 class="page-header">Profil</h1>
+						</div>
+						<div class="col-lg-6">
+							<h3>Passwort ändern</h3>
+							<%
+								if ("2".equalsIgnoreCase(request.getParameter("show"))) {
+							%>
+								<div class="alert alert-danger">Neue Passwörter stimmen nicht überein!</div>
+							<%
+								} else if ("1".equalsIgnoreCase(request.getParameter("show"))) {
+							%>
+								<div class="alert alert-success">Passwort geändert!</div>
+							<%
+								} else if ("3".equalsIgnoreCase(request.getParameter("show"))) {
+							%>
+								<div class="alert alert-danger">Falsches Passwort!</div>
+							<%
+							} else if ("4".equalsIgnoreCase(request.getParameter("show"))) {
+							%>
+								<div class="alert alert-danger">Passwort ist zu kurz! (min 8 Zeichen)</div>
+							<%
+							}
+							%>
+							<form id="updateuser" action="action.jsp?do=updatepassword" method="POST">
+								<div class="form-group">
+									<label>Altes Passwort: </label><input name="oldpassword" type="password" class="form-control" autocomplete="off"></input>
+								</div>
+								<div class="form-group">
+									<label>Neues Passwort: </label><input name="newpassword" type="password" class="form-control" autocomplete="off"></input>
+								</div>
+								<div class="form-group">
+									<label>Neues Passwort wiederholen: </label><input name="newpassword2" type="password" class="form-control" autocomplete="off"></input>
+								</div>
+								<span class="btn-group">
+									<button type="submit" form="updateuser" class="btn btn-success">Passwort ändern</button>
+								</span>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		<%	
 			} else if (request.getParameter("user") != null && user.hasGlobalPermission(Permission.ADMIN)) {
 				PanelUser editingUser = main.getChief().getPanelUserDatabase().getUser(Integer.valueOf(request.getParameter("user")));
 		%>
@@ -206,7 +246,7 @@
 						<%
 							if (user.getId() == editingUser.getId()) {
 						%>
-							<div class="alert alert-warning">Änderungen können vielleicht auch deine Rechte einschrenken!</div>
+							<div class="alert alert-warning">Änderungen können deine Rechte einschränken!</div>
 						<%
 							}
 						%>
@@ -253,7 +293,7 @@
 							<%
 								if ("2".equalsIgnoreCase(request.getParameter("show"))) {
 							%>
-								<div class="alert alert-danger">Passwort ist nicht richtig!</div>
+								<div class="alert alert-danger">Passwort ist nicht richtig! (min 8 Zeichen oder nicht gleich)</div>
 							<%
 								} else if ("1".equalsIgnoreCase(request.getParameter("show"))) {
 							%>
@@ -266,10 +306,10 @@
 									<label>Name: </label><input name="name" type="text" class="form-control" autocomplete="off" value="<% out.print(editingUser.getName()); %>"></input>
 								</div>
 								<div class="form-group">
-									<label>Password: </label><input name="password" type="password" class="form-control" autocomplete="off"></input>
+									<label>Passwort: </label><input name="password" type="password" class="form-control" autocomplete="off"></input>
 								</div>
 								<div class="form-group">
-									<label>Password wiederholen: </label><input name="password2" type="password" class="form-control" autocomplete="off"></input>
+									<label>Passwort wiederholen: </label><input name="password2" type="password" class="form-control" autocomplete="off"></input>
 								</div>
 								<span class="btn-group">
 									<button type="submit" form="updateuser" class="btn btn-success">Speichern</button>
@@ -319,7 +359,7 @@
 							<%
 								} else if ("3".equalsIgnoreCase(request.getParameter("show"))) {
 							%>
-								<div class="alert alert-danger">Passwort ist leer!</div>
+								<div class="alert alert-danger">Passwort ist zu kurz! (min 8 Zeichen)</div>
 							<%
 								}
 							%>
@@ -451,7 +491,7 @@
 									</div>
 								</fieldset>
 							</div>
-							<form class="form col-lg-6" action="action.jsp?do=update&server=<% out.print(server.getId()); %>" method="POST">
+							<form class="form col-lg-6" id="updateserver" action="action.jsp?do=update&server=<% out.print(server.getId()); %>" method="POST">
 								<h3>Einstellungen</h3>
 								<div class="well">
 									<span class="label label-primary">Server ID</span> <code><% out.print(server.getId()); %></code><br>
@@ -481,17 +521,23 @@
 									<div class="form-group">
 										<label>Startcommand: </label><input name="startcommand" class="form-control" value="<% out.print(server.getStartCommand()); %>"></input>
 									</div>
+									<span class="btn-group">
 									<%
 										if (user.hasPermission(server.getId(), Permission.SERVER_SETTINGS)) {
 									%>
-										<div class="form-group">
-											<button class="btn btn-primary btn-block">Speichern</button>
-										</div>
+										<button type="submit" form="updateserver" class="btn btn-success">Speichern</button>
+									<%
+										}
+										if (user.hasPermission(server.getId(), Permission.ADMIN)) {
+									%>
+										<button type="submit" form="deleteserver" class="btn btn-danger">Server löschen</button>
 									<%
 										}
 									%>
+									</span>
 								</fieldset>
 							</form>
+							<form class="form col-lg-6" id="deleteserver" action="action.jsp?do=deleteserver&server=<% out.print(server.getId()); %>" method="POST"></form>
 						</div>
 					</div>
 				</div>
@@ -502,40 +548,9 @@
 			<div id="page-wrapper">
 				<div class="container-fluid">
 					<div class="row">
-						<h1 class="page-header">Dashboard<small>Alle Server</small></h1>
 						<div class="col-lg-12">
-							<div class="col-lg-4">
-								<div class="checkbox">
-									<input type="checkbox"  value=""></input>
-								</div> 
-								<div class="col-lg-6">
-									<div class="form-group">
-										<input id="disabledInput"  class="form-control" type="text" disabled="disabled" placeholder="Server 1"></input>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-2">
-								<div class="alert alert-success"><center>Gestartet</center></div>
-							</div>
-						</div>
-						</br>
-						</br>
-						<div class="col-lg-2">
-						 	<div class="form-group">
-								<select class="form-control">
-									<option>Editieren</option>
-									<option>Löschen</option>
-									<option>Starten</option>
-									<option>Stoppen</option>
-									<option>Restarten</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-lg-2">
-							<button class="btn btn-default">AusfÃ¼hren</button>
-						</div>
-						<div class="col-lg-12">
-							<h1 class="page-header"></h1>
+							<h1 class="page-header">Willkommen!</h1>
+							<p>Willkommen im UmbrellaPanel, hier kannst du alle Server verwalten.<br>Unter Profil kannst du dein Passwort ändern.</p>
 						</div>
 					</div>
 				</div>
@@ -545,5 +560,6 @@
 		}
 	%>
 	</div>
+	<span style="color: white; position: fixed; right: 0px; bottom: 0px; background: none repeat scroll 0% 0% #666; padding-left: 2px; border-top-left-radius: 5px;">&copy; iDreams 2014-2015</span>
 </body>
 </html>

@@ -50,7 +50,9 @@ public class UmbrellaServerManager implements ServerManager {
 		for (int id : servers.keySet()) {
 			GameServer gameServer = getServer(id);
 			if (gameServer.isRunning()) {
-				gameServer.dispatchCommand("stop"); // TODO GameServer#getStopCommand()
+				gameServer.dispatchCommand("stop");
+				gameServer.dispatchCommand("end");
+				gameServer.dispatchCommand("exit");
 				try {
 					gameServer.joinProcess();
 				} catch (Exception e) {

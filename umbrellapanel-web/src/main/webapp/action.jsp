@@ -46,6 +46,24 @@ if (action.equalsIgnoreCase("logout")) {
 	return;
 }
 
+if (action.equalsIgnoreCase("updatepassword") && request.getParameter("oldpassword") != null && request.getParameter("newpassword") != null && request.getParameter("newpassword2") != null) {
+	if (!request.getParameter("newpassword").equals(request.getParameter("newpassword2"))) {
+		response.sendRedirect("/?profil&show=2");
+		return;
+	}
+	if (!user.canLogin(user.getName(), request.getParameter("oldpassword"))) {
+		response.sendRedirect("/?profil&show=3");
+		return;
+	}
+	if (request.getParameter("newpassword").length() < 8) {
+		response.sendRedirect("/?profil&show=4");
+		return;
+	}
+	user.setPassword(request.getParameter("newpassword"));
+	response.sendRedirect("/?profil&show=1");
+	return;
+}
+
 if (action.equalsIgnoreCase("usercreate") && request.getParameter("name") != null && request.getParameter("password") != null && request.getParameter("password2") != null) {
 	if (!user.hasGlobalPermission(Permission.ADMIN)) {
 		return;
@@ -54,7 +72,7 @@ if (action.equalsIgnoreCase("usercreate") && request.getParameter("name") != nul
 		response.sendRedirect("/?users&show=2");
 		return;
 	}
-	if (request.getParameter("password").isEmpty()) {
+	if (request.getParameter("password").length() < 8) {
 		response.sendRedirect("/?users&show=3");
 		return;
 	}
@@ -92,8 +110,8 @@ if (request.getParameter("user") != null) {
 		main.getChief().getPanelUserDatabase().updateUser(editingUser);
 		return;
 	} else if (action.equalsIgnoreCase("updateuser") && request.getParameter("name") != null && request.getParameter("password") != null && request.getParameter("password2") != null) {
-		if (!request.getParameter("password").isEmpty() && !request.getParameter("password2").isEmpty()) {
-			if (!request.getParameter("password").equals(request.getParameter("password2"))) {
+		if (!request.getParameter("password").isEmpty() || !request.getParameter("password2").isEmpty()) {
+			if (!request.getParameter("password").equals(request.getParameter("password2")) ||request.getParameter("password").length() < 8) {
 				response.sendRedirect("/?user=" + editingUser.getId() + "&show=2");
 				return;
 			} else {
@@ -147,6 +165,9 @@ if (request.getParameter("server") != null) {
 		server.setStartCommand(request.getParameter("startcommand"));
 		server.update();
 		response.sendRedirect("/?server=" + server.getId());
+	} else if (action.equalsIgnoreCase("deleteserver") && user.hasPermission(server.getId(), Permission.ADMIN)) {
+		main.getChief().getServerManager().deleteServer(server);
+		response.sendRedirect("/");
 	}
 	return;
 }
