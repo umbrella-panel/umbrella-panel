@@ -67,9 +67,6 @@
 				<directory>src/main/webapp</directory>
 				<targetPath>/web/</targetPath>
 			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
 		</resources>
 		<plugins>
 			<plugin>
