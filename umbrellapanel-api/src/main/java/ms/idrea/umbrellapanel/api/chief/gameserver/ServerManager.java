@@ -3,7 +3,6 @@ package ms.idrea.umbrellapanel.api.chief.gameserver;
 import java.util.List;
 
 import ms.idrea.umbrellapanel.api.core.LoadAndSaveable;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
 public interface ServerManager extends LoadAndSaveable {
@@ -12,7 +11,7 @@ public interface ServerManager extends LoadAndSaveable {
 
 	public List<GameServer> getAllServers();
 
-	public GameServer createServer(PanelUser user, Address address, String startCommand, int workerId);
+	public GameServer createServer(Address address, String startCommand, int workerId);
 
 	public void deleteServer(GameServer server);
 

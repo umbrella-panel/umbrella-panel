@@ -1,6 +1,5 @@
 package ms.idrea.umbrellapanel.worker.net;
 
-import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
 import ms.idrea.umbrellapanel.net.DynamicSession;
@@ -30,10 +29,9 @@ public class ClientMessageHandler implements MessageHandler<DynamicSession, Mess
 		try {
 			if (rawMessage instanceof UpdateGameServerMessage) {
 				UpdateGameServerMessage message = (UpdateGameServerMessage) rawMessage;
-				PanelUser user = getUserOrThrow(message.getUserId());
 				GameServer oldServer = worker.getServerManager().getServer(message.getId());
 				if (oldServer == null) {
-					GameServer server = new UmbrellaGameServer(message.getId(), user.getId(), message.getAddress(), message.getStartCommand(), worker.getLogHandler(), worker.getServerManager(), worker.getUserRegistery(), worker.getNetworkClient());
+					GameServer server = new UmbrellaGameServer(message.getId(), message.getAddress(), message.getStartCommand(), worker.getLogHandler(), worker.getServerManager(), worker.getNetworkClient());
 					switch (message.getAction()) {
 						case CREATE:
 							worker.getServerManager().createServer(server);
@@ -103,14 +101,6 @@ public class ClientMessageHandler implements MessageHandler<DynamicSession, Mess
 			worker.getLogger().warning("Error while processing network messsage: \"" + rawMessage.getClass() + "\" (\"" + rawMessage.toString() + "\"), send by \"" + session.getClass() + "\" (\"" + session.toString() + "\")");
 			e.printStackTrace();
 		}
-	}
-
-	private PanelUser getUserOrThrow(int id) {
-		PanelUser user = worker.getUserRegistery().getPanelUser(id);
-		if (user == null) {
-			throw new NullPointerException("No user found with id " + id);
-		}
-		return user;
 	}
 
 	private GameServer getServerOrThrow(int id) {

@@ -2,6 +2,8 @@ package ms.idrea.umbrellapanel.api.worker;
 
 import java.util.logging.Logger;
 
+import org.apache.ftpserver.ftplet.UserManager;
+
 import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
@@ -25,4 +27,8 @@ public interface Worker {
 	public Logger getLogger();
 
 	public boolean isRunning();
+
+	public void enableConsole();
+
+	public UserManager getFTPUserWrapper();
 }

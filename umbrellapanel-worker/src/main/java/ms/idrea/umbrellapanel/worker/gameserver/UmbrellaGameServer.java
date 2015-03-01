@@ -5,10 +5,9 @@ import java.io.IOException;
 
 import lombok.Getter;
 import lombok.Setter;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
-import ms.idrea.umbrellapanel.api.worker.UserRegistery;
 import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
@@ -27,24 +26,20 @@ public class UmbrellaGameServer implements GameServer {
 	private Address address;
 	@Setter
 	private String startCommand;
-	@Getter
-	private int userId;
 	private UmbrellaServerContoller umbrellaServerContoller;
 	@Getter
 	private File workingDirectory;
 	private LogHandler logHandler;
-	private UserRegistery userRegistery;
 	private NetworkClient networkClient;
 
-	public UmbrellaGameServer(int id, int userId, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, UserRegistery userRegistery, NetworkClient networkClient) {
+	public UmbrellaGameServer(int id, Address address, String startCommand, LogHandler logHandler, ServerManager serverManager, NetworkClient networkClient) {
 		this.id = id;
-		this.userId = userId;
 		this.address = address;
 		this.startCommand = startCommand;
 		this.logHandler = logHandler;
 		this.networkClient = networkClient;
 		// make sure workingDirectory is set
-		workingDirectory = new File(new File(serverManager.getGameServerDirectory(), String.valueOf(userId)), String.valueOf(id));
+		workingDirectory = new File(serverManager.getGameServerDirectory(), String.valueOf(id));
 		if (workingDirectory.getParent() != null) {
 			new File(workingDirectory.getParent()).mkdirs();
 		}
@@ -99,12 +94,7 @@ public class UmbrellaGameServer implements GameServer {
 	public boolean isRunning() {
 		return umbrellaServerContoller != null;
 	}
-
-	@Override
-	public PanelUser getPanelUser() {
-		return userRegistery.getPanelUser(userId);
-	}
-
+	
 	@Override
 	public String getStartCommand() {
 		return startCommand + " -h " + address.getHost() + " -p " + address.getPort();
@@ -119,6 +109,7 @@ public class UmbrellaGameServer implements GameServer {
 
 	protected void appendServerLog(String message) {
 		logHandler.append(id, message);
+		logHandler.flush(); // TODO :/
 	}
 
 	protected void updateProcessState(ProcessState state) {

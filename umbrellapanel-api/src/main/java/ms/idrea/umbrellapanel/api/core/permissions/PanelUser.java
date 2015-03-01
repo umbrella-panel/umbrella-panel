@@ -1,4 +1,4 @@
-package ms.idrea.umbrellapanel.api.core;
+package ms.idrea.umbrellapanel.api.core.permissions;
 
 import java.security.MessageDigest;
 
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class PanelUser {
+public class PanelUser extends Permissible {
 
 	private final int id;
 	private String name;
@@ -20,6 +20,7 @@ public class PanelUser {
 	}
 
 	public PanelUser(int id, String name, String password, boolean isHashed) {
+		super();
 		this.id = id;
 		this.name = name;
 		if (isHashed) {
@@ -30,7 +31,6 @@ public class PanelUser {
 	}
 
 	public boolean canLogin(String name, String password) {
-		System.out.println(this.name + ".equals(" + name + ") && " + this.password + ".equals(" + hashPassword(password) + ")");
 		return this.name.equals(name) && this.password.equals(hashPassword(password));
 	}
 

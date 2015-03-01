@@ -19,7 +19,6 @@ public class UpdateGameServerMessage implements Message {
 
 	private Action action;
 	private int id;
-	private int userId;
 	private Address address;
 	private String startCommand;
 }

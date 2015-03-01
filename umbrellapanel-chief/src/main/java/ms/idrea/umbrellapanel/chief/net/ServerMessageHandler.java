@@ -2,11 +2,10 @@ package ms.idrea.umbrellapanel.chief.net;
 
 import ms.idrea.umbrellapanel.api.chief.Chief;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.chief.UmbrellaChief;
 import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage;
 import ms.idrea.umbrellapanel.net.messages.LogMessage;
-import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage.Action;
@@ -50,7 +49,7 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 						for (GameServer server : chief.getServerManager().getAllServers()) {
 							// only send the worker the server if he owns it
 							if (server.getWorkerId() == worker.getId()) {
-								worker.send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.UPDATE, server.getId(), server.getUserId(), server.getAddress(), server.getStartCommand()));
+								server.update();
 							}
 						}
 					}

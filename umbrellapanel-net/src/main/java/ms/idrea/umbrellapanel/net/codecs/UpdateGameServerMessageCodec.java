@@ -17,18 +17,16 @@ public class UpdateGameServerMessageCodec implements Codec<UpdateGameServerMessa
 	public UpdateGameServerMessage decode(ByteBuf buf) throws IOException {
 		String action = ByteBufUtils.readUTF8(buf);
 		int id = buf.readInt();
-		int userId = buf.readInt();
 		String ip = ByteBufUtils.readUTF8(buf);
 		int port = buf.readInt();
 		String startCommand = ByteBufUtils.readUTF8(buf);
-		return new UpdateGameServerMessage(Action.valueOf(action), id, userId, new Address(ip, port), startCommand);
+		return new UpdateGameServerMessage(Action.valueOf(action), id, new Address(ip, port), startCommand);
 	}
 
 	@Override
 	public ByteBuf encode(ByteBuf buf, UpdateGameServerMessage message) throws IOException {
 		ByteBufUtils.writeUTF8(buf, message.getAction().toString());
 		buf.writeInt(message.getId());
-		buf.writeInt(message.getUserId());
 		ByteBufUtils.writeUTF8(buf, message.getAddress().getHost());
 		buf.writeInt(message.getAddress().getPort());
 		ByteBufUtils.writeUTF8(buf, message.getStartCommand());

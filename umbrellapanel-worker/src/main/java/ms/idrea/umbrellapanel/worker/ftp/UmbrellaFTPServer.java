@@ -33,7 +33,7 @@ public class UmbrellaFTPServer implements FTPServer {
 		ListenerFactory listener = new ListenerFactory();
 		listener.setPort(21);
 		serverFactory.addListener("default", listener.createListener());
-		serverFactory.setUserManager(worker.getUserRegistery());
+		serverFactory.setUserManager(worker.getFTPUserWrapper());
 		serverFactory.setFtplets(bakeFtplets());
 		ftpServer = serverFactory.createServer();
 		try {

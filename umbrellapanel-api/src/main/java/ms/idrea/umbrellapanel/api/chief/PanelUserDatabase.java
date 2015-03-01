@@ -3,11 +3,13 @@ package ms.idrea.umbrellapanel.api.chief;
 import java.util.List;
 
 import ms.idrea.umbrellapanel.api.core.LoadAndSaveable;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 
 public interface PanelUserDatabase extends LoadAndSaveable {
 
 	public PanelUser createUser(String name, String password);
+
+	public PanelUser getUser(String name);
 
 	public void updateUser(PanelUser user);
 

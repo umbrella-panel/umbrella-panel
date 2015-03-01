@@ -12,7 +12,7 @@ import java.util.Map;
 
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage.Action;
 
@@ -66,6 +66,17 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 		users.remove(user.getId());
 		broadcastChange(user, Action.DELETE);
 	}
+	
+	@Override
+	public PanelUser getUser(String name) {
+		for (int id : users.keySet()) {
+			PanelUser user = getUser(id);
+			if (user.getName().equalsIgnoreCase(name)) {
+				return user;
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public PanelUser getUser(int id) {
@@ -92,6 +103,12 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 			writer.newLine();
 			writer.write(user.getPassword());
 			writer.newLine();
+			writer.write(String.valueOf(user.getPermissions().size()));
+			writer.newLine();
+			for (int serverId : user.getPermissions().keySet()) {
+				writer.write(serverId + ":" + user.getPermission(serverId));
+				writer.newLine();
+			}
 		}
 		writer.flush();
 	}
@@ -104,7 +121,13 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 		users = new HashMap<>(userSize);
 		for (int i = 0; i < userSize; i++) {
 			int id = Integer.valueOf(reader.readLine());
-			users.put(id, new PanelUser(id, reader.readLine(), reader.readLine(), true));
+			PanelUser user = new PanelUser(id, reader.readLine(), reader.readLine(), true);
+			int permissionSize = Integer.valueOf(reader.readLine());
+			for (int j = 0; j < permissionSize; j++) {
+				String[] l = reader.readLine().split(":");
+				user.grantPermission(Integer.valueOf(l[0]), Integer.valueOf(l[1]));
+			}
+			users.put(id, user);
 		}
 	}
 }

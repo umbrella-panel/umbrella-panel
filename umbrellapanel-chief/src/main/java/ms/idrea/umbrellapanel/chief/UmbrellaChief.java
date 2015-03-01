@@ -13,7 +13,7 @@ import ms.idrea.umbrellapanel.api.chief.conf.ChiefProperties;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.chief.conf.UmbrellaChiefProperties;
@@ -29,11 +29,19 @@ public class UmbrellaChief implements Chief {
 	@Getter
 	private static Chief instance;
 
-	public static void main(String... args) {
+	public static Chief createInstance() {
 		instance = new UmbrellaChief();
-		instance.start();
+		return instance;
 	}
 
+	public static void main(String... args) {
+		createInstance();
+		instance.start();
+		instance.enableConsole();
+	}
+
+	private UmbrellaChief() {}
+	
 	// TODO save
 	/*
 	 * Users
@@ -41,7 +49,7 @@ public class UmbrellaChief implements Chief {
 	 * 
 	 * OfflineWorkers
 	 * LastWorkerId
-	 * 
+	 * s
 	 * Servers
 	 * LastServerId
 	 * 
@@ -80,7 +88,9 @@ public class UmbrellaChief implements Chief {
 		fileManager.register(workerManager, "workers");
 		fileManager.register(panelUserDatabase, "users");
 		fileManager.load();
-		//
+	}
+	
+	public void enableConsole() {
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		while ((line = scanner.nextLine()) != null) {
@@ -113,8 +123,7 @@ public class UmbrellaChief implements Chief {
 				PanelUser user = panelUserDatabase.createUser(args[0], args[1]);
 				System.out.println(user);
 			} else if (base.equalsIgnoreCase("createserver")) {
-				PanelUser user = panelUserDatabase.getUser(Integer.valueOf(args[0]));
-				GameServer server = serverManager.createServer(user, new Address(args[1], Integer.valueOf(args[2])), "java -jar server.jar", Integer.valueOf(args[3]));
+				GameServer server = serverManager.createServer(new Address(args[0], Integer.valueOf(args[1])), "java -jar server.jar", Integer.valueOf(args[2]));
 				System.out.println(server);
 			} else if (base.equalsIgnoreCase("manageserver")) {
 				GameServer server = serverManager.getServer(Integer.valueOf(args[1]));
@@ -163,10 +172,19 @@ public class UmbrellaChief implements Chief {
 					System.out.println(server.toString());
 				}
 				System.out.println("------");
+			} else if (base.equalsIgnoreCase("addperm")) {
+				PanelUser user = panelUserDatabase.getUser(Integer.valueOf(args[0]));
+				if (args.length == 2) {
+					user.grantGlobalPermission(Integer.valueOf(args[1]));
+				} else {
+					user.grantPermission(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+				}
+				panelUserDatabase.updateUser(user);
+				System.out.println("OK");
 			} else if (base.equalsIgnoreCase("help")) {
 				logger.info("commands:");
 				logger.info("adduser <name> <password>");
-				logger.info("crateserver <userId> <hostIp> <hostPort> <workerId>");
+				logger.info("crateserver <hostIp> <hostPort> <workerId>");
 				logger.info("manageserver <start|force-stop|delete> <serverId>");
 				logger.info("sendcmd <serverId> <cmd...>");
 				logger.info("listworkers");

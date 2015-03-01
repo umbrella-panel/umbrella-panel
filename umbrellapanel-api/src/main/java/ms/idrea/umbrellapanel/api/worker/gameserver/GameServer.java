@@ -1,6 +1,5 @@
 package ms.idrea.umbrellapanel.api.worker.gameserver;
 
-import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
 public interface GameServer {
@@ -10,10 +9,6 @@ public interface GameServer {
 	public Address getAddress();
 
 	public void setAddress(Address address);
-
-	public int getUserId();
-
-	public PanelUser getPanelUser();
 
 	public void setup();
 

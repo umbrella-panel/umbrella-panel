@@ -14,7 +14,6 @@ import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
 public class UmbrellaServerManager implements ServerManager {
@@ -49,8 +48,11 @@ public class UmbrellaServerManager implements ServerManager {
 	}
 
 	@Override
-	public GameServer createServer(PanelUser user, Address address, String startCommand, int workerId) {
-		GameServer server = new UmbrellaGameServer(getNextId(), user.getId(), workerId, address, startCommand, workerManager, panelUserDatabase);
+	public GameServer createServer(Address address, String startCommand, int workerId) {
+		GameServer server = new UmbrellaGameServer(getNextId(), workerId, address, startCommand, workerManager, panelUserDatabase);
+		if (server.getWorker() == null) {
+			throw new IllegalStateException("Worker is offline!");
+		}
 		servers.put(server.getId(), server);
 		server.setup();
 		return server;
@@ -73,8 +75,6 @@ public class UmbrellaServerManager implements ServerManager {
 			GameServer server = getServer(id);
 			writer.write(String.valueOf(server.getId()));
 			writer.newLine();
-			writer.write(String.valueOf(server.getUserId()));
-			writer.newLine();
 			writer.write(String.valueOf(server.getWorkerId()));
 			writer.newLine();
 			writer.write(String.valueOf(server.getAddress().getHost()));
@@ -82,6 +82,8 @@ public class UmbrellaServerManager implements ServerManager {
 			writer.write(String.valueOf(server.getAddress().getPort()));
 			writer.newLine();
 			writer.write(String.valueOf(server.getStartCommand()));
+			writer.newLine();
+			writer.write(String.valueOf(server.getName()));
 			writer.newLine();
 		}
 		writer.flush();
@@ -95,12 +97,13 @@ public class UmbrellaServerManager implements ServerManager {
 		servers = new ConcurrentHashMap<>(serverSize);
 		for (int i = 0; i < serverSize; i++) {
 			int id = Integer.valueOf(reader.readLine());
-			int userId = Integer.valueOf(reader.readLine());
 			int workerId = Integer.valueOf(reader.readLine());
 			String host = reader.readLine();
 			int port = Integer.valueOf(reader.readLine());
 			String startCommand = reader.readLine();
-			servers.put(id, new UmbrellaGameServer(id, userId, workerId, new Address(host, port), startCommand, workerManager, panelUserDatabase));
+			GameServer server = new UmbrellaGameServer(id, workerId, new Address(host, port), startCommand, workerManager, panelUserDatabase);
+			server.setName(reader.readLine());
+			servers.put(id, server);
 		}
 	}
 }

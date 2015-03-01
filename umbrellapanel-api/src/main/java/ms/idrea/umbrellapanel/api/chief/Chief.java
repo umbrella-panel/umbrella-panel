@@ -21,4 +21,6 @@ public interface Chief {
 	public Logger getLogger();
 	
 	public ChiefProperties getChiefProperties();
+	
+	public void enableConsole();
 }

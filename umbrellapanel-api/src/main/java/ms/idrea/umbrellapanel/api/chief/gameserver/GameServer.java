@@ -2,7 +2,10 @@ package ms.idrea.umbrellapanel.api.chief.gameserver;
 
 import java.util.List;
 
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
 import com.flowpowered.networking.session.Session;
@@ -14,10 +17,6 @@ public interface GameServer {
 	public Address getAddress();
 
 	public void setAddress(Address address);
-
-	public int getUserId();
-
-	public PanelUser getPanelUser();
 
 	public void setup();
 
@@ -39,9 +38,26 @@ public interface GameServer {
 
 	public Session getWorker();
 
+	public String getName();
+
+	public void setName(String name);
+
 	public int getWorkerId();
-	
+
 	public void appendLog(String log);
-	
-	public List<String> getLogBuffer();
+
+	public List<PanelUser> listUsers(int permission);
+
+	public List<ServerLog> getLogBuffer();
+
+	@Getter
+	@ToString
+	@AllArgsConstructor
+	public static class ServerLog {
+
+		private final long timestamp;
+		private final String message;
+	}
+
+	public void update();
 }

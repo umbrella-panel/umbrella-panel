@@ -5,6 +5,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.ftpserver.ftplet.UserManager;
+
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
@@ -17,6 +19,7 @@ import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage.Action;
 import ms.idrea.umbrellapanel.worker.conf.UmbrellaWorkerProperties;
+import ms.idrea.umbrellapanel.worker.ftp.FTPUserWrapper;
 import ms.idrea.umbrellapanel.worker.ftp.UmbrellaFTPServer;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
@@ -30,6 +33,7 @@ public class UmbrellaWorker implements Worker {
 	public static void main(String... args) {
 		instance = new UmbrellaWorker();
 		instance.start();
+		instance.enableConsole();
 	}
 
 	// ---------------
@@ -40,6 +44,7 @@ public class UmbrellaWorker implements Worker {
 	private UserRegistery userRegistery;
 	private FTPServer ftpServer;
 	private WorkerProperties workerProperties;
+	private UserManager ftpUserWrapper;
 	private boolean isRunning;
 
 	// loadup the good stuffzz
@@ -57,7 +62,9 @@ public class UmbrellaWorker implements Worker {
 		LoggerHelper.worker(logger, Level.INFO);
 		workerProperties = new UmbrellaWorkerProperties(this);
 		workerProperties.load();
-		userRegistery = new UmbrellaUserRegistery(this);
+		userRegistery = new UmbrellaUserRegistery();
+		serverManager = new UmbrellaServerManager();
+		ftpUserWrapper = new FTPUserWrapper(userRegistery, serverManager);
 		ftpServer = new UmbrellaFTPServer(this);
 		try {
 			ftpServer.start();
@@ -65,7 +72,6 @@ public class UmbrellaWorker implements Worker {
 			new Exception("Failed to start ftp server!", e).printStackTrace();
 		}
 		logHandler = new UmbrellaLogHandler(this);
-		serverManager = new UmbrellaServerManager();
 		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()), new Runnable() {
 
 			@Override
@@ -78,6 +84,9 @@ public class UmbrellaWorker implements Worker {
 				// the umbrella server should now send all the data.
 			}
 		});
+	}
+	
+	public void enableConsole() {
 		Scanner scanner = new Scanner(System.in);
 		String input;
 		while ((input = scanner.next()) != null) {
@@ -103,5 +112,10 @@ public class UmbrellaWorker implements Worker {
 		workerProperties.save();
 		ftpServer.shutdown();
 		networkClient.shutdown();
+	}
+
+	@Override
+	public UserManager getFTPUserWrapper() {
+		return ftpUserWrapper;
 	}
 }

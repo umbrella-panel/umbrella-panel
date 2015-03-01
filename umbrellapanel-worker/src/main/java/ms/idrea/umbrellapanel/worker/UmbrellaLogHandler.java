@@ -34,7 +34,7 @@ public class UmbrellaLogHandler extends Thread implements LogHandler {
 					wait(SEND_INTERVAL);
 				} catch (InterruptedException e) {
 				}
-				flush();
+			//	flush();
 			}
 		}
 	}

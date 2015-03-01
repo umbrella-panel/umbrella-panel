@@ -39,3 +39,4 @@ manifest.mf
 *.properties
 *.dat
 *.conf
+*.bat

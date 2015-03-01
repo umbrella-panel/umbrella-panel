@@ -1,5 +1,6 @@
 package ms.idrea.umbrellapanel.chief.gameserver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,7 @@ import lombok.ToString;
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
-import ms.idrea.umbrellapanel.api.core.PanelUser;
+import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.net.Worker;
 import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
@@ -29,29 +30,30 @@ public class UmbrellaGameServer implements GameServer {
 	@Getter
 	private String startCommand;
 	@Getter
-	private int userId;
-	@Getter
 	private boolean isRunning = false;
+	@Getter
+	@Setter
+	private String name;
 	@Getter
 	private int workerId;
 	private PanelUserDatabase panelUserDatabase;
 	private WorkerManager workerManager;
-	private List<String> logBuffer;
+	private List<ServerLog> logBuffer;
 
-	public UmbrellaGameServer(int id, int userId, int workerId, Address address, String startCommand, WorkerManager workerManager, PanelUserDatabase panelUserDatabase) {
+	public UmbrellaGameServer(int id, int workerId, Address address, String startCommand, WorkerManager workerManager, PanelUserDatabase panelUserDatabase) {
 		this.id = id;
-		this.userId = userId;
+		this.name = "SERVER-" + id + " ON " + address.getHost() + ":" + address.getPort();
 		this.workerId = workerId;
 		this.address = address;
 		this.startCommand = startCommand;
 		this.workerManager = workerManager;
 		this.panelUserDatabase = panelUserDatabase;
-		this.logBuffer = Collections.synchronizedList(new LinkedList<String>());
+		this.logBuffer = Collections.synchronizedList(new LinkedList<ServerLog>());
 	}
 
 	@Override
 	public void setup() {
-		getWorkerOrThrow().send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.CREATE, id, userId, address, startCommand));
+		getWorkerOrThrow().send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.CREATE, id, address, startCommand));
 	}
 
 	@Override
@@ -88,11 +90,6 @@ public class UmbrellaGameServer implements GameServer {
 	}
 
 	@Override
-	public PanelUser getPanelUser() {
-		return panelUserDatabase.getUser(id);
-	}
-
-	@Override
 	public Worker getWorker() {
 		return (Worker) workerManager.getRunningWorker(workerId);
 	}
@@ -112,11 +109,27 @@ public class UmbrellaGameServer implements GameServer {
 
 	@Override
 	public void appendLog(String log) {
-		logBuffer.add(log);
+		logBuffer.add(new ServerLog(System.currentTimeMillis(), log));
 	}
 
 	@Override
-	public List<String> getLogBuffer() {
+	public List<ServerLog> getLogBuffer() {
 		return Collections.unmodifiableList(logBuffer);
+	}
+
+	@Override
+	public void update() {
+		getWorkerOrThrow().send(new UpdateGameServerMessage(ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage.Action.UPDATE, id, address, startCommand));
+	}
+
+	@Override
+	public List<PanelUser> listUsers(int permission) {
+		List<PanelUser> temp = new ArrayList<>();
+		for (PanelUser user : panelUserDatabase.getAllUsers()) {
+			if (user.hasPermission(id, permission)) {
+				temp.add(user);
+			}
+		}
+		return temp;
 	}
 }
