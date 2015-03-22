@@ -18,6 +18,7 @@ public class UmbrellaChiefProperties extends UmbrellaProperties implements Chief
 	public void onNewPropertiesCreated() {
 		setSharedPassword(new BigInteger(130, new SecureRandom()).toString(32));
 		setNetPort(35886);
+		setWebPort(8081);
 	}
 
 	@Override
@@ -38,5 +39,15 @@ public class UmbrellaChiefProperties extends UmbrellaProperties implements Chief
 	@Override
 	public void setNetPort(int port) {
 		set(Key.NET_PORT, port);
+	}
+
+	@Override
+	public int getWebPort() {
+		return getInt(Key.WEB_PORT, 8081);
+	}
+
+	@Override
+	public void setWebPort(int port) {
+		set(Key.WEB_PORT, port);
 	}
 }

@@ -39,7 +39,7 @@ public class UmbrellaWeb {
 		try {
 			tomcat = new Tomcat();
 			tomcat.getConnector().setDomain("0.0.0.0");
-			tomcat.getConnector().setPort(8081);
+			tomcat.getConnector().setPort(chief.getChiefProperties().getWebPort());
 			Context context = tomcat.addWebapp("", new File("web").getAbsolutePath());
 			context.setConfigFile(new File("web/WEB-INF/web.xml").getAbsoluteFile().toURL());
 			tomcat.start();

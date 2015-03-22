@@ -13,4 +13,8 @@ public interface ChiefProperties {
 	public int getNetPort();
 
 	public void setNetPort(int port);
+
+	public int getWebPort();
+
+	public void setWebPort(int port);
 }

@@ -13,7 +13,8 @@ public abstract class UmbrellaProperties {
 		NET_PORT,
 		WORKER_ID,
 		CHIEF_HOST,
-		CHIEF_PORT;
+		CHIEF_PORT,
+		WEB_PORT;
 
 		public String toPath() {
 			return toString().toLowerCase();
