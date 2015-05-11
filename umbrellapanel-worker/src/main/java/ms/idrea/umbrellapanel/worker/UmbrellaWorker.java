@@ -85,7 +85,7 @@ public class UmbrellaWorker implements Worker {
 			}
 		});
 	}
-	
+
 	public void enableConsole() {
 		Scanner scanner = new Scanner(System.in);
 		String input;

@@ -9,15 +9,8 @@ import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
 
 public class UmbrellaServerManager implements ServerManager {
 
-	// UmbrellaWeb -> UmbrellaWorker -> This -> (Commands)
-	// OnStartup -> UmbrellaWeb -> SERVERS TO MANAGE -> This
-	// 
-	// Messages:
-	// ManageGameServer -> Type (Create || Delete || Force-Stop)
-	// GameServerCommandMessage
-	// GameServerLogMessage
-	// 
-	// 
+	public static final String[] STOP_COMMANDS = { "stop", "end", "exit", "shutdown" };
+
 	private ConcurrentMap<Integer, GameServer> servers = new ConcurrentHashMap<>();
 
 	@Override
@@ -50,9 +43,9 @@ public class UmbrellaServerManager implements ServerManager {
 		for (int id : servers.keySet()) {
 			GameServer gameServer = getServer(id);
 			if (gameServer.isRunning()) {
-				gameServer.dispatchCommand("stop");
-				gameServer.dispatchCommand("end");
-				gameServer.dispatchCommand("exit");
+				for (String command : STOP_COMMANDS) {
+					gameServer.dispatchCommand(command);
+				}
 				try {
 					gameServer.joinProcess();
 				} catch (Exception e) {

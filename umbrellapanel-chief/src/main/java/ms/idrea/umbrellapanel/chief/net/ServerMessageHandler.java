@@ -23,7 +23,6 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 
 	@Override
 	public void handle(Worker worker, Message rawMessage) {
-		// System.out.println("[SERVER-IN " + worker + "]: " + rawMessage);
 		try {
 			if (rawMessage instanceof WorkerMessage) {
 				WorkerMessage message = (WorkerMessage) rawMessage;

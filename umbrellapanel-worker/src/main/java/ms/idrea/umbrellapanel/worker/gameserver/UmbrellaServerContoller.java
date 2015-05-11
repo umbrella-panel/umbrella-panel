@@ -21,7 +21,6 @@ public class UmbrellaServerContoller extends Thread {
 		STOPPING
 	};
 
-	public static final String STOP_COMMAND = "stop";
 	private UmbrellaGameServer server;
 	private Process process;
 	private BufferedReader input;
@@ -51,11 +50,6 @@ public class UmbrellaServerContoller extends Thread {
 		} else {
 			setState(ProcessState.STOPPED);
 		}
-	}
-
-	public void softStop() {
-		dispatchCommand(STOP_COMMAND);
-		setState(ProcessState.STOPPING);
 	}
 
 	public boolean dispatchCommand(String command) {

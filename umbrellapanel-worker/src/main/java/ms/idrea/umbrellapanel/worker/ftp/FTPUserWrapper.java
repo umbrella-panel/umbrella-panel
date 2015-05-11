@@ -2,7 +2,6 @@ package ms.idrea.umbrellapanel.worker.ftp;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,6 @@ public class FTPUserWrapper implements UserManager {
 
 	private WrappedUser getWrapper(String loginName) {
 		String[] split = loginName.split("-");
-		System.out.println(Arrays.toString(split));
 		if (split.length != 2 || !Utils.isInteger(split[0])) {
 			return null;
 		}
@@ -43,14 +41,11 @@ public class FTPUserWrapper implements UserManager {
 		if (user == null) {
 			return null;
 		}
-		System.out.println(user);
 		int serverId = Integer.valueOf(split[0]);
 		GameServer server = serverManager.getServer(serverId);
 		if (server == null) {
-			System.out.println("server null");
 			return null;
 		}
-		System.out.println(user.getPermissions().toString());
 		if (!user.hasPermission(server.getId(), Permission.FTP_ACCESS)) {
 			return null;
 		}

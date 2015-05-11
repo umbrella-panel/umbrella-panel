@@ -41,20 +41,7 @@ public class UmbrellaChief implements Chief {
 	}
 
 	private UmbrellaChief() {}
-	
-	// TODO save
-	/*
-	 * Users
-	 * LastUserId
-	 * 
-	 * OfflineWorkers
-	 * LastWorkerId
-	 * s
-	 * Servers
-	 * LastServerId
-	 * 
-	 */
-	// ---------------
+
 	private ChiefProperties chiefProperties;
 	private FileManager fileManager;
 	private NetworkServer networkServer;
