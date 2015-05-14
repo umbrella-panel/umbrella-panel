@@ -13,6 +13,7 @@ import ms.idrea.umbrellapanel.api.chief.conf.ChiefProperties;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
+import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
@@ -20,6 +21,7 @@ import ms.idrea.umbrellapanel.chief.conf.UmbrellaChiefProperties;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
 import ms.idrea.umbrellapanel.chief.net.Worker;
+import ms.idrea.umbrellapanel.chief.webapi.UmbrellaEndPointManager;
 
 import com.flowpowered.networking.session.Session;
 
@@ -48,6 +50,7 @@ public class UmbrellaChief implements Chief {
 	private PanelUserDatabase panelUserDatabase;
 	private ServerManager serverManager;
 	private WorkerManager workerManager;
+	private EndPointManager webapi;
 	private Logger logger;
 	private boolean isRunning;
 
@@ -70,6 +73,11 @@ public class UmbrellaChief implements Chief {
 		networkServer = new UmbrellaNetworkServer(workerManager, chiefProperties.getNetPort());
 		panelUserDatabase = new UmbrellaPanelUserDatabase(networkServer);
 		serverManager = new UmbrellaServerManager(panelUserDatabase, workerManager);
+		try {
+			webapi = new UmbrellaEndPointManager(this);
+		} catch (Exception e) {
+			new Exception("Failed to start EndPointManager", e).printStackTrace();
+		}
 		//
 		fileManager.register(serverManager, "servers");
 		fileManager.register(workerManager, "workers");
@@ -96,6 +104,7 @@ public class UmbrellaChief implements Chief {
 			return;
 		}
 		isRunning = false;
+		webapi.shutdown();
 		networkServer.shutdown();
 		chiefProperties.save();
 		fileManager.save();
@@ -177,6 +186,8 @@ public class UmbrellaChief implements Chief {
 				logger.info("listworkers");
 				logger.info("listusers");
 				logger.info("listservers");
+				logger.info("addperm <userId> <value>");
+				logger.info("addperm <userId> <serverId> <value>");
 			} else {
 				logger.info("Unknown command! For help type \"help\"");
 			}

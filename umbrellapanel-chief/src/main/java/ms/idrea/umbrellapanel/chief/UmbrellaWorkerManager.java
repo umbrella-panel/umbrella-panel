@@ -80,7 +80,6 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	@Override
 	public void onStop(Session session) {
 		Worker worker = sessionToWorker(session);
-		// TODO shutdown all 
 		runningWorkers.remove(worker.getId());
 		workerList = null;
 	}

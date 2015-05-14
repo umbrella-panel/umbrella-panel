@@ -50,6 +50,8 @@ public interface GameServer {
 
 	public List<ServerLog> getLogBuffer();
 
+	public void update();
+
 	@Getter
 	@ToString
 	@AllArgsConstructor
@@ -58,6 +60,4 @@ public interface GameServer {
 		private final long timestamp;
 		private final String message;
 	}
-
-	public void update();
 }

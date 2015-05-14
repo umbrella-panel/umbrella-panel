@@ -40,6 +40,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>ms.idrea</groupId>
+			<artifactId>umbrellapanel-chief-webapi-v1</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>ms.idrea</groupId>
 			<artifactId>umbrellapanel-net</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
