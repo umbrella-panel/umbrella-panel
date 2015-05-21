@@ -43,6 +43,8 @@ public interface GameServer {
 	public void setName(String name);
 
 	public int getWorkerId();
+	
+	public Address getWorkerAddress();
 
 	public void appendLog(String log);
 

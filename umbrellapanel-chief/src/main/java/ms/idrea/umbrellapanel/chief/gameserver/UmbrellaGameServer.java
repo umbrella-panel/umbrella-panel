@@ -90,6 +90,15 @@ public class UmbrellaGameServer implements GameServer {
 	}
 
 	@Override
+	public Address getWorkerAddress() {
+		Worker worker = getWorker();
+		if (worker == null) {
+			return null;
+		}
+		return new Address(worker.getAddress().getHostString(), worker.getAddress().getPort());
+	}
+
+	@Override
 	public Worker getWorker() {
 		return (Worker) workerManager.getRunningWorker(workerId);
 	}

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
+import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.server.ConsoleEndPoint;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.server.ManageEndPoint;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.server.SendCommandEndPoint;
@@ -44,11 +45,21 @@ public class V1EndPoints {
 		BasicDBObject s = new BasicDBObject();
 		s.append("id", server.getId());
 		s.append("name", server.getName());
-		s.append("workerId", server.getWorkerId());
+		BasicDBObject w = new BasicDBObject();
+		w.append("workerId", server.getWorkerId());
+		w.append("online", server.getWorker() != null);
+		Address workerAdress = server.getWorkerAddress();
+		if (workerAdress != null) {
+			w.append("address", workerAdress.toString());
+			w.append("ip", workerAdress.getHost());
+			w.append("port", workerAdress.getPort());
+		}
+		s.append("worker", w);
 		s.append("isRunning", server.isRunning());
 		s.append("address", server.getAddress().toString());
 		s.append("ip", server.getAddress().getHost());
 		s.append("port", server.getAddress().getPort());
+		s.append("startcommand", server.getStartCommand());
 		return s;
 	}
 
