@@ -36,6 +36,9 @@ public class ManageEndPoint extends ServerEndPoint {
 	public EndPointResponse __getResponse(HttpServletRequest request, PanelUser user, GameServer server) {
 		String action = request.getParameter("action");
 		if (action.equalsIgnoreCase("update")) {
+			if (!user.hasPermission(server.getId(), Permission.SERVER_SETTINGS)) {
+				return INSUFFICIENT_PERMISSIONS_RESPONSE;
+			}
 			if (!server.isRunning()) {
 				boolean edited = false;
 				if (request.getParameter("servername") != null) {
