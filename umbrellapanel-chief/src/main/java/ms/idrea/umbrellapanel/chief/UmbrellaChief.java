@@ -20,7 +20,7 @@ import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.chief.conf.UmbrellaChiefProperties;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
-import ms.idrea.umbrellapanel.chief.net.Worker;
+import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 import ms.idrea.umbrellapanel.chief.webapi.UmbrellaEndPointManager;
 
 import com.flowpowered.networking.session.Session;
@@ -148,8 +148,8 @@ public class UmbrellaChief implements Chief {
 			} else if (base.equalsIgnoreCase("listworkers")) {
 				System.out.println("---Workers---");
 				for (Session session : workerManager.getAllWorkers()) {
-					if (session instanceof Worker) {
-						Worker worker = (Worker) session;
+					if (session instanceof UmbrellaWorker) {
+						UmbrellaWorker worker = (UmbrellaWorker) session;
 						System.out.println(worker.getId() + " on " + worker.getAddress());
 					} else {
 						System.out.println("Unknown " + session.toString());

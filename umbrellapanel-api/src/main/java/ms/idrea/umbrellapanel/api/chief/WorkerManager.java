@@ -10,7 +10,7 @@ public interface WorkerManager extends LoadAndSaveable {
 
 	public List<? extends Session> getAllWorkers();
 
-	public Object getWorker(int id);
+	public Worker getWorker(int id);
 
 	public Session getRunningWorker(int id);
 

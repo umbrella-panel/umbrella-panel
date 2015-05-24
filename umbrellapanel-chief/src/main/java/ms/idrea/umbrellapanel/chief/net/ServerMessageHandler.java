@@ -13,7 +13,7 @@ import ms.idrea.umbrellapanel.net.messages.WorkerMessage.Action;
 import com.flowpowered.networking.Message;
 import com.flowpowered.networking.MessageHandler;
 
-public class ServerMessageHandler implements MessageHandler<Worker, Message> {
+public class ServerMessageHandler implements MessageHandler<UmbrellaWorker, Message> {
 
 	private Chief chief;
 
@@ -22,7 +22,7 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 	}
 
 	@Override
-	public void handle(Worker worker, Message rawMessage) {
+	public void handle(UmbrellaWorker worker, Message rawMessage) {
 		try {
 			if (rawMessage instanceof WorkerMessage) {
 				WorkerMessage message = (WorkerMessage) rawMessage;
@@ -47,7 +47,7 @@ public class ServerMessageHandler implements MessageHandler<Worker, Message> {
 						}
 						for (GameServer server : chief.getServerManager().getAllServers()) {
 							// only send the worker the server if he owns it
-							if (server.getWorkerId() == worker.getId()) {
+							if (server.getWorker().getId() == worker.getId()) {
 								server.update();
 							}
 						}

@@ -9,11 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
+import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
-import ms.idrea.umbrellapanel.chief.net.Worker;
+import ms.idrea.umbrellapanel.chief.UmbrellaWorkerManager.OfflineWorker;
+import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
 import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
@@ -90,21 +92,17 @@ public class UmbrellaGameServer implements GameServer {
 	}
 
 	@Override
-	public Address getWorkerAddress() {
-		Worker worker = getWorker();
-		if (worker == null) {
-			return null;
-		}
-		return new Address(worker.getAddress().getHostString(), worker.getAddress().getPort());
+	public UmbrellaWorker getOnlineWorker() {
+		return ((OfflineWorker) getWorker()).getOnlineWorker();
 	}
 
 	@Override
 	public Worker getWorker() {
-		return (Worker) workerManager.getRunningWorker(workerId);
+		return workerManager.getWorker(workerId);
 	}
-
-	private Worker getWorkerOrThrow() {
-		Worker worker = getWorker();
+	
+	private UmbrellaWorker getWorkerOrThrow() {
+		UmbrellaWorker worker = getOnlineWorker();
 		if (worker == null) {
 			throw new IllegalStateException("Worker is offline!");
 		}

@@ -7,13 +7,13 @@ import ms.idrea.umbrellapanel.net.DynamicSession;
 
 import com.flowpowered.networking.protocol.AbstractProtocol;
 
-public class Worker extends DynamicSession {
+public class UmbrellaWorker extends DynamicSession {
 
 	@Setter
 	@Getter
 	private int id = -1;
 
-	public Worker(Channel channel, AbstractProtocol bootstrapProtocol) {
+	public UmbrellaWorker(Channel channel, AbstractProtocol bootstrapProtocol) {
 		super(channel, bootstrapProtocol);
 	}
 }

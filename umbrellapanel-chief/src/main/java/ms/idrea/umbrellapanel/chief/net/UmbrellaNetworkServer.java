@@ -18,7 +18,7 @@ import com.flowpowered.networking.session.Session;
 public class UmbrellaNetworkServer extends NetworkServer implements ms.idrea.umbrellapanel.api.chief.net.NetworkServer {
 
 	private ProtocolRegistry<AbstractProtocol> pr = new ProtocolRegistry<>();
-	private ConcurrentMap<InetSocketAddress, Worker> workers = new ConcurrentHashMap<>();
+	private ConcurrentMap<InetSocketAddress, UmbrellaWorker> workers = new ConcurrentHashMap<>();
 	private WorkerManager workerManager;
 
 	public UmbrellaNetworkServer(WorkerManager workerManager, int netport) {
@@ -33,17 +33,17 @@ public class UmbrellaNetworkServer extends NetworkServer implements ms.idrea.umb
 
 	@Override
 	public Session newSession(Channel c) {
-		Worker session = new Worker(c, pr.getProtocol(c.localAddress()));
+		UmbrellaWorker session = new UmbrellaWorker(c, pr.getProtocol(c.localAddress()));
 		workers.put(session.getAddress(), session);
 		return session;
 	}
 
 	@Override
 	public void sessionInactivated(Session session) {
-		if (!(session instanceof Worker)) {
+		if (!(session instanceof UmbrellaWorker)) {
 			throw new IllegalArgumentException("Session is not a Worker!");
 		}
-		workers.remove(((Worker) session).getAddress());
+		workers.remove(((UmbrellaWorker) session).getAddress());
 		workerManager.onStop(session);
 	}
 

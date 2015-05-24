@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
@@ -45,22 +46,26 @@ public class V1EndPoints {
 		BasicDBObject s = new BasicDBObject();
 		s.append("id", server.getId());
 		s.append("name", server.getName());
-		BasicDBObject w = new BasicDBObject();
-		w.append("workerId", server.getWorkerId());
-		w.append("online", server.getWorker() != null);
-		Address workerAdress = server.getWorkerAddress();
-		if (workerAdress != null) {
-			w.append("address", workerAdress.toString());
-			w.append("ip", workerAdress.getHost());
-			w.append("port", workerAdress.getPort());
-		}
-		s.append("worker", w);
+		s.append("worker", convertWorker(server.getWorker()));
 		s.append("isRunning", server.isRunning());
 		s.append("address", server.getAddress().toString());
 		s.append("ip", server.getAddress().getHost());
 		s.append("port", server.getAddress().getPort());
 		s.append("startcommand", server.getStartCommand());
 		return s;
+	}
+	
+	public static BasicDBObject convertWorker(Worker worker) {
+		BasicDBObject w = new BasicDBObject();
+		w.append("id", worker.getId());
+		w.append("online", worker.isOnline());
+		Address workerAdress = worker.getAddress();
+		if (workerAdress != null) {
+			w.append("address", workerAdress.toString());
+			w.append("ip", workerAdress.getHost());
+			w.append("port", workerAdress.getPort());
+		}
+		return w;
 	}
 
 	public static BasicDBObject convertPanelUser(PanelUser user) {

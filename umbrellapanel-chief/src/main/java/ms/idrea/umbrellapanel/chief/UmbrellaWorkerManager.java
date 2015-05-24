@@ -12,9 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import lombok.Getter;
-
+import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
-import ms.idrea.umbrellapanel.chief.net.Worker;
+import ms.idrea.umbrellapanel.api.util.Address;
+import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 
 import com.flowpowered.networking.session.Session;
 
@@ -23,8 +24,8 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	// contains all workers, they may be offline
 	private ConcurrentMap<Integer, OfflineWorker> workers = new ConcurrentHashMap<>();
 	// contains all running workers
-	private ConcurrentMap<Integer, Worker> runningWorkers = new ConcurrentHashMap<>();
-	private List<Worker> workerList = null;
+	private ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
+	private List<UmbrellaWorker> workerList = null;
 	private int nextId = 0;
 
 	@Override
@@ -33,21 +34,21 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	}
 
 	@Override
-	public Worker getRunningWorker(int id) {
+	public UmbrellaWorker getRunningWorker(int id) {
 		return runningWorkers.get(id);
 	}
 
 	@Override
-	public List<Worker> getAllWorkers() {
+	public List<UmbrellaWorker> getAllWorkers() {
 		buildCache();
 		return workerList;
 	}
 
 	public void buildCache() {
 		if (workerList == null) {
-			List<Worker> temp = new ArrayList<>();
+			List<UmbrellaWorker> temp = new ArrayList<>();
 			for (Integer id : runningWorkers.keySet()) {
-				Worker worker = runningWorkers.get(id);
+				UmbrellaWorker worker = runningWorkers.get(id);
 				if (worker.getId() != -1) { // Worker#getId() is safer then #keySet()
 					temp.add(worker);
 				}
@@ -63,7 +64,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 	@Override
 	public void onRegister(Session session) {
-		Worker worker = sessionToWorker(session);
+		UmbrellaWorker worker = sessionToWorker(session);
 		worker.setId(getNextId());
 		workers.put(worker.getId(), new OfflineWorker(worker));
 		onStart(worker, worker.getId());
@@ -71,7 +72,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 	@Override
 	public void onStart(Session session, int id) {
-		Worker worker = sessionToWorker(session);
+		UmbrellaWorker worker = sessionToWorker(session);
 		worker.setId(id);
 		runningWorkers.put(worker.getId(), worker);
 		workerList = null;
@@ -79,21 +80,21 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 	@Override
 	public void onStop(Session session) {
-		Worker worker = sessionToWorker(session);
+		UmbrellaWorker worker = sessionToWorker(session);
 		runningWorkers.remove(worker.getId());
 		workerList = null;
 	}
 
-	private Worker sessionToWorker(Session session) {
-		if (session instanceof Worker) {
-			return (Worker) session;
+	private UmbrellaWorker sessionToWorker(Session session) {
+		if (session instanceof UmbrellaWorker) {
+			return (UmbrellaWorker) session;
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
 	@Getter
-	public class OfflineWorker {
+	public class OfflineWorker implements Worker {
 
 		private int id;
 
@@ -101,16 +102,27 @@ public class UmbrellaWorkerManager implements WorkerManager {
 			this.id = id;
 		}
 
-		public OfflineWorker(Worker worker) {
+		public OfflineWorker(UmbrellaWorker worker) {
 			this.id = worker.getId();
 		}
 
-		public Worker getWorker() {
+		public UmbrellaWorker getOnlineWorker() {
 			return runningWorkers.get(id);
 		}
 
+		@Override
 		public boolean isOnline() {
-			return getWorker() != null;
+			return getOnlineWorker() != null;
+		}
+
+		@Override
+		public Address getAddress() {
+			UmbrellaWorker worker = getOnlineWorker();
+			if (worker == null) {
+				return null;
+			} else {
+				return new Address(worker.getAddress().getHostString(), worker.getAddress().getPort());
+			}
 		}
 	}
 

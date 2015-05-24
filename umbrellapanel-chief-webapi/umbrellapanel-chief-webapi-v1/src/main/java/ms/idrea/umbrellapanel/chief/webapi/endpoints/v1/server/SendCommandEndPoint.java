@@ -24,7 +24,7 @@ public class SendCommandEndPoint extends ServerEndPoint {
 
 	@Override
 	public EndPointResponse __getResponse(HttpServletRequest request, PanelUser user, GameServer server) {
-		if (server.getWorker() == null) {
+		if (server.getOnlineWorker() == null) {
 			return WORKER_OFFLINE;
 		} else if (server.dispatchCommand(request.getParameter("command"))) {
 			return COMMAND_DISPATCHED;

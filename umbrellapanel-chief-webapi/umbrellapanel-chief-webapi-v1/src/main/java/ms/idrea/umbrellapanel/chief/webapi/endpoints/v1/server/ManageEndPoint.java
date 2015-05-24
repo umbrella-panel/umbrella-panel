@@ -59,7 +59,7 @@ public class ManageEndPoint extends ServerEndPoint {
 				}
 				if (edited) {
 					// update only if the worker is only, if not he will get the information on next startup
-					if (server.getWorker() != null) {
+					if (server.getOnlineWorker() != null) {
 						server.update();
 					}
 					return new EndPointResponse(HttpServletResponse.SC_OK, new BasicDBObject("server", V1EndPoints.convertGameServer(server)).append("ok", "server updated").toString());
@@ -70,7 +70,7 @@ public class ManageEndPoint extends ServerEndPoint {
 				return CANT_UPDATE_WHILE_RUNNING;
 			}
 		}
-		if (server.getWorker() == null) {
+		if (server.getOnlineWorker() == null) {
 			return WORKER_OFFLINE;
 		}
 		if (action.equalsIgnoreCase("delete")) {

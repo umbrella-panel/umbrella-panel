@@ -50,7 +50,7 @@ public class UmbrellaServerManager implements ServerManager {
 	@Override
 	public GameServer createServer(Address address, String startCommand, int workerId) {
 		GameServer server = new UmbrellaGameServer(getNextId(), workerId, address, startCommand, workerManager, panelUserDatabase);
-		if (server.getWorker() == null) {
+		if (server.getOnlineWorker() == null) {
 			throw new IllegalStateException("Worker is offline!");
 		}
 		servers.put(server.getId(), server);
@@ -75,7 +75,7 @@ public class UmbrellaServerManager implements ServerManager {
 			GameServer server = getServer(id);
 			writer.write(String.valueOf(server.getId()));
 			writer.newLine();
-			writer.write(String.valueOf(server.getWorkerId()));
+			writer.write(String.valueOf(server.getWorker().getId()));
 			writer.newLine();
 			writer.write(String.valueOf(server.getAddress().getHost()));
 			writer.newLine();

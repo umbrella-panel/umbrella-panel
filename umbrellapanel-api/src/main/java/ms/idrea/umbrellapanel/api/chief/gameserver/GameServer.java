@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
 
@@ -36,15 +37,13 @@ public interface GameServer {
 
 	public void setStartCommand(String startCommand);
 
-	public Session getWorker();
+	public Session getOnlineWorker();
+	
+	public Worker getWorker();
 
 	public String getName();
 
 	public void setName(String name);
-
-	public int getWorkerId();
-	
-	public Address getWorkerAddress();
 
 	public void appendLog(String log);
 
