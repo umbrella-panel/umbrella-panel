@@ -2,13 +2,14 @@ package ms.idrea.umbrellapanel.api.chief;
 
 import java.util.List;
 
+import ms.idrea.umbrellapanel.api.chief.net.RunningWorker;
 import ms.idrea.umbrellapanel.api.core.LoadAndSaveable;
 
 import com.flowpowered.networking.session.Session;
 
 public interface WorkerManager extends LoadAndSaveable {
 
-	public List<? extends Session> getAllWorkers();
+	public List<RunningWorker> getAllWorkers();
 
 	public Worker getWorker(int id);
 

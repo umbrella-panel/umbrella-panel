@@ -13,6 +13,7 @@ import ms.idrea.umbrellapanel.api.chief.conf.ChiefProperties;
 import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.gameserver.ServerManager;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
+import ms.idrea.umbrellapanel.api.chief.net.RunningWorker;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.util.Address;
@@ -20,10 +21,7 @@ import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.chief.conf.UmbrellaChiefProperties;
 import ms.idrea.umbrellapanel.chief.gameserver.UmbrellaServerManager;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaNetworkServer;
-import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 import ms.idrea.umbrellapanel.chief.webapi.UmbrellaEndPointManager;
-
-import com.flowpowered.networking.session.Session;
 
 @Getter
 public class UmbrellaChief implements Chief {
@@ -147,13 +145,8 @@ public class UmbrellaChief implements Chief {
 				System.out.println("OK");
 			} else if (base.equalsIgnoreCase("listworkers")) {
 				System.out.println("---Workers---");
-				for (Session session : workerManager.getAllWorkers()) {
-					if (session instanceof UmbrellaWorker) {
-						UmbrellaWorker worker = (UmbrellaWorker) session;
-						System.out.println(worker.getId() + " on " + worker.getAddress());
-					} else {
-						System.out.println("Unknown " + session.toString());
-					}
+				for (RunningWorker worker : workerManager.getAllWorkers()) {
+					System.out.println(worker.getId() + " on " + worker.getOfflineWorker().getAddress());
 				}
 				System.out.println("------");
 			} else if (base.equalsIgnoreCase("listusers")) {

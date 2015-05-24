@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
+import ms.idrea.umbrellapanel.api.chief.net.RunningWorker;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 
@@ -25,7 +26,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	private ConcurrentMap<Integer, OfflineWorker> workers = new ConcurrentHashMap<>();
 	// contains all running workers
 	private ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
-	private List<UmbrellaWorker> workerList = null;
+	private List<RunningWorker> workerList = null;
 	private int nextId = 0;
 
 	@Override
@@ -39,14 +40,14 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	}
 
 	@Override
-	public List<UmbrellaWorker> getAllWorkers() {
+	public List<RunningWorker> getAllWorkers() {
 		buildCache();
 		return workerList;
 	}
 
 	public void buildCache() {
 		if (workerList == null) {
-			List<UmbrellaWorker> temp = new ArrayList<>();
+			List<RunningWorker> temp = new ArrayList<>();
 			for (Integer id : runningWorkers.keySet()) {
 				UmbrellaWorker worker = runningWorkers.get(id);
 				if (worker.getId() != -1) { // Worker#getId() is safer then #keySet()

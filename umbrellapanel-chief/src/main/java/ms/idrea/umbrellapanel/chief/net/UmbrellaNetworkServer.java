@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
+import ms.idrea.umbrellapanel.api.chief.net.RunningWorker;
 import ms.idrea.umbrellapanel.net.UmbrellaProtocol;
 
 import com.flowpowered.networking.Message;
@@ -33,7 +34,7 @@ public class UmbrellaNetworkServer extends NetworkServer implements ms.idrea.umb
 
 	@Override
 	public Session newSession(Channel c) {
-		UmbrellaWorker session = new UmbrellaWorker(c, pr.getProtocol(c.localAddress()));
+		UmbrellaWorker session = new UmbrellaWorker(workerManager, c, pr.getProtocol(c.localAddress()));
 		workers.put(session.getAddress(), session);
 		return session;
 	}
@@ -49,7 +50,7 @@ public class UmbrellaNetworkServer extends NetworkServer implements ms.idrea.umb
 
 	@Override
 	public void broadcast(Message... messages) {
-		for (Session worker : workerManager.getAllWorkers()) {
+		for (RunningWorker worker : workerManager.getAllWorkers()) {
 			worker.sendAll(messages);
 		}
 	}

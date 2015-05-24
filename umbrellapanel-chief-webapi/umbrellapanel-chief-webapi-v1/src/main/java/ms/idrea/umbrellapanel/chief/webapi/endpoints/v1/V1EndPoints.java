@@ -40,6 +40,8 @@ public class V1EndPoints {
 		new ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.servers.ListEndPoint(manager);
 		new ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.users.ManageEndPoint(manager);
 		new ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.users.ViewEndPoint(manager);
+		// workers
+		new ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.workers.ListEndPoint(manager);
 	}
 
 	public static BasicDBObject convertGameServer(GameServer server) {
