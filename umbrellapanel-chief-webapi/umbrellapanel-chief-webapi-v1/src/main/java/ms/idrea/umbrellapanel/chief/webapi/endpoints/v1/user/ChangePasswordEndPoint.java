@@ -9,7 +9,7 @@ import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 
 public class ChangePasswordEndPoint extends LoginRequiredEndPoint {
 
-	public static final EndPointResponse INVALID_LOGIN = makeJSONResponse(HttpServletResponse.SC_UNAUTHORIZED, "error", "oldpassword is correct");
+	public static final EndPointResponse INVALID_LOGIN = makeJSONResponse(HttpServletResponse.SC_UNAUTHORIZED, "error", "oldpassword is not correct");
 	public static final EndPointResponse PASSWORD_UPDATED = makeJSONResponse(HttpServletResponse.SC_OK, "ok", "password updated");
 
 	public ChangePasswordEndPoint(EndPointManager manager) {
