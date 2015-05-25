@@ -13,11 +13,19 @@ public class Permissible {
 	}
 
 	public void grantGlobalPermission(int permission) {
-		permissions.put(-1, permission);
+		if (permission <= 0) {
+			permissions.remove(-1);
+		} else {
+			permissions.put(-1, permission);
+		}
 	}
 
 	public void grantPermission(int serverId, int permission) {
-		permissions.put(serverId, permission);
+		if (permission <= 0) {
+			permissions.remove(serverId);
+		} else {
+			permissions.put(serverId, permission);
+		}
 	}
 
 	public boolean hasGlobalPermission(int permission) {
