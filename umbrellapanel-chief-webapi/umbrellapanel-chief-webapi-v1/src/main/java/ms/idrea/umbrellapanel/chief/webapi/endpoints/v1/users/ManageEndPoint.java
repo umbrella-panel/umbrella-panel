@@ -51,7 +51,7 @@ public class ManageEndPoint extends LoginRequiredEndPoint {
 			String newPassword = request.getParameter("newpassword");
 			if (newPassword != null) {
 				if (newPassword.length() < 8) {
-					return PASSWORD_TOO_SHORT;
+					return NEW_PASSWORD_TOO_SHORT;
 				} else {
 					o.setPassword(newPassword);
 					return PASSWORD_UPDATED;

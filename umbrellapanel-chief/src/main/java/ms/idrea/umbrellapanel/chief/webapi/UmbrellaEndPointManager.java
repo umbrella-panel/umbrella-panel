@@ -55,7 +55,8 @@ public class UmbrellaEndPointManager implements EndPointManager {
 	@Override
 	public String createSession(PanelUser user) {
 		for (String sessId : sessions.keySet()) {
-			if (getSession(sessId).getId() == user.getId()) {
+			PanelUser o = getSession(sessId);
+			if (o != null && o.getId() == user.getId()) {
 				sessions.remove(sessId);
 			}
 		}
@@ -72,7 +73,8 @@ public class UmbrellaEndPointManager implements EndPointManager {
 	public void destroySession(String sessId) {
 		PanelUser user = getSession(sessId);
 		for (String o : sessions.keySet()) {
-			if (getSession(o).getId() == user.getId()) {
+			PanelUser otherUser = getSession(o);
+			if (otherUser != null && otherUser.getId() == user.getId()) {
 				sessions.remove(o);
 			}
 		}

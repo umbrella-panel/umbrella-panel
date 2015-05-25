@@ -3,15 +3,18 @@ package ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.users;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mongodb.BasicDBObject;
-
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.chief.webapi.endpoint.LoginRequiredEndPoint;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.core.permissions.Permission;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.V1EndPoints;
 
+import com.mongodb.BasicDBObject;
+
 public class CreateEndPoint extends LoginRequiredEndPoint {
+
+	public static final EndPointResponse NAME_TOO_SHORT = makeJSONResponse(HttpServletResponse.SC_BAD_REQUEST, "error", "name is too short");
+	public static final EndPointResponse PASSWORD_TOO_SHORT = makeJSONResponse(HttpServletResponse.SC_BAD_REQUEST, "error", "password is too short");
 
 	public CreateEndPoint(EndPointManager manager) {
 		super(manager, "v1/users/create");
@@ -32,7 +35,9 @@ public class CreateEndPoint extends LoginRequiredEndPoint {
 			return PASSWORD_TOO_SHORT;
 		}
 		String name = request.getParameter("name");
-		if (chief.getPanelUserDatabase().getUser(name) != null) {
+		if (name.length() <= 0) {
+			return NAME_TOO_SHORT;
+		} else if (chief.getPanelUserDatabase().getUser(name) != null) {
 			return NAME_ALREADY_TAKEN;
 		}
 		PanelUser u = chief.getPanelUserDatabase().createUser(name, password);

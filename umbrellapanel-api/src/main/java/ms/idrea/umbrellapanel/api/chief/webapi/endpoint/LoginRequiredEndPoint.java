@@ -10,7 +10,7 @@ public abstract class LoginRequiredEndPoint extends BasicEndPointHandler {
 
 	public static final EndPointResponse NAME_ALREADY_TAKEN = makeJSONResponse(HttpServletResponse.SC_CONFLICT, "error", "name is already taken");
 	public static final EndPointResponse USER_NOT_FOUND = makeJSONResponse(HttpServletResponse.SC_NOT_FOUND, "error", "user not found");
-	public static final EndPointResponse PASSWORD_TOO_SHORT = makeJSONResponse(HttpServletResponse.SC_BAD_GATEWAY, "error", "new password is too short");
+	public static final EndPointResponse NEW_PASSWORD_TOO_SHORT = makeJSONResponse(HttpServletResponse.SC_BAD_REQUEST, "error", "new password is too short");
 	public static final EndPointResponse WORKER_OFFLINE = makeJSONResponse(HttpServletResponse.SC_CONFLICT, "error", "worker is offline");
 	public static final EndPointResponse SERVER_NO_FOUND_RESPONSE = makeJSONResponse(HttpServletResponse.SC_NOT_FOUND, "error", "server not found");
 	public static final EndPointResponse FORBIDDEN_RESPONSE = makeJSONResponse(HttpServletResponse.SC_FORBIDDEN, "error", "authentication required");
