@@ -37,6 +37,7 @@
 					<execution>
 						<phase>package</phase>
 						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<artifactSet>
 								<excludes>
 									<exclude>META-INF/*.SF</exclude>
