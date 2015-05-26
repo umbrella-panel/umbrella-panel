@@ -82,7 +82,6 @@ public class FTPUserWrapper implements UserManager {
 
 	@Override
 	public User getUserByName(String name) throws FtpException {
-		System.out.println("FTPUserWrapper.getUserByName()");
 		return getWrapper(name);
 	}
 
