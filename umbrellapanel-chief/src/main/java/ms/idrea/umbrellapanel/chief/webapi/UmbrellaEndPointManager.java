@@ -27,7 +27,7 @@ public class UmbrellaEndPointManager implements EndPointManager {
 
 	public UmbrellaEndPointManager(Chief chief) throws Exception {
 		this.chief = chief;
-		server = new Server(8080);
+		server = new Server(chief.getChiefProperties().getWebPort());
 		server.setHandler(new RequestHandler(this));
 		server.start();
 		V1EndPoints.init(this);

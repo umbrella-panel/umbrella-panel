@@ -102,7 +102,9 @@ public class UmbrellaChief implements Chief {
 			return;
 		}
 		isRunning = false;
-		webapi.shutdown();
+		if (webapi != null) {
+			webapi.shutdown();
+		}
 		networkServer.shutdown();
 		chiefProperties.save();
 		fileManager.save();
