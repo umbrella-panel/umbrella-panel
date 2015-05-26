@@ -20,7 +20,7 @@ import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
 import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
 
-@ToString
+@ToString(exclude = {"panelUserDatabase", "workerManager", "logBuffer"})
 public class UmbrellaGameServer implements GameServer {
 
 	@Getter
