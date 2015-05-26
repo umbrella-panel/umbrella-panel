@@ -12,7 +12,6 @@
 		<module>umbrellapanel-chief</module>
 		<module>umbrellapanel-worker</module>
 		<module>umbrellapanel-api</module>
-		<module>umbrellapanel-web</module>
 		<module>umbrellapanel-chief-webapi</module>
 	</modules>
 	<properties>
