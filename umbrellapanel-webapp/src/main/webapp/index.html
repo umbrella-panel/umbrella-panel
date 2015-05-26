@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>UmbrellaPanel</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/font-awesome.min.css" rel="stylesheet">
+		
+		<!-- Custom styles for this template -->
+		<link href="css/style.min.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div id="login-content" class="container" style="display: block;">
+			<fieldset class="form-signin">
+				<h2 class="form-signin-heading page-header">UmbrellaPanel</h2>
+				<h3>Bitte einloggen</h3>
+				
+				<label for="inputHost" class="sr-only">Host</label>
+				<input type="text" id="inputHost" class="form-control" placeholder="Host" required autofocus/>
+				
+				<label for="inputName" class="sr-only">Benutzername</label>
+				<input type="text" id="inputName" class="form-control" placeholder="Benutzername" required autofocus/>
+				
+				<label for="inputPassword" class="sr-only">Passwort</label>
+				<input type="password" id="inputPassword" class="form-control" placeholder="Passwort" required/>
+				
+				<button id="form-signin-submit" class="btn btn-lg btn-primary btn-block">Anmelden</button>
+			</fieldset>
+		</div>
+		<div id="panel-content" class="container" style="display: none;">
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a id="nav-welcome" class="navbar-brand">UmbrellaPanel</a>
+					</div>
+					<div class="collapse navbar-collapse" id="navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="dropdown" id="navserverdropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-server"></i> Server <span class="caret"></span></a>
+								<ul class="dropdown-menu" style="max-height: 450px; overflow-y: auto;" role="menu" id="nav-server-list">
+								</ul>
+							</li>
+							<li><a id="nav-create-server"><i class="fa fa-plus-circle"></i> Server erstellen</a></li>
+							<li><a id="nav-manage-users"><i class="fa fa-users"></i> Benutzer</a></li>
+						</ul>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> <span class="username"></span> <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a id="nav-user-settings"><i class="fa fa-cog"></i> Profil</a></li>
+									<li class="divider"></li>
+									<li><a id="nav-user-logout"><i class="fa fa-power-off"></i> Abmelden</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<div id="welcome-view" class="view view-active">
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="page-header">Willkommen im UmbrellaPanel!<small> Hallo <span class="username"></span></small></h2>
+						<span id="logout-status"></span>
+					</div>
+				</div>
+			</div>
+			<div id="manage-users-view" class="view">
+				<h2 class="page-header">Benutzer verwalten</h2>
+				<div class="row">
+					<div class="col-md-6">
+						<h4>Alle Benutzer</h4>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th style="width: 10%;">ID</th>
+									<th colspan="2">Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<h4>Benutzer erstellen</h4>
+						<fieldset id="user-create">
+							<div class="form-group">
+								<label>Name:</label>
+								<input name="name" type="text" class="form-control" autocomplete="off"/>
+							</div>
+							<div class="form-group">
+								<label>Password:</label>
+								<input name="password" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<div class="form-group">
+								<label>Password wiederholen:</label>
+								<input name="password2" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<button id="user-create-submit" class="btn btn-success"><i class="fa fa-user-plus"></i> Erstellen</button>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+			<div id="manage-user-view" class="view">
+				<h2 class="page-header">Benutzer: <span class="editusername">Paul</span></h2>
+				<div class="row">
+					<div class="col-md-6">
+						<h4>Berechtigungen</h4>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Server</th>
+									<th>Wert</th>
+									<th style="width: 10px;"></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<button id="manage-user-permissions-submit" class="btn btn-success"><i class="fa fa-check"></i> Speichern</button>
+						<button id="manage-user-permissions-addrow" class="btn btn-info"><i class="fa fa-plus-circle"></i> Zeile hinzufügen</button>
+					</div>
+					<div class="col-md-6">
+						<h4>Name ändern</h4>
+						<fieldset id="manage-user-set-name">
+							<div class="form-group">
+								<label>Name:</label>
+								<input name="name" type="text" class="form-control" autocomplete="off"/>
+							</div>
+							<button id="manage-user-set-name-submit" class="btn btn-success"><i class="fa fa-check"></i> Name ändern</button>
+						</fieldset>
+						<br>
+						<h4>Passwort setzen</h4>
+						<fieldset id="manage-user-set-password">
+							<div class="form-group">
+								<label>Password:</label>
+								<input name="password" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<div class="form-group">
+								<label>Password wiederholen:</label>
+								<input name="password2" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<button id="manage-user-set-password-submit" class="btn btn-success"><i class="fa fa-check"></i> Passwort setzen</button>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+			<div id="user-settings-view" class="view">
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="page-header">Profil<small> Passwort ändern</small></h2>
+						<fieldset id="user-change-password">
+							<div class="form-group">
+								<label>Altes Passwort:</label>
+								<input name="oldpassword" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<div class="form-group">
+								<label>Neues Passwort:</label>
+								<input name="newpassword" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<div class="form-group">
+								<label>Neues Passwort wiederholen:</label>
+								<input name="newpassword2" type="password" class="form-control" autocomplete="off"/>
+							</div>
+							<button id="user-change-password-submit" class="btn btn-success"><i class="fa fa-check"></i> Passwort ändern</button>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+			<div id="create-server-view" class="view">
+				<div class="row">
+					<div class="col-md-12">
+						<h2 class="page-header">Server erstellen</h2>
+						<fieldset id="createServerFieldset">
+							<div class="form-group">
+								<label>Worker: </label>
+								<select class="form-control" name="worker">
+								</select>
+							</div>
+							<div class="form-group">
+								<label>Adresse:</label>
+								<div class="input-group">
+									<input name="host" type="text" class="form-control" placeholder="Host" />
+									<span class="input-group-addon" style="border-left: 0; border-right: 0;">:</span>
+									<input name="port" type="text" class="form-control" placeholder="Port" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label>Start Befehl:</label>
+								<input name="startcommand" class="form-control" placeholder="Start Befehl"/>
+							</div>
+							<button id="create-server-submit" class="btn btn-success"><i class="fa fa-plus-circle"></i> Erstellen</button>
+						</fieldset>
+					</div>
+				</div>				
+			</div>
+			<div id="server-view" class="view">
+				<h2 class="page-header"><span class="server-status bullet bullet-danger"></span> <span class="server-name">Server1</span><span class="pull-right">
+						<button type="button" id="server-start" class="btn btn-success server-controll-btn"><i class="fa fa-play"></i><span class="hidden-xs">&nbsp;Starten</span></button>
+						<button type="button" id="server-stop" class="btn btn-danger server-controll-btn"><i class="fa fa-stop"></i><span class="hidden-xs">&nbsp;Stoppen</span></button>
+						<button type="button" id="server-refresh" class="btn btn-info"><i class="fa fa-refresh"></i><span class="hidden-xs">&nbsp;Neuladen</span></button>
+					</span>
+				</h2>
+				<div class="clearfix"></div>
+				<div role="tabpanel">
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#console" aria-controls="console" role="tab" data-toggle="tab"><i class="fa fa-terminal"></i> Konsole</a></li>
+						<li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Einstellungen</a></li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane row active" id="console">
+							<div class="col-md-12">
+								<div class="well" id="log">
+								</div>
+								<fieldset id="sendCommandFieldset">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="fa fa-chevron-right"></i></span>
+										<input class="form-control" type="text" placeholder="Befehl"/>
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="button">Senden</button>
+										</span>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane row" id="settings">
+							<div class="col-md-6">
+								<h4>Status</h4>
+								<ul class="list-group">
+									<li class="list-group-item"><span class="worker-status bullet bullet-danger"></span> <span class="label label-default">Worker</span> <code class="worker-text"></code> <span class="label label-default">Server ID</span> <code class="server-id"></code></li>
+									<li class="list-group-item"><span class="ftp-status bullet bullet-danger"></span> <span class="label label-default">FTP</span> <code class="ftp-text"></code></li>
+								</ul>
+								<button id="server-delete-submit" class="btn btn-danger server-controll-btn"><i class="fa fa-trash-o"></i> Server löschen</button>
+							</div>
+							<div class="col-md-6">
+								<h4>Einstellungen</h4>
+								<fieldset id="settingsFieldset">
+									<div class="form-group">
+										<label>Servername:</label>
+										<input name="servername" class="form-control" placeholder="Servername"/>
+									</div>
+									<div class="form-group">
+										<label>Adresse:</label>
+										<div class="input-group">
+											<input name="host" type="text" class="form-control" placeholder="Host" />
+											<span class="input-group-addon" style="border-left: 0; border-right: 0;">:</span>
+											<input name="port" type="text" class="form-control" placeholder="Port" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Start Befehl:</label>
+										<input name="startcommand" class="form-control" placeholder="Start Befehl"/>
+									</div>
+									<button id="server-settings-update" class="btn btn-success"><i class="fa fa-check"></i> Speichern</button>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<datalist id="permissionValues">
+			<option value="10">PANEL_ACCESS</option>
+			<option value="20">FTP_ACCESS</option>
+			<option value="30">SERVER_SETTINGS</option>
+			<option value="999">ADMIN</option>
+		</datalist>
+		<datalist id="serverValues">
+		</datalist>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/site.min.js"></script>
+	</body>
+</html>

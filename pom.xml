@@ -13,6 +13,7 @@
 		<module>umbrellapanel-worker</module>
 		<module>umbrellapanel-api</module>
 		<module>umbrellapanel-chief-webapi</module>
+		<module>umbrellapanel-webapp</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
