@@ -71,10 +71,6 @@ div#server-view .well#log {
 	white-space: nowrap;
 }
 
-div#manage-users-view h4, div#manage-user-view h4 {
-	margin-top: 0px;
-}
-
 h2.page-header {
 	margin-top: 0px;
 }
