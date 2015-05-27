@@ -108,9 +108,12 @@ public class UmbrellaWorker implements Worker {
 		logger.info("Worker is stopping!");
 		serverManager.shutdown();
 		logHandler.shutdown();
-		networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
 		workerProperties.save();
 		ftpServer.shutdown();
+		try {
+			networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
+		} catch (Exception e) {
+		}
 		networkClient.shutdown();
 	}
 
