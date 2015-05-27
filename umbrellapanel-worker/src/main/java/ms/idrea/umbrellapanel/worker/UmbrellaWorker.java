@@ -113,6 +113,7 @@ public class UmbrellaWorker implements Worker {
 		try {
 			networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
 		} catch (Exception e) {
+			new Exception("Could not send stopped workermessage!", e).printStackTrace();
 		}
 		networkClient.shutdown();
 	}
