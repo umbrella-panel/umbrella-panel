@@ -554,7 +554,7 @@ function loadServerlist() {
 			$("#nav-server-list").html("");
 			$("#serverValues").html("");
 			$.each(data.servers, function(key, server) {
-				$("#nav-server-list").append("<li><a serverId=" + server.id + "><span class=\"bullet bullet-" + (server.isRunning == true ? "success" : "danger") + "\"></span></span> " + server.name + "</a></li>");
+				$("#nav-server-list").append("<li><a serverId=" + server.id + "><span class=\"bullet bullet-" + (server.isRunning == true ? "success" : "danger") + "\"></span> " + server.name + "</a></li>");
 				$("#serverValues").append("<option value=\"" + server.id + "\">" + server.name + "</option>");
 			});
 			$("#serverValues").append("<option value=\"-1\">GLOBAL</option>");
