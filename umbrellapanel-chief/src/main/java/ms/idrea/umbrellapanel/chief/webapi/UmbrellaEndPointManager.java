@@ -2,6 +2,7 @@ package ms.idrea.umbrellapanel.chief.webapi;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class UmbrellaEndPointManager implements EndPointManager {
 
 	@Override
 	public String createSession(PanelUser user) {
-		for (String sessId : sessions.keySet()) {
+		for (String sessId : new ArrayList<String>(sessions.keySet())) {
 			PanelUser o = getSession(sessId);
 			if (o != null && o.getId() == user.getId()) {
 				sessions.remove(sessId);
@@ -72,7 +73,7 @@ public class UmbrellaEndPointManager implements EndPointManager {
 	@Override
 	public void destroySession(String sessId) {
 		PanelUser user = getSession(sessId);
-		for (String o : sessions.keySet()) {
+		for (String o : new ArrayList<String>(sessions.keySet())) {
 			PanelUser otherUser = getSession(o);
 			if (otherUser != null && otherUser.getId() == user.getId()) {
 				sessions.remove(o);
