@@ -77,6 +77,7 @@ function setHost(newHost) {
 	} else {
 		host = newHost;
 	}
+	$.cookie('umbr_lastHost', host);
 }
 
 function apiPost(endpoint, parms, callback) {
@@ -102,6 +103,7 @@ function apiPost(endpoint, parms, callback) {
 }
 
 function logout() {
+	$.removeCookie('umbr_lastSessId');
 	apiPost("user/logout", {}, function(data) {
 		if (data.error != null) {
 			alert(data.error);
@@ -127,11 +129,23 @@ function logout() {
 }
 
 function login(name, password) {
-	apiPost("user/login", {"name": name, "password": password}, function(data) {
+	var parms = {};
+	var silent = false;
+	if (name == null && password == null) {
+		parms.sessId = sessId;
+		silent = true;
+	} else {
+		parms.name = name;
+		parms.password = password;
+	}
+	apiPost("user/login", parms, function(data) {
 		if (data.error != null) {
-			alert(data.error);
+			if (!silent) {
+				alert(data.error);
+			}
 		} else {
 			sessId = data.sessId;
+			$.cookie("umbr_lastSessId", sessId);
 			user = data.user;
 			user.hasPermission = function(server, req) {
 				var local = user.permissions[server] >= req;
@@ -735,4 +749,15 @@ $(document).ready(function() {
 		setView("welcome");
 		pushParms({});
 	});
+	// autologin
+	var lastHost = $.cookie("umbr_lastHost");
+	var lastSessId = $.cookie("umbr_lastSessId");
+	if (lastHost != null) {
+		$("#login-content input#inputHost").val(lastHost);
+	}
+	if (lastHost != null && lastSessId != null) {
+		setHost(lastHost);
+		sessId = lastSessId;
+		login();
+	}
 });
