@@ -140,7 +140,10 @@ function login(name, password) {
 	}
 	apiPost("user/login", parms, function(data) {
 		if (data.error != null) {
-			if (!silent) {
+			if (silent) {
+				sessId = null;
+				$.removeCookie("umbr_lastSessId");
+			} else {
 				alert(data.error);
 			}
 		} else {
