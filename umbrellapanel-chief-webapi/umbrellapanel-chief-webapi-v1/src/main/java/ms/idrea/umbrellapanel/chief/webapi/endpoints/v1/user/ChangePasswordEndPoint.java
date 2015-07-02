@@ -31,6 +31,7 @@ public class ChangePasswordEndPoint extends LoginRequiredEndPoint {
 				return NEW_PASSWORD_TOO_SHORT;
 			}
 			user.setPassword(newPassword);
+			chief.getPanelUserDatabase().updateUser(user);
 			return PASSWORD_UPDATED;
 		}
 	}
