@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+import org.apache.commons.io.IOUtils;
+
 import lombok.Getter;
 
 /**
@@ -24,6 +26,7 @@ public class UmbrellaServerContoller extends Thread {
 	private UmbrellaGameServer server;
 	private Process process;
 	private BufferedReader input;
+	private BufferedReader errorInput;
 	private PrintWriter output;
 	@Getter
 	private ProcessState processState = ProcessState.PRE;
@@ -67,13 +70,16 @@ public class UmbrellaServerContoller extends Thread {
 			process = Runtime.getRuntime().exec(server.getStartCommand(), new String[] {}, server.getWorkingDirectory());
 			setState(ProcessState.RUNNING);
 			input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			errorInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			output = new PrintWriter(process.getOutputStream());
 			String line;
-			while ((line = input.readLine()) != null) {
+			while ((line = input.readLine()) != null || (line = errorInput.readLine()) != null) {
 				server.appendServerLog(line);
 			}
 		} catch (IOException e) {
 		}
+		IOUtils.closeQuietly(input);
+		IOUtils.closeQuietly(errorInput);
 		if (process != null) {
 			process.destroy();
 		}
