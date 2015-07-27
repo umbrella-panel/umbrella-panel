@@ -43,6 +43,7 @@ public class ManageEndPoint extends LoginRequiredEndPoint {
 					return NAME_ALREADY_TAKEN;
 				}
 				o.setName(newName);
+				chief.getPanelUserDatabase().updateUser(o);
 				return new EndPointResponse(HttpServletResponse.SC_OK, new BasicDBObject("user", V1EndPoints.convertPanelUser(o)).append("ok", "name updated").toString());
 			} else {
 				return INVALID_PARAMETERS;
@@ -53,6 +54,7 @@ public class ManageEndPoint extends LoginRequiredEndPoint {
 				if (newPassword.length() < 8) {
 					return NEW_PASSWORD_TOO_SHORT;
 				} else {
+					chief.getPanelUserDatabase().updateUser(o);
 					o.setPassword(newPassword);
 					return PASSWORD_UPDATED;
 				}
@@ -74,6 +76,7 @@ public class ManageEndPoint extends LoginRequiredEndPoint {
 				} else {
 					o.grantPermission(server, level);
 				}
+				chief.getPanelUserDatabase().updateUser(o);
 				return new EndPointResponse(HttpServletResponse.SC_OK, new BasicDBObject("user", V1EndPoints.convertPanelUser(o)).append("ok", "permission set").toString());
 			} else {
 				return INVALID_PARAMETERS;
