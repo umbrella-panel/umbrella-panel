@@ -14,6 +14,7 @@ public abstract class UmbrellaProperties {
 		WORKER_ID,
 		CHIEF_HOST,
 		CHIEF_PORT,
+		PASSIVE_PORT,
 		WEB_PORT;
 
 		public String toPath() {

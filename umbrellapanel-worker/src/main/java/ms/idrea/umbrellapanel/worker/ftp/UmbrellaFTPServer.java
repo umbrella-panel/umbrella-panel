@@ -7,8 +7,10 @@ import java.util.Map;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.ftp.FTPServer;
 
+import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
+import org.apache.ftpserver.ftplet.DataConnectionFactory;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.FtpReply;
 import org.apache.ftpserver.ftplet.FtpRequest;
@@ -32,6 +34,7 @@ public class UmbrellaFTPServer implements FTPServer {
 		FtpServerFactory serverFactory = new FtpServerFactory();
 		ListenerFactory listener = new ListenerFactory();
 		listener.setPort(1221);
+		((DataConnectionConfigurationFactory)listener.getDataConnectionConfiguration()).setPassivePorts(worker.getWorkerProperties().getPassivePort());
 		serverFactory.addListener("default", listener.createListener());
 		serverFactory.setUserManager(worker.getFTPUserWrapper());
 		serverFactory.setFtplets(bakeFtplets());

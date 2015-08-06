@@ -21,4 +21,8 @@ public interface WorkerProperties {
 	public int getChiefPort();
 
 	public void setChiefPort(int port);
+	
+	public String getPassivePort();
+
+	public void setPassivePort(String port);
 }
