@@ -7,6 +7,7 @@ import java.util.Map;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.ftp.FTPServer;
 
+import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.FtpServerFactory;
@@ -35,8 +36,22 @@ public class UmbrellaFTPServer implements FTPServer {
 		ListenerFactory listener = new ListenerFactory();
 		listener.setPort(1221);
 		DataConnectionConfigurationFactory dccf = new DataConnectionConfigurationFactory();
-				
 		dccf.setPassivePorts(worker.getWorkerProperties().getPassivePort());
+		
+		dccf.setActiveEnabled(listener.getDataConnectionConfiguration().isActiveEnabled());
+		dccf.setActiveIpCheck(listener.getDataConnectionConfiguration().isActiveIpCheck());
+		dccf.setImplicitSsl(listener.getDataConnectionConfiguration().isImplicitSsl());
+		dccf.setActiveLocalAddress(listener.getDataConnectionConfiguration().getActiveLocalAddress());
+		dccf.setActiveLocalPort(listener.getDataConnectionConfiguration().getActiveLocalPort());
+		dccf.setIdleTime(listener.getDataConnectionConfiguration().getIdleTime());
+		dccf.setPassiveAddress(listener.getDataConnectionConfiguration().getPassiveAddress());
+		dccf.setPassiveExternalAddress(listener.getDataConnectionConfiguration().getPassiveExernalAddress());
+		dccf.setSslConfiguration(listener.getDataConnectionConfiguration().getSslConfiguration());
+		
+		System.out.println("------------");
+		System.out.println(listener.getDataConnectionConfiguration().getPassivePorts());
+		System.out.println("------------");
+		
 		listener.setDataConnectionConfiguration(dccf.createDataConnectionConfiguration());
 		serverFactory.addListener("default", listener.createListener());
 		serverFactory.setUserManager(worker.getFTPUserWrapper());
