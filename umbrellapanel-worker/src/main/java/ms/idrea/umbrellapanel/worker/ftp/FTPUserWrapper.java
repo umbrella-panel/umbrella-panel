@@ -110,7 +110,7 @@ public class FTPUserWrapper implements UserManager {
 	static {
 		List<Authority> temp = new LinkedList<>();
 		temp.add(new WritePermission());
-		temp.add(new ConcurrentLoginPermission(20, 2));
+		temp.add(new ConcurrentLoginPermission(10, 10));
 		DEFAULT_AUTHORITIES = Collections.unmodifiableList(temp);
 	}
 
