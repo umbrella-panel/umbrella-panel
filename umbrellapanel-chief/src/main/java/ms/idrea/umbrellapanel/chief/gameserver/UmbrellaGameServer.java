@@ -116,7 +116,7 @@ public class UmbrellaGameServer implements GameServer {
 
 	@Override
 	public void appendLog(String log) {
-		if (logBuffer.size() >= 100000) {
+		if (logBuffer.size() >= 1000) {
 			logBuffer.remove(0);
 		}
 		logBuffer.add(new ServerLog(System.currentTimeMillis(), log));
