@@ -68,7 +68,7 @@ div#server-view .well#log {
 	height: 450px;
 	font-family: "Courier New", Courier, monospace;
 	line-height: 1.2em;
-	white-space: nowrap;
+	white-space: pre-wrap;
 }
 
 h2.page-header {
