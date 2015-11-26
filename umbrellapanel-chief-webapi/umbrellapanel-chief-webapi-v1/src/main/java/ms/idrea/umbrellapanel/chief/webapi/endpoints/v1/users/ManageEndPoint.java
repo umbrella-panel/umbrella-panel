@@ -54,8 +54,8 @@ public class ManageEndPoint extends LoginRequiredEndPoint {
 				if (newPassword.length() < 8) {
 					return NEW_PASSWORD_TOO_SHORT;
 				} else {
-					chief.getPanelUserDatabase().updateUser(o);
 					o.setPassword(newPassword);
+					chief.getPanelUserDatabase().updateUser(o);
 					return PASSWORD_UPDATED;
 				}
 			} else {
