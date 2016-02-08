@@ -97,7 +97,7 @@ public class UmbrellaGameServer implements GameServer {
 	
 	@Override
 	public String getStartCommand() {
-		return startCommand + " -h " + address.getHost() + " -p " + address.getPort();
+		return startCommand + " --host " + address.getHost() + " --port " + address.getPort();
 	}
 
 	@Override
