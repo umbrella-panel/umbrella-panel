@@ -256,6 +256,7 @@ function showServer(serverId) {
 	buttonIcon.addClass("fa-spin");
 	apiPost("server/view", {"id": serverId}, function(data) {
 		buttonIcon.removeClass("fa-spin");
+		updateScroll();
 		if (data.error != null) {
 			alert(data.error);
 		} else {
@@ -329,6 +330,14 @@ function showServer(serverId) {
 			}
 		}
 	});
+}
+
+function updateScroll(){
+    var element = document.getElementById("log");
+    element.scrollTop = element.scrollHeight;
+    
+    //once a second
+    setInterval("updateScroll", 1000);
 }
 
 function deleteServer() {
