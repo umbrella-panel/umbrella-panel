@@ -6,7 +6,7 @@ import ms.idrea.umbrellapanel.api.chief.Worker;
 
 public interface RunningWorker extends Session {
 
-	public int getId();
+	int getId();
 
-	public Worker getOfflineWorker();
+	Worker getOfflineWorker();
 }

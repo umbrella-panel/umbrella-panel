@@ -4,27 +4,25 @@ import ms.idrea.umbrellapanel.api.util.Address;
 
 public interface GameServer {
 
-	public int getId();
+	int getId();
 
-	public Address getAddress();
+	Address getAddress();
 
-	public void setAddress(Address address);
+	void setAddress(Address address);
 
-	public void setup();
+	void setup();
 
-	public void delete();
+	void delete();
 
-	public boolean start();
+	boolean start();
 
-	public boolean forceStop();
+	boolean forceStop();
 
-	public boolean dispatchCommand(String str);
+	boolean dispatchCommand(String str);
 
-	public boolean isRunning();
+	boolean isRunning();
 
-	public String getStartCommand();
+	String getStartCommand();
 
-	public void setStartCommand(String startCommand);
-
-	public void joinProcess() throws InterruptedException;
+	void setStartCommand(String startCommand);
 }

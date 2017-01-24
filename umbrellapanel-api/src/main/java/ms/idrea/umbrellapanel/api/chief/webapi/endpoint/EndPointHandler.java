@@ -8,13 +8,13 @@ import lombok.ToString;
 
 public interface EndPointHandler {
 
-	public String getEndPoint();
+	String getEndPoint();
 
-	public boolean isVaild(HttpServletRequest request);
+	boolean isVaild(HttpServletRequest request);
 
-	public EndPointResponse getResponse(HttpServletRequest request);
+	EndPointResponse getResponse(HttpServletRequest request);
 
-	public EndPointResponse getInValidResponse();
+	EndPointResponse getInValidResponse();
 
 	@Getter
 	@ToString

@@ -8,19 +8,19 @@ import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 
 public interface EndPointManager {
 
-	public void shutdown();
+	void shutdown();
 
-	public PanelUser getSession(String sessId);
+	PanelUser getSession(String sessId);
 
-	public String createSession(PanelUser user);
+	String createSession(PanelUser user);
 
-	public void destroySession(String sessId);
+	void destroySession(String sessId);
 
-	public void registerEndPointHander(EndPointHandler handler);
+	void registerEndPointHander(EndPointHandler handler);
 
-	public EndPointHandler getEndPointHandler(String endpoint);
+	EndPointHandler getEndPointHandler(String endpoint);
 
-	public Collection<EndPointHandler> getAllEndPoints();
+	Collection<EndPointHandler> getAllEndPoints();
 
-	public Chief getChief();
+	Chief getChief();
 }

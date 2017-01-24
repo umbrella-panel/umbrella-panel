@@ -4,11 +4,11 @@ import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 
 public interface UserRegistery {
 
-	public void delete(PanelUser user);
+	void delete(PanelUser user);
 
-	public void update(PanelUser user);
+	void update(PanelUser user);
 
-	public PanelUser getPanelUser(int id);
+	PanelUser getPanelUser(int id);
 
-	public PanelUser getByName(String name);
+	PanelUser getByName(String name);
 }

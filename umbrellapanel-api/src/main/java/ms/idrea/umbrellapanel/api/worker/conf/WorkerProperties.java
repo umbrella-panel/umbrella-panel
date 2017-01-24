@@ -2,27 +2,23 @@ package ms.idrea.umbrellapanel.api.worker.conf;
 
 public interface WorkerProperties {
 
-	public void load();
+	void load();
 
-	public void save();
+	void save();
 
-	public String getSharedPassword();
+	String getSharedPassword();
 
-	public void setSharedPassword(String password);
+	void setSharedPassword(String password);
 
-	public int getWorkerId();
+	int getWorkerId();
 
-	public void setWorkerId(int id);
+	void setWorkerId(int id);
 
-	public String getChiefHost();
+	String getChiefHost();
 
-	public void setChiefHost(String host);
+	void setChiefHost(String host);
 
-	public int getChiefPort();
+	int getChiefPort();
 
-	public void setChiefPort(int port);
-	
-	public String getPassivePort();
-
-	public void setPassivePort(String port);
+	void setChiefPort(int port);
 }

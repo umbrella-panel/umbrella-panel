@@ -4,15 +4,15 @@ import java.io.File;
 
 public interface ServerManager {
 
-	public File getGameServerDirectory();
+	File getGameServerDirectory();
 
-	public GameServer getServer(int id);
+	GameServer getServer(int id);
 
-	public void addServer(GameServer server);
+	void addServer(GameServer server);
 
-	public void createServer(GameServer server);
+	void createServer(GameServer server);
 
-	public void deleteServer(GameServer server);
+	void deleteServer(GameServer server);
 
-	public void shutdown();
+	void shutdown();
 }

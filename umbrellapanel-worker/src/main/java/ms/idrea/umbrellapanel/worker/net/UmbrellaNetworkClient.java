@@ -55,7 +55,7 @@ public class UmbrellaNetworkClient extends NetworkClient implements ms.idrea.umb
 	public void send(Message... messages) {
 		for (Message message : messages) {
 			worker.getLogger().finest("[CLIENT-OUT " + session + "]: " + message);
-			session.send(message);;
+			session.send(message);
 		}
 	}
 }

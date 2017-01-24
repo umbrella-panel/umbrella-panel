@@ -7,13 +7,13 @@ import ms.idrea.umbrellapanel.api.util.Address;
 
 public interface ServerManager extends LoadAndSaveable {
 
-	public GameServer getServer(int id);
+	GameServer getServer(int id);
 
-	public List<GameServer> getAllServers();
+	List<GameServer> getAllServers();
 
-	public GameServer createServer(Address address, String startCommand, int workerId);
+	GameServer createServer(Address address, String startCommand, int workerId);
 
-	public void deleteServer(GameServer server);
+	void deleteServer(GameServer server);
 
-	public int getNextId();
+	int getNextId();
 }

@@ -7,17 +7,17 @@ import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 
 public interface PanelUserDatabase extends LoadAndSaveable {
 
-	public PanelUser createUser(String name, String password);
+	PanelUser createUser(String name, String password);
 
-	public PanelUser getUser(String name);
+	PanelUser getUser(String name);
 
-	public void updateUser(PanelUser user);
+	void updateUser(PanelUser user);
 
-	public void deleteUser(PanelUser user);
+	void deleteUser(PanelUser user);
 
-	public PanelUser getUser(int id);
+	PanelUser getUser(int id);
 
-	public int getNextId();
+	int getNextId();
 
-	public List<PanelUser> getAllUsers();
+	List<PanelUser> getAllUsers();
 }

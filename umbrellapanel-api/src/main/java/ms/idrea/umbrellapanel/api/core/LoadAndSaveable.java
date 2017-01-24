@@ -6,7 +6,7 @@ import java.io.Writer;
 
 public interface LoadAndSaveable {
 
-	public void load(Reader in) throws IOException;
-	
-	public void save(Writer out) throws IOException;
+	void load(Reader in) throws IOException;
+
+	void save(Writer out) throws IOException;
 }

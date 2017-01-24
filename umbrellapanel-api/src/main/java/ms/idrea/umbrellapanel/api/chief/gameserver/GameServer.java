@@ -2,56 +2,34 @@ package ms.idrea.umbrellapanel.api.chief.gameserver;
 
 import java.util.List;
 
+import com.flowpowered.networking.session.Session;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+
 import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
-import ms.idrea.umbrellapanel.api.util.Address;
 
-import com.flowpowered.networking.session.Session;
+public interface GameServer extends ms.idrea.umbrellapanel.api.worker.gameserver.GameServer {
 
-public interface GameServer {
+	void setRunning(boolean running);
 
-	public int getId();
+	Session getOnlineWorker();
 
-	public Address getAddress();
+	Worker getWorker();
 
-	public void setAddress(Address address);
+	String getName();
 
-	public void setup();
+	void setName(String name);
 
-	public void delete();
+	void appendLog(String log);
 
-	public boolean start();
+	List<PanelUser> listUsers(int permission);
 
-	public boolean forceStop();
+	List<ServerLog> getLogBuffer();
 
-	public boolean dispatchCommand(String str);
-
-	public void setRunning(boolean running);
-
-	public boolean isRunning();
-
-	public String getStartCommand();
-
-	public void setStartCommand(String startCommand);
-
-	public Session getOnlineWorker();
-	
-	public Worker getWorker();
-
-	public String getName();
-
-	public void setName(String name);
-
-	public void appendLog(String log);
-
-	public List<PanelUser> listUsers(int permission);
-
-	public List<ServerLog> getLogBuffer();
-
-	public void update();
+	void update();
 
 	@Getter
 	@ToString

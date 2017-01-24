@@ -15,7 +15,7 @@ public class LogOutputStream extends ByteArrayOutputStream {
 		super();
 		this.logger = logger;
 		this.level = level;
-		this.lineSeparator = System.getProperty("line.separator");
+		lineSeparator = System.getProperty("line.separator");
 	}
 
 	@Override
@@ -25,11 +25,11 @@ public class LogOutputStream extends ByteArrayOutputStream {
 			super.flush();
 			record = this.toString();
 			super.reset();
-			if ((record.length() == 0) || record.equals(this.lineSeparator) || record.startsWith("SLF4J: ")) {
+			if ((record.length() == 0) || record.equals(lineSeparator) || record.startsWith("SLF4J: ")) {
 				// avoid empty records 
 				return;
 			}
-			this.logger.logp(this.level, "", "", record);
+			logger.logp(level, "", "", record);
 		}
 	}
 }

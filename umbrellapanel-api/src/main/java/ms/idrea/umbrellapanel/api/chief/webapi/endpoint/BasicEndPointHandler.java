@@ -2,11 +2,11 @@ package ms.idrea.umbrellapanel.api.chief.webapi.endpoint;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.mongodb.BasicDBObject;
+
 import ms.idrea.umbrellapanel.api.chief.Chief;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.util.Utils;
-
-import com.mongodb.BasicDBObject;
 
 public abstract class BasicEndPointHandler implements EndPointHandler {
 
@@ -22,7 +22,7 @@ public abstract class BasicEndPointHandler implements EndPointHandler {
 	public BasicEndPointHandler(EndPointManager manager, String endpoint) {
 		this.endpoint = Utils.fixEndPointString(endpoint);
 		this.manager = manager;
-		this.chief = manager.getChief();
+		chief = manager.getChief();
 		manager.registerEndPointHander(this);
 	}
 

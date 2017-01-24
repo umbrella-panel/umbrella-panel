@@ -6,13 +6,13 @@ import lombok.ToString;
 
 public interface LogHandler {
 
-	public void append(int id, String message);
+	void append(int id, String message);
 
-	public void append(ServerLog log);
+	void append(ServerLog log);
 
-	public void flush();
+	void flush();
 
-	public void shutdown();
+	void shutdown();
 
 	@Getter
 	@ToString

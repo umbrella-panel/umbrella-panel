@@ -18,7 +18,6 @@ public class UmbrellaWorkerProperties extends UmbrellaProperties implements Work
 		setWorkerId(-1);
 		setChiefHost("localhost");
 		setChiefPort(35886);
-		setPassivePort("123");
 	}
 
 	@Override
@@ -59,15 +58,5 @@ public class UmbrellaWorkerProperties extends UmbrellaProperties implements Work
 	@Override
 	public void setChiefPort(int port) {
 		set(Key.CHIEF_PORT, port);
-	}
-	
-	@Override
-	public String getPassivePort() {
-		return getString(Key.PASSIVE_PORT, "123");
-	}
-	
-	@Override
-	public void setPassivePort(String port) {
-		set(Key.PASSIVE_PORT, port);
 	}
 }

@@ -94,13 +94,12 @@ public class UmbrellaGameServer implements GameServer {
 	public boolean isRunning() {
 		return umbrellaServerContoller != null;
 	}
-	
+
 	@Override
 	public String getStartCommand() {
 		return startCommand + " --host " + address.getHost() + " --port " + address.getPort();
 	}
 
-	@Override
 	public void joinProcess() throws InterruptedException {
 		if (umbrellaServerContoller != null) {
 			umbrellaServerContoller.join();

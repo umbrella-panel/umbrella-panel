@@ -8,19 +8,19 @@ import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
 
 public interface Chief {
 
-	public NetworkServer getNetworkServer();
+	NetworkServer getNetworkServer();
 
-	public PanelUserDatabase getPanelUserDatabase();
+	PanelUserDatabase getPanelUserDatabase();
 
-	public ServerManager getServerManager();
+	ServerManager getServerManager();
 
-	public WorkerManager getWorkerManager();
+	WorkerManager getWorkerManager();
 
-	public void start();
+	void start();
 
-	public Logger getLogger();
-	
-	public ChiefProperties getChiefProperties();
-	
-	public void enableConsole();
+	Logger getLogger();
+
+	ChiefProperties getChiefProperties();
+
+	void enableConsole();
 }

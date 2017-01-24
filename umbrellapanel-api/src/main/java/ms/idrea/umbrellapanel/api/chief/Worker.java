@@ -4,12 +4,12 @@ import ms.idrea.umbrellapanel.api.util.Address;
 
 public interface Worker {
 
-	public int getId();
+	int getId();
 
 	/**
 	 * May be <code>null</code> is the worker is not {@link #isOnline()}
 	 */
-	public Address getAddress();
+	Address getAddress();
 
-	public boolean isOnline();
+	boolean isOnline();
 }

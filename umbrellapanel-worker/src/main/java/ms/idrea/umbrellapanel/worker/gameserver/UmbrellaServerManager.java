@@ -47,7 +47,7 @@ public class UmbrellaServerManager implements ServerManager {
 					gameServer.dispatchCommand(command);
 				}
 				try {
-					gameServer.joinProcess();
+					((UmbrellaGameServer) gameServer).joinProcess();
 				} catch (Exception e) {
 				}
 			}

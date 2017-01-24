@@ -4,7 +4,7 @@ import com.flowpowered.networking.Message;
 
 public interface NetworkServer {
 
-	public void broadcast(Message... messages);
+	void broadcast(Message... messages);
 
-	public void shutdown();
+	void shutdown();
 }

@@ -2,19 +2,19 @@ package ms.idrea.umbrellapanel.api.chief.conf;
 
 public interface ChiefProperties {
 
-	public void load();
+	void load();
 
-	public void save();
+	void save();
 
-	public String getSharedPassword();
+	String getSharedPassword();
 
-	public void setSharedPassword(String password);
+	void setSharedPassword(String password);
 
-	public int getNetPort();
+	int getNetPort();
 
-	public void setNetPort(int port);
+	void setNetPort(int port);
 
-	public int getWebPort();
+	int getWebPort();
 
-	public void setWebPort(int port);
+	void setWebPort(int port);
 }

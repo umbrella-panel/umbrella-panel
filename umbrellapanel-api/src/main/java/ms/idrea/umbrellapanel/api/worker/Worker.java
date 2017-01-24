@@ -10,25 +10,25 @@ import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 
 public interface Worker {
 
-	public void start();
+	void start();
 
-	public void shutdown();
+	void shutdown();
 
-	public NetworkClient getNetworkClient();
+	NetworkClient getNetworkClient();
 
-	public LogHandler getLogHandler();
+	LogHandler getLogHandler();
 
-	public ServerManager getServerManager();
+	ServerManager getServerManager();
 
-	public UserRegistery getUserRegistery();
+	UserRegistery getUserRegistery();
 
-	public WorkerProperties getWorkerProperties();
+	WorkerProperties getWorkerProperties();
 
-	public Logger getLogger();
+	Logger getLogger();
 
-	public boolean isRunning();
+	boolean isRunning();
 
-	public void enableConsole();
+	void enableConsole();
 
-	public UserManager getFTPUserWrapper();
+	UserManager getFTPUserWrapper();
 }
