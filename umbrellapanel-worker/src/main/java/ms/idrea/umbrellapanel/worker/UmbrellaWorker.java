@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.apache.ftpserver.ftplet.UserManager;
 
 import lombok.Getter;
+
 import ms.idrea.umbrellapanel.api.util.LoggerHelper;
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
 import ms.idrea.umbrellapanel.api.worker.UserRegistery;
@@ -15,14 +16,13 @@ import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.conf.WorkerProperties;
 import ms.idrea.umbrellapanel.api.worker.ftp.FTPServer;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
-import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
 import ms.idrea.umbrellapanel.net.messages.WorkerMessage.Action;
 import ms.idrea.umbrellapanel.worker.conf.UmbrellaWorkerProperties;
 import ms.idrea.umbrellapanel.worker.ftp.FTPUserWrapper;
 import ms.idrea.umbrellapanel.worker.ftp.UmbrellaFTPServer;
 import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaServerManager;
-import ms.idrea.umbrellapanel.worker.net.UmbrellaNetworkClient;
+import ms.idrea.umbrellapanel.worker.net.TransportClient;
 
 @Getter
 public class UmbrellaWorker implements Worker {
@@ -38,7 +38,7 @@ public class UmbrellaWorker implements Worker {
 
 	// ---------------
 	private Logger logger;
-	private NetworkClient networkClient;
+	private TransportClient networkClient;
 	private ServerManager serverManager;
 	private LogHandler logHandler;
 	private UserRegistery userRegistery;
@@ -63,7 +63,7 @@ public class UmbrellaWorker implements Worker {
 		workerProperties = new UmbrellaWorkerProperties(this);
 		workerProperties.load();
 		userRegistery = new UmbrellaUserRegistery();
-		serverManager = new UmbrellaServerManager();
+		serverManager = new UmbrellaServerManager(this);
 		ftpUserWrapper = new FTPUserWrapper(userRegistery, serverManager);
 		ftpServer = new UmbrellaFTPServer(this);
 		try {
@@ -72,7 +72,7 @@ public class UmbrellaWorker implements Worker {
 			new Exception("Failed to start ftp server!", e).printStackTrace();
 		}
 		logHandler = new UmbrellaLogHandler(this);
-		networkClient = new UmbrellaNetworkClient(this, new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()), new Runnable() {
+		networkClient = new TransportClient(this, new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()), new Runnable() {
 
 			@Override
 			public void run() {
@@ -84,6 +84,11 @@ public class UmbrellaWorker implements Worker {
 				// the umbrella server should now send all the data.
 			}
 		});
+		try {
+			networkClient.connect();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void enableConsole() {
@@ -94,6 +99,7 @@ public class UmbrellaWorker implements Worker {
 				break;
 			}
 			logger.info("Type \"exit\" to exit the program!");
+			System.out.println(serverManager);
 		}
 		scanner.close();
 		shutdown();

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class LoggerHelper {
 
-	private static final SimpleDateFormat COMMON_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");;
+	private static final SimpleDateFormat COMMON_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	private static final Formatter COMMON_FORMATER = new Formatter() {
 
 		@Override
@@ -22,13 +22,13 @@ public class LoggerHelper {
 	};
 
 	public static Logger getCommonLogger(String name, Level consoleLevel, String logFile, Level fileLevel) {
-		Logger logger = Logger.getLogger(name);
-		setConsoleLogger(logger, consoleLevel);
-		setFileLogger(logger, fileLevel, logFile);
-		PrintStream ps = new PrintStream(new LogOutputStream(logger, Level.SEVERE), true);
+		Logger log = Logger.getLogger(name);
+		setConsoleLogger(log, consoleLevel);
+		setFileLogger(log, fileLevel, logFile);
+		PrintStream ps = new PrintStream(new LogOutputStream(log, Level.SEVERE), true);
 		System.setErr(ps);
 		System.setOut(ps);
-		return logger;
+		return log;
 	}
 
 	public static void setFileLogger(Logger logger, Level level, String file) {

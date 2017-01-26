@@ -3,9 +3,9 @@ package ms.idrea.umbrellapanel.api.chief.webapi.endpoint;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
+import ms.idrea.umbrellapanel.api.gameserver.ManagedServer;
 import ms.idrea.umbrellapanel.api.util.Utils;
 
 public abstract class ServerEndPoint extends LoginRequiredEndPoint {
@@ -25,7 +25,7 @@ public abstract class ServerEndPoint extends LoginRequiredEndPoint {
 
 	@Override
 	public final EndPointResponse _getResponse(HttpServletRequest request, PanelUser user) {
-		GameServer server = manager.getChief().getServerManager().getServer(Integer.valueOf(request.getParameter("id")));
+		ManagedServer server = manager.getChief().getServerManager().getServer(Integer.valueOf(request.getParameter("id")));
 		if (server == null) {
 			return SERVER_NO_FOUND_RESPONSE;
 		}
@@ -35,7 +35,7 @@ public abstract class ServerEndPoint extends LoginRequiredEndPoint {
 		return __getResponse(request, user, server);
 	}
 
-	public abstract EndPointResponse __getResponse(HttpServletRequest request, PanelUser user, GameServer server);
+	public abstract EndPointResponse __getResponse(HttpServletRequest request, PanelUser user, ManagedServer server);
 
 	public abstract boolean __isValid(HttpServletRequest request);
 }

@@ -5,11 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mongodb.BasicDBObject;
 
-import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.chief.webapi.endpoint.LoginRequiredEndPoint;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.core.permissions.Permission;
+import ms.idrea.umbrellapanel.api.gameserver.ManagedServer;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.api.util.Utils;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.V1EndPoints;
@@ -34,7 +34,7 @@ public class CreateEndPoint extends LoginRequiredEndPoint {
 		if (chief.getWorkerManager().getRunningWorker(workerId) == null) {
 			return WORKER_OFFLINE;
 		}
-		GameServer server = chief.getServerManager().createServer(new Address(request.getParameter("ip"), Integer.valueOf(request.getParameter("port"))), request.getParameter("startcommand"), workerId);
+		ManagedServer server = chief.getServerManager().createSingleInstanceServer(new Address(request.getParameter("ip"), Integer.valueOf(request.getParameter("port"))), request.getParameter("startcommand"), workerId);
 		return new EndPointResponse(HttpServletResponse.SC_CREATED, new BasicDBObject("server", V1EndPoints.convertGameServer(server)).append("ok", "server created").toString());
 	}
 }

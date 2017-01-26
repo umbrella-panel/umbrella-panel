@@ -14,11 +14,11 @@ public interface Worker {
 
 	void shutdown();
 
-	NetworkClient getNetworkClient();
-
 	LogHandler getLogHandler();
 
 	ServerManager getServerManager();
+	
+	NetworkClient getNetworkClient();
 
 	UserRegistery getUserRegistery();
 

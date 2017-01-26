@@ -3,15 +3,15 @@ package ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.servers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.chief.webapi.endpoint.LoginRequiredEndPoint;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.core.permissions.Permission;
+import ms.idrea.umbrellapanel.api.gameserver.ManagedServer;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.V1EndPoints;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 
 public class ListEndPoint extends LoginRequiredEndPoint {
 
@@ -28,7 +28,7 @@ public class ListEndPoint extends LoginRequiredEndPoint {
 	public EndPointResponse _getResponse(HttpServletRequest request, PanelUser user) {
 		BasicDBObject object = new BasicDBObject();
 		BasicDBList servers = new BasicDBList();
-		for (GameServer server : chief.getServerManager().getAllServers()) {
+		for (ManagedServer server : chief.getServerManager().getAllServers()) {
 			if (user.hasPermission(server.getId(), Permission.PANEL_ACCESS)) {
 				servers.add(V1EndPoints.convertGameServer(server));
 			}

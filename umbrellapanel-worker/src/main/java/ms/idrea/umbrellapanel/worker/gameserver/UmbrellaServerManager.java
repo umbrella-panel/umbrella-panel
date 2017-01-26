@@ -4,14 +4,32 @@ import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+import ms.idrea.umbrellapanel.api.gameserver.MultiInstanceServer;
+import ms.idrea.umbrellapanel.api.gameserver.SingleInstanceServer;
+import ms.idrea.umbrellapanel.api.util.Address;
+import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.api.worker.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.worker.gameserver.ServerManager;
+import ms.idrea.umbrellapanel.api.worker.net.NetworkClient;
 
+@ToString(of = { "servers" })
+@RequiredArgsConstructor
 public class UmbrellaServerManager implements ServerManager {
 
 	public static final String[] STOP_COMMANDS = { "stop", "end", "exit", "shutdown" };
-
+	private final Worker worker;
 	private ConcurrentMap<Integer, GameServer> servers = new ConcurrentHashMap<>();
+
+	public GameServer createSingleServer(int id, Address address, String startCommand, NetworkClient networkClient) {
+		return new UmbrellaSingleInstanceGameServer(id, address, startCommand, worker.getLogHandler(), this, networkClient);
+	}
+
+	public MultiInstanceServer createMultiServer(int id, String startCommand, NetworkClient networkClient) {
+		return new UmbrellaMultiInstanceGameServer(id, startCommand, worker.getLogHandler(), this, networkClient);
+	}
 
 	@Override
 	public GameServer getServer(int id) {
@@ -29,7 +47,6 @@ public class UmbrellaServerManager implements ServerManager {
 	@Override
 	public void createServer(GameServer server) {
 		addServer(server);
-		server.setup();
 	}
 
 	@Override
@@ -40,15 +57,17 @@ public class UmbrellaServerManager implements ServerManager {
 
 	@Override
 	public void shutdown() {
-		for (int id : servers.keySet()) {
-			GameServer gameServer = getServer(id);
-			if (gameServer.isRunning()) {
-				for (String command : STOP_COMMANDS) {
-					gameServer.dispatchCommand(command);
-				}
-				try {
-					((UmbrellaGameServer) gameServer).joinProcess();
-				} catch (Exception e) {
+		for (GameServer server : servers.values()) {
+			if (server instanceof SingleInstanceServer) {
+				SingleInstanceServer s = (SingleInstanceServer) server;
+				if (s.isRunning()) {
+					for (String command : STOP_COMMANDS) {
+						s.dispatchCommand(command);
+					}
+					try {
+						((UmbrellaSingleInstanceGameServer) s).joinProcess();
+					} catch (Exception e) {
+					}
 				}
 			}
 		}

@@ -4,10 +4,12 @@ import com.mongodb.BasicDBObject;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
 import ms.idrea.umbrellapanel.api.chief.Worker;
-import ms.idrea.umbrellapanel.api.chief.gameserver.GameServer;
 import ms.idrea.umbrellapanel.api.chief.webapi.EndPointManager;
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
+import ms.idrea.umbrellapanel.api.gameserver.ManagedServer;
+import ms.idrea.umbrellapanel.api.gameserver.ManagedServerInstance;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.server.ConsoleEndPoint;
 import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.server.ManageEndPoint;
@@ -44,19 +46,21 @@ public class V1EndPoints {
 		new ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.workers.ListEndPoint(manager);
 	}
 
-	public static BasicDBObject convertGameServer(GameServer server) {
+	public static BasicDBObject convertGameServer(ManagedServer server) {
 		BasicDBObject s = new BasicDBObject();
 		s.append("id", server.getId());
 		s.append("name", server.getName());
 		s.append("worker", convertWorker(server.getWorker()));
-		s.append("isRunning", server.isRunning());
-		s.append("address", server.getAddress().toString());
-		s.append("ip", server.getAddress().getHost());
-		s.append("port", server.getAddress().getPort());
 		s.append("startcommand", server.getStartCommand());
+		if (server instanceof ManagedServerInstance) {
+			s.append("isRunning", ((ManagedServerInstance) server).isRunning());
+			s.append("address", ((ManagedServerInstance) server).getAddress().toString());
+			s.append("ip", ((ManagedServerInstance) server).getAddress().getHost());
+			s.append("port", ((ManagedServerInstance) server).getAddress().getPort());
+		}
 		return s;
 	}
-	
+
 	public static BasicDBObject convertWorker(Worker worker) {
 		BasicDBObject w = new BasicDBObject();
 		w.append("id", worker.getId());

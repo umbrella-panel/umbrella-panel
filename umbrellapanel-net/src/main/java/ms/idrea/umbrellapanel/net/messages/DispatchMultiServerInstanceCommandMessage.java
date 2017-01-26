@@ -9,14 +9,9 @@ import com.flowpowered.networking.Message;
 @Getter
 @ToString
 @AllArgsConstructor
-public class GameServerStatusMessage implements Message {
-
-	public static enum Status {
-		RUNNING,
-		STOPPED
-	}
+public class DispatchMultiServerInstanceCommandMessage implements Message {
 
 	private int serverId;
 	private int instanceId;
-	private Status status;
+	private String command;
 }

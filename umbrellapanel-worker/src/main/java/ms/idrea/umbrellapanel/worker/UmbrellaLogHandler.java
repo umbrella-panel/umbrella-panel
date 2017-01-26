@@ -1,10 +1,5 @@
 package ms.idrea.umbrellapanel.worker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import ms.idrea.umbrellapanel.api.worker.LogHandler;
 import ms.idrea.umbrellapanel.api.worker.Worker;
 import ms.idrea.umbrellapanel.net.messages.LogMessage;
@@ -12,7 +7,6 @@ import ms.idrea.umbrellapanel.net.messages.LogMessage;
 public class UmbrellaLogHandler extends Thread implements LogHandler {
 
 	public static final int SEND_INTERVAL = Integer.getInteger("worker.log.sendInterval", 500);
-	private Map<Integer, List<String>> logBuffer = new HashMap<>();
 	private Worker worker;
 
 	public UmbrellaLogHandler(Worker worker) {
@@ -50,23 +44,19 @@ public class UmbrellaLogHandler extends Thread implements LogHandler {
 
 	@Override
 	public void append(int id, String message) {
-		append(new ServerLog(id, message));
+		append(id, id, message);
 	}
 
 	@Override
+	public synchronized void append(int serverId, int instanceId, String message) {
+		worker.getNetworkClient().send(new LogMessage(serverId, instanceId, message));
+	}
+
 	public synchronized void append(ServerLog log) {
-		if (logBuffer.get(log.getId()) == null) {
-			logBuffer.put(log.getId(), new ArrayList<String>());
-		}
-		logBuffer.get(log.getId()).add(log.getMessage());
-		worker.getLogger().fine("[" + log.getId() + "]: " + log.getMessage());
+		append(log.getServerId(), log.getInstanceId(), log.getMessage());
 	}
 
 	@Override
 	public synchronized void flush() {
-		for (int id : logBuffer.keySet()) {
-			worker.getNetworkClient().send(new LogMessage(id, logBuffer.get(id)));
-		}
-		logBuffer.clear();
 	}
 }

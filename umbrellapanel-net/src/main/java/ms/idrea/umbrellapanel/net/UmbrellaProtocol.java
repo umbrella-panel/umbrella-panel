@@ -1,20 +1,9 @@
 package ms.idrea.umbrellapanel.net;
 
 import io.netty.buffer.ByteBuf;
-import ms.idrea.umbrellapanel.net.codecs.DispatchCommandMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.GameServerStatusMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.LogMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.ManageGameServerMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.UpdateGameServerMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.UpdatePanelUserMessageCodec;
-import ms.idrea.umbrellapanel.net.codecs.WorkerMessageCodec;
-import ms.idrea.umbrellapanel.net.messages.DispatchCommandMessage;
-import ms.idrea.umbrellapanel.net.messages.GameServerStatusMessage;
-import ms.idrea.umbrellapanel.net.messages.LogMessage;
-import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage;
-import ms.idrea.umbrellapanel.net.messages.UpdateGameServerMessage;
-import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
-import ms.idrea.umbrellapanel.net.messages.WorkerMessage;
+
+import ms.idrea.umbrellapanel.net.codecs.*;
+import ms.idrea.umbrellapanel.net.messages.*;
 
 import com.flowpowered.networking.Codec;
 import com.flowpowered.networking.Codec.CodecRegistration;
@@ -26,8 +15,10 @@ import com.flowpowered.networking.protocol.simple.SimpleProtocol;
 
 public class UmbrellaProtocol extends SimpleProtocol {
 
+	public static final int PROTOCOL_VERSION = 1;
+
 	public UmbrellaProtocol(Class<? extends MessageHandler<? extends DynamicSession, Message>> handler) {
-		super("UmbrellaProtocol", 7);
+		super("UmbrellaProtocol", 12);
 		registerMessage(LogMessage.class, LogMessageCodec.class, handler, null);
 		registerMessage(ManageGameServerMessage.class, ManageGameServerMessageCodec.class, handler, null);
 		registerMessage(UpdateGameServerMessage.class, UpdateGameServerMessageCodec.class, handler, null);
@@ -35,6 +26,11 @@ public class UmbrellaProtocol extends SimpleProtocol {
 		registerMessage(UpdatePanelUserMessage.class, UpdatePanelUserMessageCodec.class, handler, null);
 		registerMessage(WorkerMessage.class, WorkerMessageCodec.class, handler, null);
 		registerMessage(GameServerStatusMessage.class, GameServerStatusMessageCodec.class, handler, null);
+		registerMessage(ProtocolVersionMessage.class, ProtocolVersionCodec.class, handler, null);
+		registerMessage(UpdateMultiInstanceServerMessage.class, UpdateMultiInstanceServerMessageCodec.class, handler, null);
+		registerMessage(UpdateServerInstanceMessage.class, UpdateServerInstanceMessageCodec.class, handler, null);
+		registerMessage(ManageMultiServerInstanceMessage.class, ManageMultiServerInstanceMessageCodec.class, handler, null);
+		registerMessage(DispatchMultiServerInstanceCommandMessage.class, DispatchMultiServerInstanceCommandMessageCodec.class, handler, null); // 12
 	}
 
 	@Override

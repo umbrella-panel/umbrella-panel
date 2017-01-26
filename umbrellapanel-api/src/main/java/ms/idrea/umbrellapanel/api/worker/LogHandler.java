@@ -6,9 +6,9 @@ import lombok.ToString;
 
 public interface LogHandler {
 
-	void append(int id, String message);
+	void append(int serverId, int instanceId, String message);
 
-	void append(ServerLog log);
+	void append(int serverId, String message);
 
 	void flush();
 
@@ -19,7 +19,8 @@ public interface LogHandler {
 	@AllArgsConstructor
 	public static class ServerLog {
 
-		private int id;
+		private int serverId;
+		private int instanceId;
 		private String message;
 	}
 }

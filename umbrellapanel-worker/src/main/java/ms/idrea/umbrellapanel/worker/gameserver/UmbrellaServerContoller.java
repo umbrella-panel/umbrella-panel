@@ -9,6 +9,9 @@ import org.apache.commons.io.IOUtils;
 
 import lombok.Getter;
 
+import ms.idrea.umbrellapanel.api.gameserver.ServerInstance;
+import ms.idrea.umbrellapanel.worker.gameserver.UmbrellaMultiInstanceGameServer.UmbrellaServerInstance;
+
 /**
  * Controls and manages a single, running {@link UmbreallaGameServer} instance
  * 
@@ -20,10 +23,11 @@ public class UmbrellaServerContoller extends Thread {
 		PRE,
 		RUNNING,
 		STOPPED,
-		STOPPING
+		STOPPING;
 	};
 
-	private UmbrellaGameServer server;
+	private final AbstractServer server;
+	private final ServerInstance instance;
 	private Process process;
 	private BufferedReader input;
 	private BufferedReader errorInput;
@@ -31,8 +35,9 @@ public class UmbrellaServerContoller extends Thread {
 	@Getter
 	private ProcessState processState = ProcessState.PRE;
 
-	public UmbrellaServerContoller(UmbrellaGameServer server) {
+	public UmbrellaServerContoller(ServerInstance instance, AbstractServer server) {
 		super("serverController-" + server.getId());
+		this.instance = instance;
 		this.server = server;
 		super.start();
 	}
@@ -44,7 +49,11 @@ public class UmbrellaServerContoller extends Thread {
 
 	private void setState(ProcessState state) {
 		processState = state;
-		server.updateProcessState(processState);
+		if (instance instanceof UmbrellaSingleInstanceGameServer) {
+			((UmbrellaSingleInstanceGameServer) instance).updateProcessState(state);
+		} else if (instance instanceof UmbrellaServerInstance) {
+			((UmbrellaServerInstance) instance).updateProcessState(state);
+		}
 	}
 
 	public void forceStop() {
@@ -67,14 +76,14 @@ public class UmbrellaServerContoller extends Thread {
 	@Override
 	public void run() {
 		try {
-			process = Runtime.getRuntime().exec(server.getStartCommand(), new String[] {}, server.getWorkingDirectory());
+			process = Runtime.getRuntime().exec(server.getStartCommand() + " --port " + instance.getAddress().getPort() + " --host " + instance.getAddress().getHost(), new String[] {}, server.getWorkingDirectory());
 			setState(ProcessState.RUNNING);
 			input = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			errorInput = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 			output = new PrintWriter(process.getOutputStream());
 			String line;
 			while ((line = input.readLine()) != null || (line = errorInput.readLine()) != null) {
-				server.appendServerLog(line);
+				instance.appendLog(line);
 			}
 		} catch (IOException e) {
 		}

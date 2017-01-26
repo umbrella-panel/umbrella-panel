@@ -14,14 +14,16 @@ public class GameServerStatusMessageCodec implements Codec<GameServerStatusMessa
 
 	@Override
 	public GameServerStatusMessage decode(ByteBuf buf) throws IOException {
-		int id = buf.readInt();
+		int serverId = buf.readInt();
+		int instanceId = buf.readInt();
 		String status = ByteBufUtils.readUTF8(buf);
-		return new GameServerStatusMessage(id, Status.valueOf(status));
+		return new GameServerStatusMessage(serverId, instanceId, Status.valueOf(status));
 	}
 
 	@Override
 	public ByteBuf encode(ByteBuf buf, GameServerStatusMessage message) throws IOException {
-		buf.writeInt(message.getId());
+		buf.writeInt(message.getServerId());
+		buf.writeInt(message.getInstanceId());
 		ByteBufUtils.writeUTF8(buf, message.getStatus().toString());
 		return buf;
 	}

@@ -4,19 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import ms.idrea.umbrellapanel.net.messages.ManageGameServerMessage.Action;
+
 import com.flowpowered.networking.Message;
 
 @Getter
 @ToString
 @AllArgsConstructor
-public class GameServerStatusMessage implements Message {
+public class ManageMultiServerInstanceMessage implements Message {
 
-	public static enum Status {
-		RUNNING,
-		STOPPED
-	}
-
+	private Action action;
 	private int serverId;
 	private int instanceId;
-	private Status status;
 }
