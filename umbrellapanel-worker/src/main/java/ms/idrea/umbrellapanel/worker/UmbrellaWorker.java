@@ -76,6 +76,10 @@ public class UmbrellaWorker implements Worker {
 
 			@Override
 			public void run() {
+				if(workerProperties.getSharedPassword().equals("$SHAREDPASSWORD$")) {
+					logger.warning("Enter the shared password of the chief. DONT USE \"$SHAREDPASSWORD$\"!");
+					System.exit(0);
+				}
 				if (workerProperties.getWorkerId() == -1) {
 					networkClient.send(new WorkerMessage(Action.REGISTER, workerProperties.getSharedPassword()));
 				} else {

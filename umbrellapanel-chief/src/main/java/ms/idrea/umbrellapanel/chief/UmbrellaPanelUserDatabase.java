@@ -6,9 +6,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
+import com.flowpowered.networking.Message;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import ms.idrea.umbrellapanel.api.chief.PanelUserDatabase;
 import ms.idrea.umbrellapanel.api.chief.net.NetworkServer;
@@ -16,12 +21,11 @@ import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage;
 import ms.idrea.umbrellapanel.net.messages.UpdatePanelUserMessage.Action;
 
-import com.flowpowered.networking.Message;
-
 public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 
+	private static final JsonParser PARSER = new JsonParser();
 	private NetworkServer networkServer;
-	private Map<Integer, PanelUser> users = new HashMap<>();
+	private final List<PanelUser> users = Collections.synchronizedList(new ArrayList<PanelUser>());
 	private int nextId = 0;
 
 	public UmbrellaPanelUserDatabase(NetworkServer networkServer) {
@@ -35,30 +39,31 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 
 	@Override
 	public List<PanelUser> getAllUsers() {
-		List<PanelUser> list = new ArrayList<>();
-		for (Integer id : users.keySet()) {
-			list.add(getUser(id));
-		}
-		return list;
+		return Collections.unmodifiableList(users);
 	}
 
 	@Override
 	public PanelUser createUser(String name, String password) {
 		int id = getNextId();
 		PanelUser user = new PanelUser(id, name, password);
-		users.put(id, user);
+		users.add(user);
 		broadcastChange(user, Action.UPDATE);
 		return user;
 	}
 
 	@Override
+	/* 
+	 * To update an user create a new PanelUser object with the same id of the old user 
+	 * 
+	 */
 	public void updateUser(PanelUser user) {
-		if (users.containsKey(user.getId())) {
-			users.put(user.getId(), user);
-			broadcastChange(user, Action.UPDATE);
-		} else {
-			throw new NullPointerException("User not found!");
+		if (getUser(user.getId()) == null) {
+			throw new IllegalArgumentException("User not found in system!");
 		}
+		PanelUser oldUser = getUser(user.getId());
+		users.remove(oldUser);
+		users.add(user);
+		broadcastChange(user, Action.UPDATE);
 	}
 
 	@Override
@@ -66,11 +71,10 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 		users.remove(user.getId());
 		broadcastChange(user, Action.DELETE);
 	}
-	
+
 	@Override
 	public PanelUser getUser(String name) {
-		for (int id : users.keySet()) {
-			PanelUser user = getUser(id);
+		for (PanelUser user : users) {
 			if (user.getName().equalsIgnoreCase(name)) {
 				return user;
 			}
@@ -91,24 +95,21 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 	@Override
 	public void save(Writer out) throws IOException {
 		BufferedWriter writer = new BufferedWriter(out);
-		writer.write(String.valueOf(nextId));
-		writer.newLine();
-		writer.write(String.valueOf(users.size()));
-		writer.newLine();
-		for (int id : users.keySet()) {
-			PanelUser user = getUser(id);
-			writer.write(String.valueOf(user.getId()));
-			writer.newLine();
-			writer.write(user.getName());
-			writer.newLine();
-			writer.write(user.getPassword());
-			writer.newLine();
-			writer.write(String.valueOf(user.getPermissions().size()));
-			writer.newLine();
+		JsonObject userSaveData = new JsonObject();
+		JsonArray usersArray = new JsonArray();
+		for (PanelUser user : users) {
+			JsonObject obj = new JsonObject();
+			obj.addProperty("id", user.getId());
+			obj.addProperty("name", user.getName());
+			obj.addProperty("password", user.getPassword());
+			JsonArray permissionsArray = new JsonArray();
 			for (int serverId : user.getPermissions().keySet()) {
-				writer.write(serverId + ":" + user.getPermission(serverId));
-				writer.newLine();
+				permissionsArray.add(serverId + ":" + user.getPermission(serverId));
 			}
+			obj.add("permissions", permissionsArray);
+			usersArray.add(obj);
+			userSaveData.add("users", usersArray);
+			writer.write(userSaveData.toString());
 		}
 		writer.flush();
 	}
@@ -116,18 +117,17 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 	@Override
 	public void load(Reader in) throws IOException {
 		BufferedReader reader = new BufferedReader(in);
-		nextId = Integer.valueOf(reader.readLine());
-		int userSize = Integer.valueOf(reader.readLine());
-		users = new HashMap<>(userSize);
-		for (int i = 0; i < userSize; i++) {
-			int id = Integer.valueOf(reader.readLine());
-			PanelUser user = new PanelUser(id, reader.readLine(), reader.readLine(), true);
-			int permissionSize = Integer.valueOf(reader.readLine());
-			for (int j = 0; j < permissionSize; j++) {
-				String[] l = reader.readLine().split(":");
-				user.grantPermission(Integer.valueOf(l[0]), Integer.valueOf(l[1]));
-			}
-			users.put(id, user);
+		String readed = reader.readLine();
+		if (readed == null) {
+			return;
+		}
+		JsonObject obj = PARSER.parse(readed).getAsJsonObject();
+		JsonArray userArray = obj.get("users").getAsJsonArray();
+		for (JsonElement element : userArray) {
+			JsonObject userData = (JsonObject) element;
+			PanelUser user = new PanelUser(userData.get("id").getAsInt(), userData.get("name").getAsString(),
+					userData.get("password").getAsString(), true);
+			users.add(user);
 		}
 	}
 }
