@@ -1,0 +1,123 @@
+.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+	margin-bottom: 10px;
+}
+.form-signin .checkbox {
+	font-weight: normal;
+}
+.form-signin .form-control {
+	position: relative;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 10px;
+	font-size: 16px;
+}
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+.form-signin input#inputHost {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.form-signin input#inputName {
+	margin-bottom: -1px;
+	margin-top: -1px;
+	border-radius: 0;
+}
+.form-signin input#inputPassword {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.navbar-default {
+	border-radius: 0px 0px 4px 4px;
+	border-top: 0px none;
+}
+
+.view-active {
+	display: block !important;
+}
+
+.view {
+	display: none;
+	margin-bottom: 15px;
+}
+
+a {
+	cursor: pointer;
+}
+
+div#server-view div.tab-content {
+	margin-top: 10px;
+}
+
+div#server-view .well#log {
+	overflow: scroll;
+	color: #FFF;
+	background-color: #000;
+	margin-bottom: 10px;
+	height: 450px;
+	font-family: "Courier New", Courier, monospace;
+	line-height: 1.2em;
+	white-space: pre-wrap;
+}
+
+h2.page-header {
+	margin-top: 0px;
+}
+
+.bullet {
+	width: 0.6em;
+	height: 0.6em;
+	display: inline-block;
+	border-radius: 0.3em;
+}
+
+.bullet-default {
+	background-color: rgb(255, 255, 255);
+	box-shadow: 0px 0px 0.1em rgb(204, 204, 204);
+}
+
+.bullet-primary {
+	background-color: rgb(51, 122, 183);
+	box-shadow: 0px 0px 0.1em rgb(46, 109, 164);
+}
+
+.bullet-success {
+	background-color: rgb(92, 184, 92);
+	box-shadow: 0px 0px 0.1em rgb(76, 174, 76);
+}
+
+.bullet-info {
+	background-color: rgb(91, 192, 222);
+	box-shadow: 0px 0px 0.1em rgb(70, 184, 218);
+}
+
+.bullet-warning {
+	background-color: rgb(240, 173, 78);
+	box-shadow: 0px 0px 0.1em rgb(238, 162, 54);
+}
+
+.bullet-danger {
+	background-color: rgb(217, 83, 79);
+	box-shadow: 0px 0px 0.1em rgb(212, 63, 58);
+}
+
+span.hidden-xs {
+	display: inline-block !important;
+}
+
+@media (max-width: 767px) {
+	span.hidden-xs {
+		display: none!important;
+	}
+}
