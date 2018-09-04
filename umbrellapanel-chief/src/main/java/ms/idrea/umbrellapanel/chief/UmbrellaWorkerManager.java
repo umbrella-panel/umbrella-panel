@@ -11,6 +11,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.flowpowered.networking.session.Session;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import lombok.Getter;
 import ms.idrea.umbrellapanel.api.chief.Worker;
 import ms.idrea.umbrellapanel.api.chief.WorkerManager;
@@ -18,20 +24,24 @@ import ms.idrea.umbrellapanel.api.chief.net.RunningWorker;
 import ms.idrea.umbrellapanel.api.util.Address;
 import ms.idrea.umbrellapanel.chief.net.UmbrellaWorker;
 
-import com.flowpowered.networking.session.Session;
-
 public class UmbrellaWorkerManager implements WorkerManager {
 
+	private static final JsonParser PARSER = new JsonParser();
 	// contains all workers, they may be offline
-	private ConcurrentMap<Integer, OfflineWorker> workers = new ConcurrentHashMap<>();
+	private final List<OfflineWorker> workers = Collections.synchronizedList(new ArrayList<OfflineWorker>());
 	// contains all running workers
-	private ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
 	private List<RunningWorker> workerList = null;
 	private int nextId = 0;
 
 	@Override
 	public OfflineWorker getWorker(int id) {
-		return workers.get(id);
+		for (OfflineWorker worker : workers) {
+			if (worker.getId() == id) {
+				return worker;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -67,7 +77,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	public void onRegister(Session session) {
 		UmbrellaWorker worker = sessionToWorker(session);
 		worker.setId(getNextId());
-		workers.put(worker.getId(), new OfflineWorker(worker));
+		workers.add(new OfflineWorker(worker));
 		onStart(worker, worker.getId());
 	}
 
@@ -130,27 +140,33 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	@Override
 	public void save(Writer out) throws IOException {
 		BufferedWriter writer = new BufferedWriter(out);
-		writer.write(String.valueOf(nextId));
-		writer.newLine();
-		writer.write(String.valueOf(workers.size()));
-		writer.newLine();
-		for (int id : workers.keySet()) {
-			OfflineWorker worker = getWorker(id);
-			writer.write(String.valueOf(worker.getId()));
-			writer.newLine();
+		JsonObject workersSaveData = new JsonObject();
+		workersSaveData.addProperty("nextId", nextId);
+		JsonArray workersArray = new JsonArray();
+		for (OfflineWorker entry : workers) {
+			JsonObject obj = new JsonObject();
+			obj.addProperty("id", entry.getId());
+			workersArray.add(obj);
 		}
+		workersSaveData.add("workers", workersArray);
+		writer.write(workersSaveData.toString());
 		writer.flush();
 	}
 
 	@Override
 	public void load(Reader in) throws IOException {
 		BufferedReader reader = new BufferedReader(in);
-		nextId = Integer.valueOf(reader.readLine());
-		int workerSize = Integer.valueOf(reader.readLine());
-		workers = new ConcurrentHashMap<>(workerSize);
-		for (int i = 0; i < workerSize; i++) {
-			int id = Integer.valueOf(reader.readLine());
-			workers.put(id, new OfflineWorker(id));
+		String readed = reader.readLine();
+		if (readed == null) {
+			return;
+		}
+		JsonObject obj = PARSER.parse(readed).getAsJsonObject();
+		this.nextId = obj.get("nextId").getAsInt();
+		JsonArray workersArray = obj.get("workers").getAsJsonArray();
+		for (JsonElement element : workersArray) {
+			JsonObject userData = (JsonObject) element;
+			int id = userData.get("id").getAsInt();
+			workers.add(new OfflineWorker(id));
 		}
 	}
 }

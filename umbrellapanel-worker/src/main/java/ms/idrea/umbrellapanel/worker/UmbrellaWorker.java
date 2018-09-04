@@ -72,18 +72,26 @@ public class UmbrellaWorker implements Worker {
 			new Exception("Failed to start ftp server!", e).printStackTrace();
 		}
 		logHandler = new UmbrellaLogHandler(this);
-		networkClient = new TransportClient(this, new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()), new Runnable() {
+		networkClient = new TransportClient(this,
+				new InetSocketAddress(workerProperties.getChiefHost(), workerProperties.getChiefPort()),
+				new Runnable() {
 
-			@Override
-			public void run() {
-				if (workerProperties.getWorkerId() == -1) {
-					networkClient.send(new WorkerMessage(Action.REGISTER, workerProperties.getSharedPassword()));
-				} else {
-					networkClient.send(new WorkerMessage(Action.STARTED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
-				}
-				// the umbrella server should now send all the data.
-			}
-		});
+					@Override
+					public void run() {
+						if (workerProperties.getSharedPassword().equals("$SHAREDPASSWORD$")) {
+							logger.warning("Enter the shared password of the chief. DONT USE \"$SHAREDPASSWORD$\"!");
+							System.exit(0);
+						}
+						if (workerProperties.getWorkerId() == -1) {
+							networkClient
+									.send(new WorkerMessage(Action.REGISTER, workerProperties.getSharedPassword()));
+						} else {
+							networkClient.send(new WorkerMessage(Action.STARTED, workerProperties.getWorkerId(),
+									workerProperties.getSharedPassword()));
+						}
+						// the umbrella server should now send all the data.
+					}
+				});
 		try {
 			networkClient.connect();
 		} catch (InterruptedException e) {
@@ -117,7 +125,8 @@ public class UmbrellaWorker implements Worker {
 		workerProperties.save();
 		ftpServer.shutdown();
 		try {
-			networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(), workerProperties.getSharedPassword()));
+			networkClient.send(new WorkerMessage(Action.STOPPED, workerProperties.getWorkerId(),
+					workerProperties.getSharedPassword()));
 		} catch (Exception e) {
 			new Exception("Could not send stopped workermessage!", e).printStackTrace();
 		}
