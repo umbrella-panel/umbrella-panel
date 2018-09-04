@@ -12,7 +12,7 @@ import ms.idrea.umbrellapanel.chief.webapi.endpoints.v1.V1EndPoints;
 
 public class LoginEndPoint extends BasicEndPointHandler {
 
-	public static final EndPointResponse INVALID_LOGIN = makeJSONResponse(HttpServletResponse.SC_NOT_FOUND, "error", "username or password are not correct");
+	public static final EndPointResponse INVALID_LOGIN = makeJSONResponse(HttpServletResponse.SC_UNAUTHORIZED, "error", "username or password are not correct");
 	public static final EndPointResponse SESSID_NOT_VALID = makeJSONResponse(HttpServletResponse.SC_UNAUTHORIZED, "error", "provided sessId is not valid");
 
 	public LoginEndPoint(EndPointManager manager) {

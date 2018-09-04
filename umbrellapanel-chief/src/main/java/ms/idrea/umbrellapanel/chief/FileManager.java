@@ -32,7 +32,7 @@ public class FileManager {
 				able.load(in);
 				in.close();
 			} catch (Exception e) {
-				new Exception("Unable to load " + able.getClass(), e).printStackTrace();
+				throw new RuntimeException("Unable to load " + able.getClass(), e);
 			}
 		}
 	}
@@ -45,7 +45,7 @@ public class FileManager {
 				out.flush();
 				out.close();
 			} catch (Exception e) {
-				new Exception("Unable to save " + able.getClass(), e).printStackTrace();
+				throw new RuntimeException("Unable to save " + able.getClass(), e);
 			}
 		}
 	}
