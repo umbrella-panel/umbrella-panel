@@ -5,9 +5,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,7 +33,7 @@ public class UmbrellaServerManager implements ServerManager {
 	private static final JsonParser PARSER = new JsonParser();
 	private final PanelUserDatabase panelUserDatabase;
 	private final WorkerManager workerManager;
-	private final List<ManagedServer> servers = Collections.synchronizedList(new ArrayList<>());
+	private final List<ManagedServer> servers = new CopyOnWriteArrayList<ManagedServer>();
 	private int nextId = 0;
 
 	public UmbrellaServerManager(PanelUserDatabase panelUserDatabase, WorkerManager workerManager) {

@@ -5,9 +5,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.flowpowered.networking.Message;
 import com.google.gson.JsonArray;
@@ -25,7 +25,7 @@ public class UmbrellaPanelUserDatabase implements PanelUserDatabase {
 
 	private static final JsonParser PARSER = new JsonParser();
 	private NetworkServer networkServer;
-	private final List<PanelUser> users = Collections.synchronizedList(new ArrayList<PanelUser>());
+	private final List<PanelUser> users = new CopyOnWriteArrayList<PanelUser>();
 	private int nextId = 0;
 
 	public UmbrellaPanelUserDatabase(NetworkServer networkServer) {

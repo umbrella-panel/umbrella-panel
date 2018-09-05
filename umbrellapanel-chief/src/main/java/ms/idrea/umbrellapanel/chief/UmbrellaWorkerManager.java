@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.flowpowered.networking.session.Session;
 import com.google.gson.JsonArray;
@@ -28,7 +29,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 	private static final JsonParser PARSER = new JsonParser();
 	// contains all workers, they may be offline
-	private final List<OfflineWorker> workers = Collections.synchronizedList(new ArrayList<OfflineWorker>());
+	private final List<OfflineWorker> workers = new CopyOnWriteArrayList<OfflineWorker>();
 	// contains all running workers
 	private final ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
 	private List<RunningWorker> workerList = null;
