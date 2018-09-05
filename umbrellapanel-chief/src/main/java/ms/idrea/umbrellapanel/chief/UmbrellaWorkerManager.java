@@ -8,8 +8,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.flowpowered.networking.session.Session;
@@ -31,7 +29,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	// contains all workers, they may be offline
 	private final List<OfflineWorker> workers = new CopyOnWriteArrayList<OfflineWorker>();
 	// contains all running workers
-	private final ConcurrentMap<Integer, UmbrellaWorker> runningWorkers = new ConcurrentHashMap<>();
+	private final List<UmbrellaWorker> runningWorkers = new CopyOnWriteArrayList<UmbrellaWorker>();
 	private List<RunningWorker> workerList = null;
 	private int nextId = 0;
 
@@ -47,7 +45,12 @@ public class UmbrellaWorkerManager implements WorkerManager {
 
 	@Override
 	public UmbrellaWorker getRunningWorker(int id) {
-		return runningWorkers.get(id);
+		for (UmbrellaWorker worker : runningWorkers) {
+			if (worker.getId() == id) {
+				return worker;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -59,8 +62,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	public void buildCache() {
 		if (workerList == null) {
 			List<RunningWorker> temp = new ArrayList<>();
-			for (Integer id : runningWorkers.keySet()) {
-				UmbrellaWorker worker = runningWorkers.get(id);
+			for (UmbrellaWorker worker : runningWorkers) {
 				if (worker.getId() != -1) { // Worker#getId() is safer then #keySet()
 					temp.add(worker);
 				}
@@ -86,7 +88,7 @@ public class UmbrellaWorkerManager implements WorkerManager {
 	public void onStart(Session session, int id) {
 		UmbrellaWorker worker = sessionToWorker(session);
 		worker.setId(id);
-		runningWorkers.put(worker.getId(), worker);
+		runningWorkers.add(worker);
 		workerList = null;
 	}
 
