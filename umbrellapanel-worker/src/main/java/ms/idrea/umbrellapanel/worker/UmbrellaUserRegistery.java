@@ -1,18 +1,18 @@
 package ms.idrea.umbrellapanel.worker;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import ms.idrea.umbrellapanel.api.core.permissions.PanelUser;
 import ms.idrea.umbrellapanel.api.worker.UserRegistery;
 
 public class UmbrellaUserRegistery implements UserRegistery {
 
-	private ConcurrentMap<Integer, PanelUser> users = new ConcurrentHashMap<>();
+	private List<PanelUser> users = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void update(PanelUser user) {
-		users.put(user.getId(), user);
+		users.add(user);
 	}
 
 	@Override
@@ -27,8 +27,7 @@ public class UmbrellaUserRegistery implements UserRegistery {
 
 	@Override
 	public PanelUser getByName(String name) {
-		for (int id : users.keySet()) {
-			PanelUser o = getPanelUser(id);
+		for (PanelUser o : users) {
 			if (o.getName().equals(name)) {
 				return o;
 			}
